@@ -1,23 +1,23 @@
 const services = [
   {
-    title: "Operations Design",
+    title: "AI & Data Consulting",
     description:
-      "End-to-end process architecture, team structures, and tooling to help your company scale without friction.",
+      "Identifying high-leverage AI use cases, structuring partnerships around data and BI products, and driving GTM strategy for tech launches — including UN-backed AI prototypes.",
   },
   {
-    title: "Product Management",
+    title: "Business Development",
     description:
-      "Roadmap definition, prioritisation frameworks, stakeholder alignment, and shipping discipline.",
+      "End-to-end BD: from market mapping and partnership structuring to deal negotiation and closing. Specialist in fintech, mobility, and enterprise SaaS.",
   },
   {
-    title: "AI Integration",
+    title: "Go-to-Market Strategy",
     description:
-      "Identifying high-leverage AI use cases, selecting tools, running pilots, and embedding them into your workflows.",
+      "Market entry playbooks, customer pipeline design, and unit economics. Proven in new market launches across Spain, Iberia, and Europe.",
   },
   {
-    title: "Strategic Advisory",
+    title: "Operations & Risk",
     description:
-      "Clear-eyed thinking on growth, structure, and decisions — as a fractional advisor or embedded partner.",
+      "Process design, fraud mitigation frameworks, KPI systems, and cross-functional leadership. Tangible efficiency gains — 35% in financial risk ops at Uber Direct.",
   },
 ];
 
@@ -32,6 +32,26 @@ export default function Services() {
               <h3 className="text-base font-medium text-neutral-900 mb-3">{s.title}</h3>
               <p className="text-sm text-neutral-500 leading-relaxed">{s.description}</p>
             </div>
+          ))}
+        </div>
+        <div className="mt-10 flex flex-wrap gap-3">
+          {[
+            "Business Development",
+            "Fintech",
+            "Partnerships",
+            "Commercial Strategy",
+            "Data Analytics",
+            "Cross-Functional Leadership",
+            "Project Management",
+            "GTM Planning",
+            "Unit Economics",
+          ].map((skill) => (
+            <span
+              key={skill}
+              className="text-xs text-neutral-400 border border-neutral-200 px-3 py-1 bg-white"
+            >
+              {skill}
+            </span>
           ))}
         </div>
       </div>

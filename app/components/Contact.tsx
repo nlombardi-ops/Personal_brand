@@ -9,31 +9,44 @@ export default function Contact() {
               Let's work<br />together.
             </h2>
             <p className="text-sm text-neutral-500 mt-6 leading-relaxed max-w-sm">
-              Open to advisory roles, fractional ops/PM, and consulting engagements.
-              If there's a fit, I'd love to hear about it.
+              Open to BD, AI consulting, and strategic advisory engagements.
+              Based in Madrid — working globally.
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {["Italian", "English", "Spanish", "French"].map((lang) => (
+                <span key={lang} className="text-xs text-neutral-400 border border-neutral-200 px-2 py-0.5">
+                  {lang}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-col justify-center gap-4">
+          <div className="flex flex-col justify-center gap-5">
             <a
-              href="mailto:hello@nicolombardi.com"
+              href="mailto:nicolalombardi@mac.com"
               className="text-sm text-neutral-700 hover:text-neutral-900 transition-colors"
             >
-              hello@nicolombardi.com →
+              nicolalombardi@mac.com →
             </a>
             <a
-              href="https://linkedin.com/in/nicolombardi"
+              href="https://www.linkedin.com/in/nicola-lombardi/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-neutral-700 hover:text-neutral-900 transition-colors"
             >
               LinkedIn →
             </a>
+            <a
+              href="tel:+34603376602"
+              className="text-sm text-neutral-700 hover:text-neutral-900 transition-colors"
+            >
+              +34 603 376 602 →
+            </a>
           </div>
         </div>
       </div>
       <div className="max-w-4xl mx-auto mt-24 pt-8 border-t border-neutral-100 flex justify-between items-center">
-        <p className="text-xs text-neutral-400">© 2026 Nico Lombardi</p>
-        <p className="text-xs text-neutral-400">Ops · Strategy · PM · AI</p>
+        <p className="text-xs text-neutral-400">© 2026 Nico Lombardi · Madrid, Spain</p>
+        <p className="text-xs text-neutral-400">BD · Fintech · AI · Ops</p>
       </div>
     </section>
   );

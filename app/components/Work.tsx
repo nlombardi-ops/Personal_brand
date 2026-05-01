@@ -1,27 +1,43 @@
 const work = [
   {
-    year: "2023–Present",
-    company: "Company Name",
-    role: "Head of Operations & Strategy",
+    year: "2025 – Present",
+    company: "Mottum Analytica",
+    role: "Head of AI Consulting",
     description:
-      "Led cross-functional teams to redesign core operational processes, reducing time-to-delivery by 35% and embedding AI tooling across the org.",
-    tags: ["Ops", "AI", "Strategy"],
+      "Lead commercial strategy for AI, Data & BI projects. Structured partnership agreements for UN-backed AI prototypes. Drive GTM strategy for tech product launches.",
+    tags: ["AI", "Strategy", "GTM", "BD"],
   },
   {
-    year: "2021–2023",
-    company: "Company Name",
-    role: "Senior Product Manager",
+    year: "2025",
+    company: "Uber Direct",
+    role: "Operations Manager",
     description:
-      "Owned roadmap for a B2B SaaS platform with 50k+ users. Shipped 4 major releases, drove 2× ARR growth.",
-    tags: ["Product", "B2B", "SaaS"],
+      "Designed fraud mitigation workflows that improved financial risk management efficiency by 35%. Drove operational excellence across last-mile delivery ops.",
+    tags: ["Operations", "Fintech", "Risk"],
   },
   {
-    year: "2019–2021",
-    company: "Company Name",
-    role: "Strategy & Operations",
+    year: "2022 – 2024",
+    company: "Polestar",
+    role: "Fleet Operations",
     description:
-      "Built the ops function from scratch. Designed KPI frameworks, vendor management systems, and internal tooling.",
-    tags: ["Ops", "Strategy"],
+      "Led launch and commercial strategy for telematics services targeting B2B clients, resulting in 15% revenue growth. Managed fleet partnerships across the Iberian market.",
+    tags: ["BD", "B2B", "Commercial"],
+  },
+  {
+    year: "2019 – 2022",
+    company: "Capgemini Invent",
+    role: "Senior Consultant",
+    description:
+      "Developed go-to-market strategy for Polestar Iberia, enhancing market entry success. Led CX and NPS transformation across 10 European markets for a top-tier insurance client.",
+    tags: ["Consulting", "GTM", "CX"],
+  },
+  {
+    year: "2019 – 2022",
+    company: "Amadeus IT",
+    role: "Customer Success Manager",
+    description:
+      "Managed analytics tools and customer feedback solutions for B2B travel clients, enhancing user engagement by 30%.",
+    tags: ["Analytics", "B2B", "SaaS"],
   },
 ];
 
@@ -34,7 +50,7 @@ export default function Work() {
           {work.map((item, i) => (
             <div
               key={i}
-              className="grid grid-cols-[140px_1fr] gap-8 py-10 border-b border-neutral-100 group"
+              className="grid grid-cols-[140px_1fr] gap-8 py-10 border-b border-neutral-100"
             >
               <div>
                 <p className="text-sm text-neutral-400">{item.year}</p>
@@ -43,7 +59,7 @@ export default function Work() {
               <div>
                 <h3 className="text-base font-medium text-neutral-900 mb-2">{item.role}</h3>
                 <p className="text-sm text-neutral-500 leading-relaxed">{item.description}</p>
-                <div className="flex gap-2 mt-4">
+                <div className="flex flex-wrap gap-2 mt-4">
                   {item.tags.map((tag) => (
                     <span
                       key={tag}

@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nico Lombardi — Ops, Strategy, PM & AI",
+  title: "Nico Lombardi — Business Development, Fintech & AI",
   description:
-    "Nico Lombardi helps companies move faster through operations design, product management, and AI integration.",
+    "Nico Lombardi is a business development leader with 10+ years in fintech, AI consulting, and operations. Based in Madrid, working globally.",
 };
 
 export default function RootLayout({

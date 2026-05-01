@@ -1,24 +1,31 @@
 const projects = [
   {
-    title: "Project Alpha",
+    title: "Mottum Analytica",
     description:
-      "An AI-powered ops tool built to automate weekly reporting across distributed teams. Reduced manual reporting time by 80%.",
+      "Co-built an AI consulting firm specialising in Data, BI, and AI strategy for enterprise clients. Currently leading commercial development and partnerships, including work with UN-backed AI initiatives.",
     link: "#",
-    tags: ["AI", "Automation"],
+    tags: ["AI", "Consulting", "Startups"],
   },
   {
-    title: "Project Beta",
+    title: "UN-backed AI Prototype Partnership",
     description:
-      "Internal knowledge base and SOP library for a 200-person org — designed, built, and rolled out in 6 weeks.",
+      "Structured and negotiated partnership agreements for an AI prototype programme backed by a United Nations body. Managed deal design, stakeholder alignment, and GTM planning.",
     link: "#",
-    tags: ["Ops", "Knowledge Management"],
+    tags: ["AI", "BD", "International"],
   },
   {
-    title: "Project Gamma",
+    title: "Fraud Mitigation Workflow — Uber Direct",
     description:
-      "Custom dashboard for tracking OKRs and quarterly planning across 5 departments. Built on Notion + Make.",
+      "Designed a full fraud detection and mitigation workflow for last-mile delivery operations. Reduced financial risk management costs by 35% within the first quarter of deployment.",
     link: "#",
-    tags: ["Strategy", "Tooling"],
+    tags: ["Ops", "Fintech", "Risk"],
+  },
+  {
+    title: "Telematics B2B Launch — Polestar",
+    description:
+      "Designed and executed the commercial launch strategy for a telematics services offering targeting fleet clients. Delivered 15% revenue growth in the first year.",
+    link: "#",
+    tags: ["B2B", "Mobility", "Commercial"],
   },
 ];
 
@@ -33,7 +40,7 @@ export default function Projects() {
               <div className="flex-1">
                 <h3 className="text-base font-medium text-neutral-900 mb-2">{p.title}</h3>
                 <p className="text-sm text-neutral-500 leading-relaxed mb-4">{p.description}</p>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {p.tags.map((tag) => (
                     <span
                       key={tag}
@@ -44,12 +51,6 @@ export default function Projects() {
                   ))}
                 </div>
               </div>
-              <a
-                href={p.link}
-                className="text-xs text-neutral-400 hover:text-neutral-900 transition-colors whitespace-nowrap mt-1"
-              >
-                View →
-              </a>
             </div>
           ))}
         </div>
