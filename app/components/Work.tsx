@@ -2,9 +2,9 @@ const work = [
   {
     year: "2025 – Present",
     company: "Mottum Analytica",
-    role: "Head of AI Consulting",
+    role: "Founder & Head of AI Consulting",
     description:
-      "Lead commercial strategy for AI, Data & BI projects. Structured partnership agreements for UN-backed AI prototypes. Drive GTM strategy for tech product launches.",
+      "Founded and lead an AI consulting firm focused on Data, BI, and AI strategy. Built the commercial function from zero — clients, pipeline, and partnerships, including a UN-backed AI initiative.",
     tags: ["AI", "Strategy", "GTM", "BD"],
   },
   {
@@ -24,7 +24,7 @@ const work = [
     tags: ["BD", "B2B", "Commercial"],
   },
   {
-    year: "2019 – 2022",
+    year: "2021 – 2022",
     company: "Capgemini Invent",
     role: "Senior Consultant",
     description:
@@ -32,7 +32,7 @@ const work = [
     tags: ["Consulting", "GTM", "CX"],
   },
   {
-    year: "2019 – 2022",
+    year: "2019 – 2021",
     company: "Amadeus IT",
     role: "Customer Success Manager",
     description:

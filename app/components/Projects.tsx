@@ -2,30 +2,16 @@ const projects = [
   {
     title: "Mottum Analytica",
     description:
-      "Co-built an AI consulting firm specialising in Data, BI, and AI strategy for enterprise clients. Currently leading commercial development and partnerships, including work with UN-backed AI initiatives.",
+      "Founded and lead Mottum Analytica, an AI consulting firm specialising in Data, BI, and AI strategy for enterprise clients. Built the commercial function from zero — clients, pipeline, and partnerships.",
     link: "#",
-    tags: ["AI", "Consulting", "Startups"],
+    tags: ["AI", "Consulting", "Founder"],
   },
   {
     title: "UN-backed AI Prototype Partnership",
     description:
-      "Structured and negotiated partnership agreements for an AI prototype programme backed by a United Nations body. Managed deal design, stakeholder alignment, and GTM planning.",
+      "Structured partnership agreements for an AI prototype programme backed by a United Nations agency. Managed deal design, stakeholder alignment, and GTM planning. Details under NDA.",
     link: "#",
     tags: ["AI", "BD", "International"],
-  },
-  {
-    title: "Fraud Mitigation Workflow — Uber Direct",
-    description:
-      "Designed a full fraud detection and mitigation workflow for last-mile delivery operations. Reduced financial risk management costs by 35% within the first quarter of deployment.",
-    link: "#",
-    tags: ["Ops", "Fintech", "Risk"],
-  },
-  {
-    title: "Telematics B2B Launch — Polestar",
-    description:
-      "Designed and executed the commercial launch strategy for a telematics services offering targeting fleet clients. Delivered 15% revenue growth in the first year.",
-    link: "#",
-    tags: ["B2B", "Mobility", "Commercial"],
   },
 ];
 
