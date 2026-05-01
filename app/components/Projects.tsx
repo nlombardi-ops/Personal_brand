@@ -9,7 +9,7 @@ const projects = [
   {
     title: "UN-backed AI Prototype Partnership",
     description:
-      "Structured partnership agreements for an AI prototype programme backed by a United Nations agency. Managed deal design, stakeholder alignment, and GTM planning. Details under NDA.",
+      "Structured partnership agreements for an AI programme with the UN Development Programme (UNDP) to embed AI tools in public institutions. Managed deal design, stakeholder alignment, and GTM planning.",
     link: "#",
     tags: ["AI", "BD", "International"],
   },
