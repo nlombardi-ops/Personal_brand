@@ -1,0 +1,92 @@
+{
+  "contracts": [
+    {
+      "id": "hipoteca-caixa",
+      "name": "Hipoteca CaixaBank",
+      "type": "mortgage",
+      "provider": "CaixaBank, S.A.",
+      "start_date": "2024-03",
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "Préstamo hipotecario 264,000€ a 359 meses. Fase fija: 2.95% hasta 28/02/2029. Fase variable: Euríbor 12M + 1.20%. Bonificación máxima: -0.75%. Cuota sin bonificar: 1,107.85€/mes. Cuota bonificada: 1,004.38€/mes. Amortización anticipada: máx 0.15% primeros 5 años. Subrogación posible (Ley 2/1994). Cuenta vinculada obligatoria (15€/trimestre). Seguro de daños obligatorio.",
+      "drive_link": null
+    },
+    {
+      "id": "seguro-hogar",
+      "name": "Seguro Hogar",
+      "type": "insurance",
+      "provider": "SegurCaixa Adeslas",
+      "start_date": "2024-03",
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "371.66€/año. Obligatorio por hipoteca. Puede cambiarse a otra aseguradora libremente (CaixaBank debe aceptar pólizas equivalentes sin coste). Bonificador: -0.25% tipo interés hipoteca.",
+      "drive_link": null
+    },
+    {
+      "id": "seguro-vida",
+      "name": "Seguro Vida",
+      "type": "insurance",
+      "provider": "VidaCaixa",
+      "start_date": "2024-03",
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "476.41€/año. NO obligatorio para el préstamo. Bonificador: -0.25% tipo interés. Puede rescindirse sin afectar al préstamo (solo se pierde la bonificación).",
+      "drive_link": null
+    },
+    {
+      "id": "mybox-salud",
+      "name": "MyBox Salud",
+      "type": "insurance",
+      "provider": "SegurCaixa Adeslas",
+      "start_date": "2024-03",
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "Incluido en paquete CaixaBank MyBox. Límite 6,000€/año. Alternativa al seguro vida como bonificador (-0.25%).",
+      "drive_link": null
+    },
+    {
+      "id": "energia-masmovil",
+      "name": "Electricidad MasMovil",
+      "type": "energy",
+      "provider": "MasMovil Luz y Gas",
+      "start_date": "2025-04",
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "Tarifa regulada PVPC. Potencia contratada ~24.70€/mes. Sin permanencia. Media mensual: ~77.54€.",
+      "drive_link": null
+    },
+    {
+      "id": "internet-pepephone",
+      "name": "Fibra + Móvil Pepephone",
+      "type": "internet",
+      "provider": "Pepephone (MasMovil group)",
+      "start_date": null,
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "Pepephone sin permanencia. Pendiente de datos de facturas.",
+      "drive_link": null
+    },
+    {
+      "id": "comunidad-fourquet",
+      "name": "Comunidad Propietarios",
+      "type": "community",
+      "provider": "Administraciones Colmenarejo",
+      "start_date": "2024-03",
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "Presupuesto anual 2026: 16,370€. Cuota mensual ~54.57€ (subida desde ~45€ en 2025). Agua trimestral aparte. Junta anual de propietarios.",
+      "drive_link": null
+    },
+    {
+      "id": "cuenta-caixa",
+      "name": "Cuenta Pago Vinculada",
+      "type": "banking",
+      "provider": "CaixaBank",
+      "start_date": "2024-03",
+      "permanencia_end": null,
+      "status": "active",
+      "key_terms": "Obligatoria por hipoteca. 15€/trimestre (60€/año). Se puede cancelar solo al cancelar el préstamo. Bonificador: contribuye al -0.25% con nómina+recibos+tarjeta.",
+      "drive_link": null
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "energy": [
+    {"month": "2025-04", "total": 76.32, "potencia": 24.70, "consumo": 44.36, "iva": 7.26, "provider": "MasMovil"},
+    {"month": "2025-05", "total": 61.95, "potencia": 24.70, "consumo": 31.36, "iva": 5.89, "provider": "MasMovil"},
+    {"month": "2025-06", "total": 65.22, "potencia": 24.70, "consumo": 34.32, "iva": 6.20, "provider": "MasMovil"},
+    {"month": "2025-07", "total": 61.17, "potencia": 24.70, "consumo": 30.66, "iva": 5.81, "provider": "MasMovil"},
+    {"month": "2025-08", "total": 67.91, "potencia": 24.70, "consumo": 36.76, "iva": 6.45, "provider": "MasMovil"},
+    {"month": "2025-09", "total": 80.34, "potencia": 24.70, "consumo": 48.00, "iva": 7.63, "provider": "MasMovil"},
+    {"month": "2025-10", "total": 91.46, "potencia": 24.70, "consumo": 58.07, "iva": 8.69, "provider": "MasMovil"},
+    {"month": "2025-11", "total": 85.90, "potencia": 24.70, "consumo": 53.04, "iva": 8.16, "provider": "MasMovil"},
+    {"month": "2025-12", "total": 114.08, "potencia": 24.70, "consumo": 65.45, "iva": 9.47, "provider": "MasMovil"},
+    {"month": "2026-01", "total": 95.12, "potencia": 24.70, "consumo": 61.38, "iva": 9.04, "provider": "MasMovil"},
+    {"month": "2026-02", "total": 102.27, "potencia": 24.70, "consumo": 67.85, "iva": 9.72, "provider": "MasMovil"},
+    {"month": "2026-03", "total": 48.87, "potencia": 24.70, "consumo": 15.72, "iva": 4.25, "provider": "MasMovil"},
+    {"month": "2026-04", "total": 57.44, "potencia": 24.70, "consumo": 28.04, "iva": 5.54, "provider": "MasMovil"}
+  ],
+  "internet": [],
+  "community": [
+    {"month": "2025-04", "cuota": 45.00, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-05", "cuota": 45.00, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-06", "cuota": 45.00, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-07", "cuota": 45.00, "water": 424.10, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-08", "cuota": 45.00, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-09", "cuota": 45.00, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-10", "cuota": 45.00, "water": 191.89, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-11", "cuota": 45.00, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2025-12", "cuota": 45.00, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2026-01", "cuota": 54.57, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2026-02", "cuota": 54.57, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2026-03", "cuota": 54.57, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"},
+    {"month": "2026-04", "cuota": 54.57, "water": 0, "extraordinary": 0, "provider": "Adm. Colmenarejo"}
+  ]
+}

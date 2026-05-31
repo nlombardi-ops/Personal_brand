@@ -1,0 +1,63 @@
+{
+  "policies": [
+    {
+      "id": "seguro-hogar",
+      "name": "Seguro Hogar",
+      "type": "home",
+      "provider": "SegurCaixa Adeslas",
+      "monthly_cost": 30.97,
+      "annual_cost": 371.66,
+      "start_date": "2024-03",
+      "renewal_date": "2025-03",
+      "permanencia_end": null,
+      "coverage": [
+        "Incendio",
+        "Explosión",
+        "Tormenta",
+        "Elementos naturales",
+        "Hundimiento de terreno",
+        "Energía nuclear",
+        "Continente y contenido"
+      ],
+      "notes": "Obligatorio por hipoteca CaixaBank. Bonificador: -0.25% en tipo de interés. Coste total vida del préstamo: 11,149.80€. Puede contratarse con otra aseguradora pero CaixaBank debe aceptar la póliza."
+    },
+    {
+      "id": "seguro-vida",
+      "name": "Seguro Vida",
+      "type": "life",
+      "provider": "VidaCaixa",
+      "monthly_cost": 39.70,
+      "annual_cost": 476.41,
+      "start_date": "2024-03",
+      "renewal_date": "2025-03",
+      "permanencia_end": null,
+      "coverage": [
+        "Fallecimiento",
+        "Invalidez"
+      ],
+      "notes": "Bonificador hipoteca: -0.25% en tipo de interés. No es obligatorio para la concesión del préstamo. Coste total vida del préstamo: 14,292.30€."
+    },
+    {
+      "id": "mybox-salud",
+      "name": "MyBox Salud",
+      "type": "health",
+      "provider": "SegurCaixa Adeslas",
+      "monthly_cost": 0,
+      "annual_cost": 0,
+      "included_in": "CaixaBank MyBox",
+      "annual_limit": 6000,
+      "start_date": "2024-03",
+      "renewal_date": null,
+      "permanencia_end": null,
+      "coverage": [
+        "Medicina general",
+        "Especialistas",
+        "Hospitalización",
+        "Urgencias",
+        "Diagnóstico por imagen",
+        "Análisis clínicos"
+      ],
+      "notes": "Incluido en paquete CaixaBank MyBox. Límite anual 6,000€. También funciona como bonificador hipoteca (-0.25% como alternativa al seguro de vida)."
+    }
+  ]
+}

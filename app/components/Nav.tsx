@@ -5,6 +5,7 @@ export default function Nav() {
     { label: "Projects", href: "#projects" },
     { label: "References", href: "#references" },
     { label: "Contact", href: "#contact" },
+    { label: "Dashboard", href: "/dashboard" },
   ];
 
   return (

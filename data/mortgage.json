@@ -1,0 +1,93 @@
+{
+  "status": "active",
+  "lender": "CaixaBank, S.A.",
+  "branch": "8953 - Store Premier Majadahonda",
+  "solicitud": "8953.01.0000662-88",
+  "contract_date": "2024-02-05",
+  "principal": 264000,
+  "term_months": 359,
+  "start_date": "2024-03",
+  "property_value": 340718,
+  "ltv_pct": 77.483,
+  "type": "mixed",
+  "fixed_rate": 2.95,
+  "fixed_rate_bonified": 2.20,
+  "fixed_end_date": "2029-02-28",
+  "fixed_period_months": 60,
+  "variable_index": "euribor_12m",
+  "variable_spread": 1.20,
+  "max_bonification": 0.75,
+  "monthly_payment": 1107.85,
+  "monthly_payment_bonified": 1004.38,
+  "total_repayment": 483519.62,
+  "total_repayment_bonified": 457009.81,
+  "tae": 4.49,
+  "tae_bonified": 4.032,
+  "early_repayment_fee_pct": 0.15,
+  "early_repayment_fee_period_years": 5,
+  "interest_demora": "tipo ordinario + 3%",
+  "bonificadores": [
+    {
+      "name": "Nómina + recibos + tarjeta",
+      "bonification": 0.25,
+      "requirements": "Nómina >600€/mes domiciliada, 3 recibos domiciliados, tarjeta débito/crédito con 3 compras/trimestre",
+      "cost_total": "Cuenta 1,800€ + Tarjeta 1,080€ over lifetime"
+    },
+    {
+      "name": "Seguro Vida o Salud",
+      "bonification": 0.25,
+      "requirements": "VidaCaixa vida o SegurCaixa Adeslas salud (excepto Dental y Básico)",
+      "cost_total": "14,292.30€ over lifetime"
+    },
+    {
+      "name": "Seguro Hogar",
+      "bonification": 0.25,
+      "requirements": "Seguro hogar SegurCaixa del inmueble hipotecado",
+      "cost_total": "11,149.80€ over lifetime"
+    },
+    {
+      "name": "Alarma Securitas Direct",
+      "bonification": 0.25,
+      "requirements": "Alarma Securitas Direct o Protección Senior",
+      "cost_total": "18,678.77€ over lifetime"
+    }
+  ],
+  "obligaciones": {
+    "cuenta_pago": "Mantener cuenta CaixaBank vinculada (15€/trimestre = 60€/año)",
+    "seguro_danos": "Obligatorio seguro de daños del inmueble durante toda la vigencia",
+    "seguro_hogar_anual": 371.66,
+    "seguro_vida_anual": 476.41
+  },
+  "schedule": [
+    {"year": 1, "annual_payment": 5581.26, "balance": 258418.74, "note": "Includes initial interest-only period"},
+    {"year": 2, "annual_payment": 13294.20, "interest": 7546.06, "principal_paid": 5748.14, "balance": 252670.60},
+    {"year": 3, "annual_payment": 13294.19, "interest": 7374.15, "principal_paid": 5920.04, "balance": 246750.56},
+    {"year": 4, "annual_payment": 13294.16, "interest": 7197.16, "principal_paid": 6097.00, "balance": 240653.56},
+    {"year": 5, "annual_payment": 13294.15, "interest": 7014.84, "principal_paid": 6279.31, "balance": 234374.25},
+    {"year": 6, "annual_payment": 16158.00, "interest": 11161.88, "principal_paid": 4996.12, "balance": 229378.13, "note": "Variable rate starts (Euríbor + 1.20%)"},
+    {"year": 7, "annual_payment": 16158.00, "interest": 10916.26, "principal_paid": 5241.74, "balance": 224136.39},
+    {"year": 8, "annual_payment": 16158.00, "interest": 10658.56, "principal_paid": 5499.44, "balance": 218636.95},
+    {"year": 9, "annual_payment": 16158.00, "interest": 10388.17, "principal_paid": 5769.83, "balance": 212867.12},
+    {"year": 10, "annual_payment": 16158.00, "interest": 10104.51, "principal_paid": 6053.49, "balance": 206813.63},
+    {"year": 11, "annual_payment": 16158.00, "interest": 9806.90, "principal_paid": 6351.10, "balance": 200462.53},
+    {"year": 12, "annual_payment": 16158.00, "interest": 9494.63, "principal_paid": 6663.37, "balance": 193799.16},
+    {"year": 13, "annual_payment": 16158.00, "interest": 9167.04, "principal_paid": 6990.96, "balance": 186808.20},
+    {"year": 14, "annual_payment": 16158.00, "interest": 8823.34, "principal_paid": 7334.66, "balance": 179473.54},
+    {"year": 15, "annual_payment": 16158.00, "interest": 8462.74, "principal_paid": 7695.26, "balance": 171778.28},
+    {"year": 16, "annual_payment": 16158.00, "interest": 8084.41, "principal_paid": 8073.59, "balance": 163704.69},
+    {"year": 17, "annual_payment": 16158.00, "interest": 7687.47, "principal_paid": 8470.53, "balance": 155234.16},
+    {"year": 18, "annual_payment": 16158.00, "interest": 7271.03, "principal_paid": 8886.97, "balance": 146347.19},
+    {"year": 19, "annual_payment": 16158.00, "interest": 6834.11, "principal_paid": 9323.89, "balance": 137023.30},
+    {"year": 20, "annual_payment": 16158.00, "interest": 6375.71, "principal_paid": 9782.29, "balance": 127241.01},
+    {"year": 21, "annual_payment": 16158.00, "interest": 5894.78, "principal_paid": 10263.22, "balance": 116977.79},
+    {"year": 22, "annual_payment": 16158.00, "interest": 5390.17, "principal_paid": 10767.83, "balance": 106209.96},
+    {"year": 23, "annual_payment": 16158.00, "interest": 4860.81, "principal_paid": 11297.19, "balance": 94912.77},
+    {"year": 24, "annual_payment": 16158.00, "interest": 4305.36, "principal_paid": 11852.64, "balance": 83060.13},
+    {"year": 25, "annual_payment": 16158.00, "interest": 3722.64, "principal_paid": 12435.36, "balance": 70624.77},
+    {"year": 26, "annual_payment": 16158.00, "interest": 3111.27, "principal_paid": 13046.73, "balance": 57578.04},
+    {"year": 27, "annual_payment": 16158.00, "interest": 2469.85, "principal_paid": 13688.15, "balance": 43889.89},
+    {"year": 28, "annual_payment": 16158.00, "interest": 1796.87, "principal_paid": 14361.13, "balance": 29528.76},
+    {"year": 29, "annual_payment": 16158.06, "interest": 1090.81, "principal_paid": 15067.25, "balance": 14461.51},
+    {"year": 30, "annual_payment": 14811.55, "interest": 350.04, "principal_paid": 14461.51, "balance": 0}
+  ]
+}
