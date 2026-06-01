@@ -151,92 +151,134 @@
   ],
   "community": [
     {
-      "month": "2025-04",
-      "cuota": 45.0,
-      "water": 0,
+      "month": "2024-05",
+      "cuota": 0,
+      "water": 23.25,
+      "extraordinary": 0,
+      "provider": "Adm. Colmenarejo"
+    },
+    {
+      "month": "2024-07",
+      "cuota": 0,
+      "water": 27.28,
+      "extraordinary": 0,
+      "provider": "Adm. Colmenarejo"
+    },
+    {
+      "month": "2024-09",
+      "cuota": 0,
+      "water": 22.57,
+      "extraordinary": 0,
+      "provider": "Adm. Colmenarejo"
+    },
+    {
+      "month": "2024-11",
+      "cuota": 0,
+      "water": 33.42,
+      "extraordinary": 0,
+      "provider": "Adm. Colmenarejo"
+    },
+    {
+      "month": "2025-01",
+      "cuota": 0,
+      "water": 28.19,
+      "extraordinary": 0,
+      "provider": "Adm. Colmenarejo"
+    },
+    {
+      "month": "2025-03",
+      "cuota": 0,
+      "water": 27.13,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2025-05",
-      "cuota": 45.0,
-      "water": 0,
-      "extraordinary": 0,
-      "provider": "Adm. Colmenarejo"
-    },
-    {
-      "month": "2025-06",
-      "cuota": 45.0,
-      "water": 0,
+      "cuota": 0,
+      "water": 23.65,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2025-07",
-      "cuota": 45.0,
-      "water": 424.1,
+      "cuota": 0,
+      "water": 28.07,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2025-08",
-      "cuota": 45.0,
+      "cuota": 56.1,
       "water": 0,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2025-09",
-      "cuota": 45.0,
-      "water": 0,
+      "cuota": 56.1,
+      "water": 22.56,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2025-10",
-      "cuota": 45.0,
-      "water": 191.89,
+      "cuota": 56.1,
+      "water": 0,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2025-11",
-      "cuota": 45.0,
+      "cuota": 56.1,
       "water": 0,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2025-12",
-      "cuota": 45.0,
+      "cuota": 56.1,
       "water": 0,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2026-01",
-      "cuota": 54.57,
-      "water": 0,
+      "cuota": 56.1,
+      "water": 30.16,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2026-02",
-      "cuota": 54.57,
+      "cuota": 56.1,
       "water": 0,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2026-03",
-      "cuota": 54.57,
-      "water": 0,
+      "cuota": 56.1,
+      "water": 25.3,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
     },
     {
       "month": "2026-04",
-      "cuota": 54.57,
+      "cuota": 56.1,
+      "water": 0,
+      "extraordinary": 0,
+      "provider": "Adm. Colmenarejo"
+    },
+    {
+      "month": "2026-05",
+      "cuota": 56.1,
+      "water": 23.85,
+      "extraordinary": 0,
+      "provider": "Adm. Colmenarejo"
+    },
+    {
+      "month": "2026-06",
+      "cuota": 57.78,
       "water": 0,
       "extraordinary": 0,
       "provider": "Adm. Colmenarejo"
