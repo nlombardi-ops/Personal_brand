@@ -1,4 +1,5 @@
 import { Zap, Building2, Landmark, TrendingDown, Calendar, AlertTriangle } from "lucide-react";
+import AuthGuard from "../components/dashboard/AuthGuard";
 import StatCard from "../components/dashboard/StatCard";
 import CostChart from "../components/dashboard/CostChart";
 import rawBills from "../../data/bills.json";
@@ -50,6 +51,7 @@ export default function DashboardOverview() {
   const activeContracts = contracts.filter((c) => c.status === "active");
 
   return (
+    <AuthGuard>
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Overview</h1>
@@ -132,5 +134,6 @@ export default function DashboardOverview() {
         </div>
       </div>
     </div>
+    </AuthGuard>
   );
 }

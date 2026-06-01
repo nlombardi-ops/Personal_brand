@@ -1,4 +1,5 @@
 import { Shield, Heart, Home, Bike, Calendar, AlertCircle, ExternalLink } from "lucide-react";
+import AuthGuard from "../../components/dashboard/AuthGuard";
 import rawInsurance from "../../../data/insurance.json";
 import rawRates from "../../../data/rates.json";
 import type { InsurancePolicy, RatesData } from "../../lib/types";
@@ -34,6 +35,7 @@ export default function InsurancePage() {
   const totalAnnual = policies.reduce((s, p) => s + (p.annual_cost || 0), 0);
 
   return (
+    <AuthGuard>
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Insurance</h1>
@@ -47,7 +49,7 @@ export default function InsurancePage() {
         <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">Monthly Cost</p>
           <p className="mt-1 text-2xl font-bold text-white">{totalMonthly > 0 ? fmt(totalMonthly) : "Included"}</p>
-          <p className="text-xs text-neutral-500">{insuranceData.policies.length} active policies</p>
+          <p className="text-xs text-neutral-500">{policies.length} active policies</p>
         </div>
         <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
           <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">Annual Cost</p>
@@ -133,5 +135,6 @@ export default function InsurancePage() {
         </p>
       </div>
     </div>
+    </AuthGuard>
   );
 }

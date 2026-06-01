@@ -1,4 +1,5 @@
 import { Landmark, TrendingDown, Calendar, Home, Shield, CreditCard, Bell } from "lucide-react";
+import AuthGuard from "../../components/dashboard/AuthGuard";
 import StatCard from "../../components/dashboard/StatCard";
 import AmortizationChart from "../../components/dashboard/AmortizationChart";
 import rawMortgage from "../../../data/mortgage.json";
@@ -45,6 +46,7 @@ export default function MortgagePage() {
     }));
 
   return (
+    <AuthGuard>
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Mortgage</h1>
@@ -220,5 +222,6 @@ export default function MortgagePage() {
         </div>
       </div>
     </div>
+    </AuthGuard>
   );
 }

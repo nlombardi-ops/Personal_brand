@@ -1,4 +1,5 @@
 import { Zap, Building2, Droplets, Wifi } from "lucide-react";
+import AuthGuard from "../../components/dashboard/AuthGuard";
 import StatCard from "../../components/dashboard/StatCard";
 import BillsTable from "../../components/dashboard/BillsTable";
 import StackedBarChart from "../../components/dashboard/StackedBarChart";
@@ -46,6 +47,7 @@ export default function BillsPage() {
   const energyTrend = prevEnergy ? ((lastEnergy - prevEnergy) / prevEnergy) * 100 : 0;
 
   return (
+    <AuthGuard>
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Bills</h1>
@@ -126,5 +128,6 @@ export default function BillsPage() {
         </div>
       </div>
     </div>
+    </AuthGuard>
   );
 }

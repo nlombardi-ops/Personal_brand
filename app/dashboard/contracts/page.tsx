@@ -1,4 +1,5 @@
 import { FileText, ExternalLink, Clock, CheckCircle, AlertTriangle } from "lucide-react";
+import AuthGuard from "../../components/dashboard/AuthGuard";
 import rawContracts from "../../../data/contracts.json";
 import type { Contract } from "../../lib/types";
 
@@ -31,6 +32,7 @@ export default function ContractsPage() {
   const freeToLeave = active.filter((c) => !c.permanencia_end).length;
 
   return (
+    <AuthGuard>
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-white">Contracts</h1>
@@ -131,5 +133,6 @@ export default function ContractsPage() {
         <p className="mt-2 text-xs text-neutral-700">Coming in a future update</p>
       </div>
     </div>
+    </AuthGuard>
   );
 }
