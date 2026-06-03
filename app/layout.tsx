@@ -16,6 +16,27 @@ export const metadata: Metadata = {
   title: "Nico Lombardi — Business Development, Fintech & AI",
   description:
     "Nico Lombardi is a business development leader with 10+ years in fintech, AI consulting, and operations. Based in Madrid, working globally.",
+  openGraph: {
+    title: "Nico Lombardi — Business Development, Fintech & AI",
+    description:
+      "10+ years driving growth at the intersection of fintech, AI and operations. Based in Madrid, working globally.",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Nico Lombardi — Business Development, Fintech & AI",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nico Lombardi — Business Development, Fintech & AI",
+    description:
+      "10+ years driving growth at the intersection of fintech, AI and operations.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

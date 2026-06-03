@@ -15,13 +15,13 @@ const references = [
   },
   {
     quote: "",
-    name: "CEO, Mottum Analytica",
+    name: "Partner, Mottum client",
     title: "Coming soon",
     pending: true,
   },
   {
     quote: "",
-    name: "Uber Direct",
+    name: "Senior Manager, Uber Direct",
     title: "Coming soon",
     pending: true,
   },
@@ -33,18 +33,22 @@ export default function References() {
   return (
     <section id="references" className="px-8 py-24 border-t border-neutral-200 bg-neutral-50">
       <div className="max-w-4xl mx-auto">
-        <p className="text-xs text-neutral-400 uppercase tracking-widest mb-12">References</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-neutral-200">
-          {live.map((r, i) => (
-            <div key={i} className="bg-neutral-50 p-8 flex flex-col justify-between">
-              <p className="text-sm text-neutral-600 leading-relaxed mb-8">"{r.quote}"</p>
-              <div>
-                <p className="text-sm font-medium text-neutral-900">{r.name}</p>
-                <p className="text-xs text-neutral-400 mt-0.5">{r.title}</p>
+        <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">References</p>
+        {live.length === 0 ? (
+          <p className="text-sm text-neutral-500">References available upon request.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-neutral-200">
+            {live.map((r, i) => (
+              <div key={i} className="bg-neutral-50 p-8 flex flex-col justify-between">
+                <p className="text-sm text-neutral-600 leading-relaxed mb-8">"{r.quote}"</p>
+                <div>
+                  <p className="text-sm font-medium text-neutral-900">{r.name}</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">{r.title}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

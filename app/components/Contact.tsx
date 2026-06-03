@@ -2,7 +2,7 @@ export default function Contact() {
   return (
     <section id="contact" className="px-8 py-24 border-t border-neutral-200">
       <div className="max-w-4xl mx-auto">
-        <p className="text-xs text-neutral-400 uppercase tracking-widest mb-12">Contact</p>
+        <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">Contact</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-16">
           <div>
             <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-light tracking-tight leading-tight text-neutral-900">
@@ -44,9 +44,17 @@ export default function Contact() {
           </div>
         </div>
       </div>
-      <div className="max-w-4xl mx-auto mt-24 pt-8 border-t border-neutral-100 flex justify-between items-center">
+      <div className="max-w-4xl mx-auto mt-24 pt-8 border-t border-neutral-100 flex justify-between items-center flex-wrap gap-4">
         <p className="text-xs text-neutral-400">© 2026 Nico Lombardi · Madrid, Spain</p>
-        <p className="text-xs text-neutral-400">BD · Fintech · AI · Ops</p>
+        <div className="flex items-center gap-6">
+          <p className="text-xs text-neutral-400">BD · Fintech · AI · Ops</p>
+          <a
+            href="/dashboard"
+            className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+          >
+            Dashboard
+          </a>
+        </div>
       </div>
     </section>
   );

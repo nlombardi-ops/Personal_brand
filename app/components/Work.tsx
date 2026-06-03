@@ -45,7 +45,7 @@ export default function Work() {
   return (
     <section id="work" className="px-8 py-24 border-t border-neutral-200">
       <div className="max-w-4xl mx-auto">
-        <p className="text-xs text-neutral-400 uppercase tracking-widest mb-12">Work</p>
+        <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">Work</p>
         <div className="space-y-0">
           {work.map((item, i) => (
             <div
@@ -53,7 +53,7 @@ export default function Work() {
               className="grid grid-cols-[140px_1fr] gap-8 py-10 border-b border-neutral-100"
             >
               <div>
-                <p className="text-sm text-neutral-400">{item.year}</p>
+                <p className="text-sm text-neutral-600">{item.year}</p>
                 <p className="text-sm font-medium text-neutral-700 mt-1">{item.company}</p>
               </div>
               <div>

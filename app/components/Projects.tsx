@@ -19,10 +19,10 @@ export default function Projects() {
   return (
     <section id="projects" className="px-8 py-24 border-t border-neutral-200">
       <div className="max-w-4xl mx-auto">
-        <p className="text-xs text-neutral-400 uppercase tracking-widest mb-12">Personal Projects</p>
-        <div className="space-y-0">
+        <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">Selected Work</p>
+        <ul className="space-y-0">
           {projects.map((p, i) => (
-            <div key={i} className="py-10 border-b border-neutral-100 flex justify-between items-start gap-8">
+            <li key={i} className="py-10 border-b border-neutral-100 flex justify-between items-start gap-8">
               <div className="flex-1">
                 <h3 className="text-base font-medium text-neutral-900 mb-2">{p.title}</h3>
                 <p className="text-sm text-neutral-500 leading-relaxed mb-4">{p.description}</p>
@@ -37,9 +37,9 @@ export default function Projects() {
                   ))}
                 </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
