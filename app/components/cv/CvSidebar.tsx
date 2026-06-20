@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FileText, User, Clock, BarChart2, ChevronLeft, LogOut } from "lucide-react";
+import { FileText, User, Clock, BarChart2, ChevronLeft, LogOut, Mail } from "lucide-react";
 
 const NAV = [
   { label: "Generate", href: "/cv", icon: FileText },
+  { label: "Cover Letter", href: "/cv/cover-letter", icon: Mail },
   { label: "My Profile", href: "/cv/profile", icon: User },
   { label: "History", href: "/cv/versions", icon: Clock },
   { label: "Stats", href: "/cv/stats", icon: BarChart2 },

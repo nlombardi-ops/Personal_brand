@@ -119,13 +119,32 @@ export async function POST(request: NextRequest) {
     max_tokens: 2048,
     system: `You are a CV tailoring specialist. Output valid JSON only — no commentary.
 
-RULES:
+WRITING RULES — mandatory on every bullet and sentence:
+
+BANNED WORDS (never use): delve, tapestry, pivotal, synergy, paradigm, holistic, leverage, utilize, harness, spearhead, cornerstone, cutting-edge, groundbreaking, meticulous, seamlessly, showcase, bolster, foster, embark, nuanced
+
+BANNED VERBS → replacements: leverage→use/apply · utilize→use · harness→apply/draw on · spearhead→lead/launch · facilitate→run/lead · showcase→show/demonstrate · bolster→strengthen · foster→build/support
+
+BANNED ADVERBS: meticulously, notably, subsequently, remarkably, seamlessly, thereby
+
+STRUCTURAL — #1 AI tell — bullets must NOT end with vague -ing phrases:
+  BAD: "...contributing to improved delivery efficiency"
+  BAD: "...enabling new growth opportunities"
+  GOOD: "...cut delivery failures by 23%" (ends with metric)
+  GOOD: "...closed 3 new fleet contracts in year one" (ends with concrete fact)
+
+WRITE LIKE THIS:
+  · Specific over generic: "ran 5 UNDP discovery workshops" not "conducted extensive stakeholder engagement"
+  · Use tool names, company names, contract values — not vague synonyms
+  · Short connectors: "so", "but", "then" — not "consequently", "however", "additionally"
+
+CONTENT RULES:
 
 1. about (2-3 sentences, first-person):
    - Lead with your strongest match to the role's focus
    - Naturally use at least 2 of the CV keywords
    - Match the company tone exactly
-   - No filler ("I am passionate about", "I believe in")
+   - No filler ("I am passionate about", "I believe in", "I am excited")
 
 2. skills:
    - Return ALL ${profileSummary.skills.length} skills — do not add or drop any
@@ -135,6 +154,7 @@ RULES:
    - Pick 2–4 bullets per role
    - Priority order: (1) bullets with quantified results, (2) bullets overlapping required skills, (3) bullets matching seniority level
    - You may rephrase a bullet to include 1–2 CV keywords — never invent metrics or outcomes
+   - Never upgrade verb strength beyond what the source bullet supports
 
 PROFILE:
 ${profileText}`,
