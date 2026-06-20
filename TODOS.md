@@ -75,6 +75,23 @@ Branding improvement roadmap. Ordered by impact. Each item is self-contained.
 
 ---
 
+---
+
+## TIER 1 — Dashboard (from design review)
+
+### 10. Finance dashboard — light theme redesign
+**What:** Replace the dark `neutral-950` dashboard with a warm stone palette (`stone-50` bg, `stone-100` sidebar, white cards). See ISSUES.md "Dashboard redesign" issue for full color spec.
+**Why:** Dark theme made sense as a scaffold. A personal finance tool should feel approachable. The stone palette is already used in the CV tool — one consistent authenticated-area visual language.
+**How:** Update 7 components: DashboardShell, Sidebar, StatCard, BillsTable, CostChart, StackedBarChart, AmortizationChart. Check all recharts stroke colors for readability on light bg.
+**Effort:** 2–3 hrs.
+
+### 11. CV tool — standalone /cv shell
+**What:** New `app/cv/` route with its own layout shell, sidebar, and four pages: Generator, My Profile, History, Stats. See ISSUES.md B7 for full spec.
+**Why:** CV generation is a separate product from the finance dashboard. Mixing them in the same sidebar is tonally wrong.
+**Effort:** See ISSUES.md B4 + B5 + B6 + B7 dependency chain.
+
+---
+
 ## Done (reference)
 
 - ✅ Dashboard removed from primary nav → moved to footer

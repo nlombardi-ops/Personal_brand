@@ -255,31 +255,101 @@ Endpoints: `POST /api/cv/applications` (create), `PATCH /api/cv/applications/:id
 
 ---
 
-## B7 — CV generator + tracker dashboard UI
+## B7 — CV tool UI (standalone shell)
 
 **Type:** AFK · **Blocked by:** B4, B5, B6
 
 ### What to build
 
-Three dashboard pages behind auth:
+A standalone `/cv` tool with its own layout shell (`app/cv/layout.tsx`), separate from the finance dashboard. Shares the same `dashboard_auth` cookie for auth — no new login. Visual language: warm stone palette (`stone-100` bg, `stone-200` sidebar, dark text, navy `#0f172a` accent).
 
-**`/dashboard/cv`** — Generator
-Paste a job URL → click Analyze → see `JobAnalysis` results → click Generate CV → preview the tailored CV in-page → Save + Download PDF. After saving, option to mark as "applied" immediately.
+#### `/cv` — Generator
 
-**`/dashboard/cv/versions`** — History
-Table of all generated CVs: company, role, date, application status badge (or "not applied"). Click a row to re-download the PDF or update the application status.
+**Layout:** Two-column split. Left column (360px fixed): URL input → Analyze button → flat key-value job analysis card (keywords displayed as chips) → Generate CV button → status/log area. Right column (flex-1, scrollable): CV preview output.
 
-**`/dashboard/cv/stats`** — Simple stats
-Total CVs generated, total applications, conversion funnel (applied → interview_1 → interview_2 → offer), ghosted count. No charts needed — a clean stat card grid is enough.
+**States:**
+- **Right panel before any action:** Centered instructional card — "Paste a job URL on the left to generate your tailored CV →"
+- **URL fetch loading:** Spinner inside the URL input field
+- **URL fetch error:** Inline error under input: "Couldn't reach this URL — paste the job description text manually" + textarea fallback
+- **Job analysis loading:** Skeleton card in left column with "Analyzing job…" label
+- **CV generation loading:** Right panel shows animated progress bar with 3 phase labels: "Reading your profile…" → "Matching experience to role…" → "Drafting your CV…". Advances over ~12s, resolves on API response. Generate button is disabled and shows spinner.
+- **CV generation error:** Error banner in right panel with "Generation failed — try again" retry button
+- **CV generated:** Right panel shows the CV as a **white paper card** (A4 proportions, white background, dark text, matching the PDF layout) floating in the `stone-50` panel. Save button + Download PDF button appear below the card.
+
+**Responsive:** Desktop-only. Add `min-w-[1024px]` to shell wrapper. Below 1024px: centered message "This tool is designed for desktop use."
+
+#### `/cv/profile` — My Profile
+
+Page for editing and enriching `data/profile.json` — the source of truth for CV generation. Simple form sections per profile group: About variants, Experience bullets per role (add/edit/delete), Skills by category, Education, Languages. No JSON editing. Saves to `data/profile.json` via `PATCH /api/cv/profile`.
+
+This is the "add your latest skills into the context" workflow — update your profile after a new project or skill, and all future CVs will reflect it.
+
+#### `/cv/versions` — History
+
+Table of all generated CVs: Company, Role, Date Generated, Status (chip). Status is editable inline (dropdown, no page reload). Click row to re-download PDF.
+
+#### `/cv/stats` — Stats
+
+Clean stat card grid (no charts): CVs Generated, Applications Submitted, Interview Rate, Offer Rate, Ghosted Count. Read from `GET /api/cv/stats`.
+
+#### Sidebar
+
+```
+[NL monogram]
+─────────────
+Generate        /cv
+My Profile      /cv/profile
+History         /cv/versions
+Stats           /cv/stats
+─────────────
+← Portfolio     /
+Sign Out
+```
 
 ### Acceptance criteria
 
-- [ ] Generator page: URL input → analysis display → CV preview → save/download flow works end-to-end
-- [ ] History page: lists all versions with status, sortable by date
-- [ ] Status can be updated inline (dropdown) on the history page without a page reload
-- [ ] Stats page shows the 5 key numbers from `GET /api/cv/stats`
-- [ ] All pages added to the dashboard sidebar navigation
-- [ ] All pages protected behind existing auth
+- [ ] `app/cv/layout.tsx` + shell component created with stone palette and sidebar above
+- [ ] Generator page: two-column split layout with all 5 async states specified above
+- [ ] CV preview renders as white paper card in the right panel (matches PDF layout)
+- [ ] Progress bar + 3 phase labels shown during generation (≥12s animated, resolves on response)
+- [ ] Profile editor page: sections for About, Experience, Skills — saves to profile.json
+- [ ] History page: table with inline status dropdown (no page reload on change)
+- [ ] Stats page: 5 stat cards from `/api/cv/stats`
+- [ ] Sidebar includes Portfolio link and Sign Out
+- [ ] Desktop-only: `min-w-[1024px]` wrapper with small-screen fallback message
+- [ ] All pages protected behind `dashboard_auth` cookie
+
+---
+
+## Dashboard redesign — finance dashboard light theme
+
+**Type:** AFK · **Blocked by:** Nothing (can be done independently of CV tool)
+
+### What to build
+
+Redesign the finance dashboard (`/dashboard/*`) from dark (`neutral-950`) to warm mid-tone stone palette. The dark theme was a placeholder — a personal finance tool should feel approachable, not like a Bloomberg terminal.
+
+**Palette change:**
+- Page background: `stone-50` (was `neutral-950`)
+- Sidebar background: `stone-100` (was `neutral-950` border-r `neutral-800`)
+- Sidebar active link: `stone-200` with `stone-900` text (was `neutral-800` with `white`)
+- Sidebar inactive link: `stone-600` hover `stone-900` (was `neutral-400` hover `neutral-200`)
+- Card background: `white` with `stone-200` border (was `neutral-900` with `neutral-800` border)
+- Card labels: `stone-500` uppercase (was `neutral-500`)
+- Card values: `stone-900` bold (was `white` bold)
+- Table header: `stone-100` bg, `stone-600` text (was `neutral-800`/`neutral-500`)
+- Table rows: `white`, hover `stone-50` (was `neutral-900`, hover `neutral-800/30`)
+- Emerald `#059669` accent: unchanged — survives theme change
+
+**Components to update:** `DashboardShell.tsx`, `Sidebar.tsx`, `StatCard.tsx`, `BillsTable.tsx`, `CostChart.tsx`, `StackedBarChart.tsx`, `AmortizationChart.tsx`
+
+### Acceptance criteria
+
+- [ ] All 7 listed components updated to stone palette
+- [ ] Emerald accent unchanged throughout
+- [ ] Chart axes/gridlines/labels readable on light background (check recharts `stroke` colors)
+- [ ] No dark text on dark background remaining (grep for `text-white` and `text-neutral-*` in dashboard components)
+- [ ] Login page updated to match light theme
 
 ---
 
