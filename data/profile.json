@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "version": "1.0",
+    "last_updated": "2026-06-20"
+  },
+  "contact": {
+    "name": "Nicola Lombardi",
+    "preferred_name": "Nico",
+    "email": "nicolalombardi@mac.com",
+    "phone": "+34 603 376 602",
+    "location": "Madrid, Spain",
+    "linkedin": "https://www.linkedin.com/in/nicola-lombardi/",
+    "available_for": [
+      "BD consulting",
+      "AI strategy",
+      "fractional BD",
+      "strategic advisory",
+      "operations leadership"
+    ]
+  },
+  "about": {
+    "tagline": "Business Development · Fintech · AI · Operations",
+    "short": "Founder of Mottum Analytica. BD and ops leader with 10+ years in fintech, AI, and consulting. Based in Madrid, working across Europe.",
+    "medium": "I help companies build the right partnerships, enter new markets, and turn strategy into traction. 10+ years across fintech, consulting, and mobility — most recently founding Mottum Analytica, an AI consulting firm with a UN Development Programme partnership.",
+    "long": "Dynamic business development leader with 10+ years of experience in fintech, AI, and operations. I've helped companies close their first enterprise deal, enter new markets, and build AI products that actually ship. Expert in structuring innovative B2B deals — from fleet telematics at Polestar to fraud mitigation at Uber Direct to UN-backed AI prototypes at Mottum. I work at the intersection of strategy and execution: I can build the pitch deck and run the partnership call.",
+    "linkedin": "I work at the intersection of strategy and execution — building pipelines, structuring deals, and turning ideas into revenue. Founder of Mottum Analytica, an AI and data consulting firm. Previously Operations Manager at Uber Direct, Fleet Operations at Polestar, Senior Consultant at Capgemini Invent. 10+ years specialising in fintech, mobility, and enterprise AI.",
+    "recruiter": "10+ years in fintech and consulting, with a track record of building commercial functions from zero and closing enterprise deals. Founder of Mottum Analytica (AI consulting). Previously: Uber Direct, Polestar, Capgemini Invent, Amadeus IT. Education: IE Business School (MSc Business Analytics & Big Data), Warwick Business School (MSc Economics & Finance), Università Cattolica Milan (BA Economics & Management). Fluent in Italian, English, Spanish, French."
+  },
+  "experience": [
+    {
+      "company": "Mottum Analytica",
+      "role": "Founder & Head of AI Consulting",
+      "period": "2025 – Present",
+      "start": "2025-01",
+      "end": null,
+      "location": "Madrid, Spain",
+      "type": "founder",
+      "summary": "Founded and lead an AI consulting firm focused on Data, BI, and AI strategy. Built the commercial function from zero — clients, pipeline, and partnerships.",
+      "bullets": [
+        "Founded Mottum Analytica from zero — built client pipeline, commercial function, and partner network without institutional backing.",
+        "Structured and closed partnership agreements with the UN Development Programme (UNDP) for an AI programme embedding AI tools in public institutions.",
+        "Lead commercial strategy for AI/Data/BI consulting projects across enterprise clients in Spain and internationally.",
+        "Drive GTM strategy for tech product launches, including market mapping, pricing design, and ICP definition.",
+        "Built and manage a cross-functional delivery team of data engineers, analysts, and consultants.",
+        "Developed repeatable BD playbooks for AI consulting engagements, shortening average deal cycle."
+      ],
+      "tags": ["AI", "Strategy", "GTM", "BD", "Founder", "Consulting"]
+    },
+    {
+      "company": "Uber Direct",
+      "role": "Operations Manager",
+      "period": "2025",
+      "start": "2025-01",
+      "end": "2025-06",
+      "location": "Madrid, Spain",
+      "type": "employee",
+      "summary": "Designed fraud mitigation workflows and drove operational excellence across last-mile delivery operations.",
+      "bullets": [
+        "Redesigned fraud detection and mitigation workflows end-to-end, improving financial risk management efficiency by 35%.",
+        "Led cross-functional operations across last-mile delivery, coordinating product, finance, and ops teams.",
+        "Designed KPI frameworks for real-time operational performance monitoring across the courier network.",
+        "Identified and closed key process gaps in courier onboarding that were driving fraud exposure.",
+        "Collaborated with the data team to build dashboards for financial risk tracking and executive reporting.",
+        "Delivered weekly executive reporting on operational risk metrics and improvement initiatives."
+      ],
+      "tags": ["Operations", "Fintech", "Risk", "Fraud", "KPIs", "Last-Mile"]
+    },
+    {
+      "company": "Polestar",
+      "role": "Fleet Operations Manager",
+      "period": "2022 – 2024",
+      "start": "2022-01",
+      "end": "2024-12",
+      "location": "Madrid, Spain",
+      "type": "employee",
+      "summary": "Led launch and commercial strategy for telematics services targeting B2B clients. Managed fleet partnerships across the Iberian market.",
+      "bullets": [
+        "Led the launch and commercial strategy for Polestar's telematics service targeting B2B fleet clients in the Iberian market.",
+        "Grew B2B telematics revenue by 15% in the first year through targeted partnership development.",
+        "Closed 3 new fleet partnerships within the first 12 months, exceeding annual targets.",
+        "Managed the full B2B sales cycle end-to-end: prospecting, pitching, negotiation, and contract close.",
+        "Coordinated with product and technical teams to align telematics feature development with client requirements.",
+        "Developed market entry playbook for the Iberian B2B fleet segment, later adopted as a template for other European markets."
+      ],
+      "tags": ["BD", "B2B", "Commercial", "Fleet", "Telematics", "Mobility"]
+    },
+    {
+      "company": "Capgemini Invent",
+      "role": "Senior Consultant",
+      "period": "2019 – 2022",
+      "start": "2019-03",
+      "end": "2022-01",
+      "location": "Madrid, Spain",
+      "type": "employee",
+      "summary": "Strategy and CX consulting for top-tier clients in automotive and insurance. Developed go-to-market strategy for Polestar Iberia and led CX transformation across 10 European markets.",
+      "bullets": [
+        "Developed go-to-market strategy for Polestar Iberia, defining market positioning, channel strategy, and customer acquisition model ahead of the brand's Spanish launch.",
+        "Led CX and NPS transformation programme across 10 European markets for a top-tier insurance client, driving measurable improvements in customer satisfaction.",
+        "Managed project workstreams independently, leading client workshops and C-level stakeholder presentations.",
+        "Designed customer journey mapping for the insurance client, identifying 12 key friction points resolved through process redesign.",
+        "Built business cases and ROI models for digital transformation initiatives to support executive decision-making.",
+        "Mentored junior consultants and contributed to internal capability building in data analytics and CX strategy."
+      ],
+      "tags": ["Consulting", "GTM", "CX", "NPS", "Strategy", "Insurance", "Automotive"]
+    },
+    {
+      "company": "Amadeus IT",
+      "role": "Customer Success Manager",
+      "period": "2017 – 2019",
+      "start": "2017-01",
+      "end": "2019-03",
+      "location": "Madrid, Spain",
+      "type": "employee",
+      "summary": "Managed analytics tools and customer feedback solutions for B2B travel clients, driving user engagement improvements.",
+      "bullets": [
+        "Managed a portfolio of B2B travel clients on Amadeus analytics and customer feedback platforms.",
+        "Improved user engagement across client accounts by 30% through proactive success planning and product adoption programmes.",
+        "Served as primary liaison between clients and product teams, translating customer feedback into actionable feature requests.",
+        "Onboarded and trained new clients on analytics tooling, reducing time-to-value from 6 weeks to 3 weeks.",
+        "Developed client health scorecards to proactively identify at-risk accounts and reduce churn.",
+        "Collaborated with sales team on upsell and cross-sell opportunities within the existing client base."
+      ],
+      "tags": ["Analytics", "B2B", "SaaS", "Customer Success", "Travel Tech"]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master, Business Analytics & Big Data",
+      "institution": "IE Business School",
+      "location": "Madrid, Spain",
+      "year": 2016
+    },
+    {
+      "degree": "Master, Economics and Finance",
+      "institution": "Warwick Business School",
+      "location": "Coventry, UK",
+      "year": 2015
+    },
+    {
+      "degree": "Bachelor, Economics & Management",
+      "institution": "Università Cattolica del Sacro Cuore",
+      "location": "Milan, Italy",
+      "year": 2012
+    }
+  ],
+  "skills": {
+    "business_development": {
+      "label": "Business Development",
+      "skills": [
+        { "name": "Partnership Structuring", "proficiency": "expert" },
+        { "name": "B2B Sales", "proficiency": "expert" },
+        { "name": "Deal Negotiation", "proficiency": "expert" },
+        { "name": "Enterprise BD", "proficiency": "advanced" },
+        { "name": "Customer Pipeline Design", "proficiency": "expert" },
+        { "name": "Account Management", "proficiency": "advanced" }
+      ]
+    },
+    "strategy": {
+      "label": "Strategy & GTM",
+      "skills": [
+        { "name": "Go-to-Market Strategy", "proficiency": "expert" },
+        { "name": "Market Entry", "proficiency": "expert" },
+        { "name": "Commercial Strategy", "proficiency": "expert" },
+        { "name": "Unit Economics", "proficiency": "advanced" },
+        { "name": "Business Case Development", "proficiency": "advanced" },
+        { "name": "Competitive Analysis", "proficiency": "advanced" }
+      ]
+    },
+    "operations": {
+      "label": "Operations & Risk",
+      "skills": [
+        { "name": "Operations Management", "proficiency": "expert" },
+        { "name": "Fraud Mitigation", "proficiency": "advanced" },
+        { "name": "KPI Design", "proficiency": "expert" },
+        { "name": "Process Design", "proficiency": "advanced" },
+        { "name": "Cross-Functional Leadership", "proficiency": "expert" },
+        { "name": "Risk Management", "proficiency": "advanced" }
+      ]
+    },
+    "ai_data": {
+      "label": "AI & Data",
+      "skills": [
+        { "name": "AI Strategy", "proficiency": "advanced" },
+        { "name": "Data Analytics", "proficiency": "advanced" },
+        { "name": "BI Strategy", "proficiency": "advanced" },
+        { "name": "AI Product GTM", "proficiency": "advanced" },
+        { "name": "Stakeholder Alignment for AI", "proficiency": "expert" }
+      ]
+    },
+    "consulting": {
+      "label": "Consulting & CX",
+      "skills": [
+        { "name": "CX Strategy", "proficiency": "advanced" },
+        { "name": "NPS Programmes", "proficiency": "advanced" },
+        { "name": "Customer Journey Mapping", "proficiency": "advanced" },
+        { "name": "Executive Presentations", "proficiency": "expert" },
+        { "name": "Workshop Facilitation", "proficiency": "advanced" },
+        { "name": "Project Management", "proficiency": "advanced" }
+      ]
+    }
+  },
+  "languages": [
+    { "language": "Italian", "level": "Native" },
+    { "language": "English", "level": "Fluent" },
+    { "language": "Spanish", "level": "Fluent" },
+    { "language": "French", "level": "Professional" }
+  ],
+  "referrals": [
+    {
+      "name": "Adrien Palumbo",
+      "title": "Managing Director Spain",
+      "company": "Polestar",
+      "quote": "Nico has a rare ability to bridge commercial strategy and operational execution. He was instrumental in building our Iberian go-to-market — precise, fast, and deeply reliable.",
+      "contact": null,
+      "status": "confirmed"
+    },
+    {
+      "name": "Javier Bordetas",
+      "title": "Director",
+      "company": "Capgemini",
+      "quote": "What sets Nico apart is his clarity. He can walk into a complex stakeholder environment and come out with a plan that everyone buys into. An exceptional consultant.",
+      "contact": null,
+      "status": "confirmed"
+    },
+    {
+      "name": "TBD",
+      "title": "Senior Manager",
+      "company": "Uber Direct",
+      "quote": null,
+      "contact": null,
+      "status": "pending"
+    },
+    {
+      "name": "TBD",
+      "title": null,
+      "company": "Mottum client",
+      "quote": null,
+      "contact": null,
+      "status": "pending"
+    }
+  ]
+}
