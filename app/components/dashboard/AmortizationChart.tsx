@@ -21,33 +21,33 @@ interface YearData {
 
 export default function AmortizationChart({ data, fixedEndYear }: { data: YearData[]; fixedEndYear: number }) {
   return (
-    <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-      <h3 className="mb-4 text-sm font-semibold text-white">Amortization Schedule — Principal vs Interest</h3>
+    <div className="rounded-xl border border-stone-200 bg-white p-5">
+      <h3 className="mb-4 text-sm font-semibold text-stone-900">Amortization Schedule — Principal vs Interest</h3>
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
             <XAxis
               dataKey="year"
-              tick={{ fill: "#737373", fontSize: 11 }}
+              tick={{ fill: "#78716c", fontSize: 11 }}
               tickLine={false}
-              axisLine={{ stroke: "#262626" }}
-              label={{ value: "Year", position: "insideBottom", offset: -5, fill: "#525252", fontSize: 11 }}
+              axisLine={{ stroke: "#e7e5e4" }}
+              label={{ value: "Year", position: "insideBottom", offset: -5, fill: "#78716c", fontSize: 11 }}
             />
             <YAxis
-              tick={{ fill: "#737373", fontSize: 11 }}
+              tick={{ fill: "#78716c", fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#171717",
-                border: "1px solid #262626",
+                backgroundColor: "#ffffff",
+                border: "1px solid #e7e5e4",
                 borderRadius: "8px",
                 fontSize: "12px",
               }}
-              labelStyle={{ color: "#a3a3a3" }}
+              labelStyle={{ color: "#57534e" }}
               formatter={(value: number, name: string) => [
                 `${value.toLocaleString("es-ES", { minimumFractionDigits: 2 })}€`,
                 name === "interest" ? "Interest" : "Principal",

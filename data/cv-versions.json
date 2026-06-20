@@ -1,0 +1,161 @@
+[
+  {
+    "id": "9196608f-8d72-4cf8-815f-78c26cbaa5eb",
+    "job_url": "https://www.linkedin.com/jobs/view/4421800477/",
+    "company": "Performanze",
+    "role_title": "Client Delivery Lead (Tech & AI Consultant)",
+    "generated_at": "2026-06-20T19:14:07.418Z",
+    "cv_content": {
+      "about": "I lead end-to-end delivery of high-impact technology and AI transformation projects, bridging technical teams and business outcomes as a trusted client partner. As founder of Mottum Analytica, I structure and ship AI, cloud, and data engagements — from UNDP-backed prototypes to enterprise GTM — combining a data-driven mindset with hands-on delivery. I thrive in builder environments where I can own the client relationship, manage risk, and turn strategy into measurable ROI.",
+      "skills": [
+        "Project Management",
+        "Stakeholder Alignment for AI",
+        "AI Strategy",
+        "AI Product GTM",
+        "Data Analytics",
+        "BI Strategy",
+        "Risk Management",
+        "Cross-Functional Leadership",
+        "Account Management",
+        "Enterprise BD",
+        "Partnership Structuring",
+        "Go-to-Market Strategy",
+        "Commercial Strategy",
+        "KPI Design",
+        "Process Design",
+        "Business Case Development",
+        "Customer Pipeline Design",
+        "B2B Sales",
+        "Deal Negotiation",
+        "Market Entry",
+        "Unit Economics",
+        "Competitive Analysis",
+        "Operations Management",
+        "Fraud Mitigation",
+        "CX Strategy",
+        "NPS Programmes",
+        "Customer Journey Mapping",
+        "Executive Presentations",
+        "Workshop Facilitation"
+      ],
+      "experience": [
+        {
+          "company": "Mottum Analytica",
+          "role": "Founder & Head of AI Consulting",
+          "period": "2025 – Present",
+          "bullets": [
+            "Lead end-to-end delivery of AI, Data, and BI transformation projects for enterprise clients across Spain and internationally, acting as trusted client partner bridging technical teams and business outcomes.",
+            "Structured and closed partnership agreements with the UN Development Programme (UNDP) to embed AI tools and systems in public institutions.",
+            "Drive GTM and technology roadmap translation for AI/cloud product launches, including market mapping, pricing, and ICP definition.",
+            "Built and manage a cross-functional delivery team of data engineers, analysts, and consultants using agile, data-driven delivery practices."
+          ]
+        },
+        {
+          "company": "Uber Direct",
+          "role": "Operations Manager",
+          "period": "2025",
+          "bullets": [
+            "Redesigned fraud detection and mitigation workflows end-to-end, improving financial risk management efficiency by 35% through data-driven process design.",
+            "Led cross-functional operations coordinating product, finance, and ops teams across last-mile delivery.",
+            "Designed KPI frameworks and dashboards for real-time operational performance and financial risk tracking.",
+            "Delivered weekly executive reporting on risk metrics, aligning stakeholders on improvement initiatives."
+          ]
+        },
+        {
+          "company": "Polestar",
+          "role": "Fleet Operations Manager",
+          "period": "2022 – 2024",
+          "bullets": [
+            "Led launch and delivery of Polestar's telematics service for B2B fleet clients, aligning technical feature development with client requirements.",
+            "Managed full B2B engagement cycle end-to-end: prospecting, pitching, negotiation, and contract close, growing revenue 15% in year one.",
+            "Coordinated with product and technical teams to translate client needs into roadmap priorities.",
+            "Built a market entry and delivery playbook later adopted as a template across other European markets."
+          ]
+        },
+        {
+          "company": "Capgemini Invent",
+          "role": "Senior Consultant",
+          "period": "2019 – 2022",
+          "bullets": [
+            "Led CX/NPS transformation programmes across 10 European markets for a top-tier client, managing delivery workstreams and C-level stakeholders.",
+            "Developed go-to-market and digital transformation strategy for Polestar Iberia ahead of the brand's Spanish launch.",
+            "Built business cases and ROI models for digital transformation initiatives to support executive decision-making.",
+            "Ran client workshops and executive presentations, translating technical solutions into business outcomes."
+          ]
+        },
+        {
+          "company": "Amadeus IT",
+          "role": "Customer Success Manager",
+          "period": "2017 – 2019",
+          "bullets": [
+            "Managed a portfolio of B2B clients on Amadeus analytics platforms, acting as primary liaison between clients and product teams.",
+            "Improved client engagement by 30% through proactive success planning and product adoption programmes.",
+            "Reduced onboarding time-to-value from 6 weeks to 3 weeks via structured training and delivery.",
+            "Built client health scorecards to proactively identify at-risk accounts and mitigate churn."
+          ]
+        }
+      ],
+      "education": [
+        {
+          "degree": "Master, Business Analytics & Big Data",
+          "institution": "IE Business School",
+          "location": "Madrid, Spain",
+          "year": 2016
+        },
+        {
+          "degree": "Master, Economics and Finance",
+          "institution": "Warwick Business School",
+          "location": "Coventry, UK",
+          "year": 2015
+        },
+        {
+          "degree": "Bachelor, Economics & Management",
+          "institution": "Università Cattolica del Sacro Cuore",
+          "location": "Milan, Italy",
+          "year": 2012
+        }
+      ],
+      "languages": [
+        {
+          "language": "Italian",
+          "level": "Native"
+        },
+        {
+          "language": "English",
+          "level": "Fluent"
+        },
+        {
+          "language": "Spanish",
+          "level": "Fluent"
+        },
+        {
+          "language": "French",
+          "level": "Professional"
+        }
+      ],
+      "referrals": [
+        {
+          "name": "Adrien Palumbo",
+          "title": "Managing Director Spain",
+          "company": "Polestar",
+          "quote": "Nico has a rare ability to bridge commercial strategy and operational execution. He was instrumental in building our Iberian go-to-market — precise, fast, and deeply reliable.",
+          "contact": null,
+          "status": "confirmed"
+        },
+        {
+          "name": "Javier Bordetas",
+          "title": "Director",
+          "company": "Capgemini",
+          "quote": "What sets Nico apart is his clarity. He can walk into a complex stakeholder environment and come out with a plan that everyone buys into. An exceptional consultant.",
+          "contact": null,
+          "status": "confirmed"
+        }
+      ],
+      "meta": {
+        "target_company": "Performanze",
+        "target_role": "Client Delivery Lead (Tech & AI Consultant)"
+      }
+    },
+    "pdf_path": "/cvs/9196608f-8d72-4cf8-815f-78c26cbaa5eb.pdf"
+  }
+]

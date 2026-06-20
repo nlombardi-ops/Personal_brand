@@ -58,6 +58,12 @@ export default function Contact() {
           >
             Dashboard
           </a>
+          <a
+            href="/cv"
+            className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+          >
+            CV Builder
+          </a>
         </div>
       </div>
     </section>

@@ -1,4 +1,4 @@
-import { Zap, Building2, Landmark, TrendingDown, Calendar, AlertTriangle } from "lucide-react";
+import { Zap, Building2, Landmark, TrendingDown, Calendar, AlertTriangle, RefreshCw } from "lucide-react";
 import AuthGuard from "../components/dashboard/AuthGuard";
 import StatCard from "../components/dashboard/StatCard";
 import CostChart from "../components/dashboard/CostChart";
@@ -34,6 +34,22 @@ function fmt(n: number) {
   return n.toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
 }
 
+function latestMonth(entries: Array<{ month: string }>) {
+  if (!entries.length) return null;
+  return entries.map((e) => e.month).sort().at(-1)!;
+}
+
+function fmtMonth(ym: string) {
+  const [y, m] = ym.split("-");
+  return new Date(Number(y), Number(m) - 1).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+}
+
+function nextFirstOfMonth() {
+  const now = new Date();
+  const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  return next.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
 export default function DashboardOverview() {
   const monthly = buildMonthlyData();
   const latest = monthly[monthly.length - 1];
@@ -50,14 +66,33 @@ export default function DashboardOverview() {
 
   const activeContracts = contracts.filter((c) => c.status === "active");
 
+  const communityLatest = latestMonth(billsData.community);
+  const energyLatest = latestMonth(billsData.energy);
+  const internetLatest = latestMonth(billsData.internet);
+
   return (
     <AuthGuard>
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Overview</h1>
-        <p className="text-sm text-neutral-500">
-          Casa Fourquet 10 — monthly costs and contract status
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-stone-900">Overview</h1>
+          <p className="text-sm text-stone-500">
+            Casa Fourquet 10 — monthly costs and contract status
+          </p>
+        </div>
+
+        {/* Sync status pill */}
+        <div className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white px-4 py-3 text-xs">
+          <RefreshCw className="h-3.5 w-3.5 text-stone-400 flex-shrink-0" />
+          <div className="space-y-0.5">
+            <div className="flex gap-3 text-stone-600">
+              <span>Community <span className="font-medium text-stone-900">{communityLatest ? fmtMonth(communityLatest) : "—"}</span></span>
+              <span>Energy <span className="font-medium text-stone-900">{energyLatest ? fmtMonth(energyLatest) : "—"}</span></span>
+              <span>Internet <span className="font-medium text-stone-900">{internetLatest ? fmtMonth(internetLatest) : "—"}</span></span>
+            </div>
+            <p className="text-stone-400">Next sync: <span className="text-stone-600">{nextFirstOfMonth()}</span></p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -66,14 +101,14 @@ export default function DashboardOverview() {
           value={fmt(mortgage.monthly_payment)}
           sub={`Bonified: ${fmt(mortgage.monthly_payment_bonified)}`}
           icon={Landmark}
-          color="bg-red-900/50"
+          color="bg-red-50"
         />
         <StatCard
           label="Latest Bills"
           value={fmt(latestTotal)}
           sub={latest?.month}
           icon={Calendar}
-          color="bg-blue-900/50"
+          color="bg-blue-50"
           trend={{ value: trendPct, label: "vs prev" }}
         />
         <StatCard
@@ -81,49 +116,49 @@ export default function DashboardOverview() {
           value={fmt(avgEnergy)}
           sub={`${billsData.energy.length} bills`}
           icon={Zap}
-          color="bg-amber-900/50"
+          color="bg-amber-50"
         />
         <StatCard
           label="Active Contracts"
           value={`${activeContracts.length}`}
           sub={`${policies.length} insurance policies`}
           icon={AlertTriangle}
-          color="bg-purple-900/50"
+          color="bg-purple-50"
         />
       </div>
 
       <CostChart data={monthly} />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-          <h3 className="mb-3 text-sm font-semibold text-white">Recent Energy Bills</h3>
-          <div className="space-y-2">
+        <div className="rounded-xl border border-stone-200 bg-white p-5">
+          <h3 className="mb-3 text-sm font-semibold text-stone-900">Recent Energy Bills</h3>
+          <div className="space-y-0">
             {billsData.energy
               .slice(-5)
               .reverse()
               .map((bill) => (
-                <div key={bill.month} className="flex items-center justify-between py-1.5 border-b border-neutral-800 last:border-0">
-                  <span className="text-sm text-neutral-400">{bill.month}</span>
-                  <span className="text-sm font-medium text-white">{fmt(bill.total)}</span>
+                <div key={bill.month} className="flex items-center justify-between py-2 border-b border-stone-100 last:border-0">
+                  <span className="text-sm text-stone-500">{bill.month}</span>
+                  <span className="text-sm font-medium text-stone-900">{fmt(bill.total)}</span>
                 </div>
               ))}
           </div>
         </div>
 
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-          <h3 className="mb-3 text-sm font-semibold text-white">Contract Status</h3>
-          <div className="space-y-2">
+        <div className="rounded-xl border border-stone-200 bg-white p-5">
+          <h3 className="mb-3 text-sm font-semibold text-stone-900">Contract Status</h3>
+          <div className="space-y-0">
             {contracts.map((c) => (
-              <div key={c.id} className="flex items-center justify-between py-1.5 border-b border-neutral-800 last:border-0">
+              <div key={c.id} className="flex items-center justify-between py-2 border-b border-stone-100 last:border-0">
                 <div>
-                  <p className="text-sm text-white">{c.name}</p>
-                  <p className="text-xs text-neutral-500">{c.provider}</p>
+                  <p className="text-sm text-stone-900">{c.name}</p>
+                  <p className="text-xs text-stone-500">{c.provider}</p>
                 </div>
                 <span
                   className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                     c.permanencia_end
-                      ? "bg-red-900/50 text-red-300"
-                      : "bg-emerald-900/50 text-emerald-300"
+                      ? "bg-red-50 text-red-600"
+                      : "bg-emerald-50 text-emerald-700"
                   }`}
                 >
                   {c.permanencia_end ? `Until ${c.permanencia_end}` : "Free"}

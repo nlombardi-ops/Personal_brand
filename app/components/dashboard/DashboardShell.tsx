@@ -12,7 +12,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className="flex min-h-screen bg-neutral-950">
+    <div className="flex min-h-screen bg-stone-50">
       <Sidebar />
       <main className="ml-60 flex-1 p-8">{children}</main>
     </div>

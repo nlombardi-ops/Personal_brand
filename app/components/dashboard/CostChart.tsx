@@ -21,8 +21,8 @@ interface MonthlyData {
 
 export default function CostChart({ data }: { data: MonthlyData[] }) {
   return (
-    <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-      <h3 className="mb-4 text-sm font-semibold text-white">Monthly Cost Trend</h3>
+    <div className="rounded-xl border border-stone-200 bg-white p-5">
+      <h3 className="mb-4 text-sm font-semibold text-stone-900">Monthly Cost Trend</h3>
       <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
@@ -40,27 +40,27 @@ export default function CostChart({ data }: { data: MonthlyData[] }) {
                 <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#262626" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
             <XAxis
               dataKey="month"
-              tick={{ fill: "#737373", fontSize: 11 }}
+              tick={{ fill: "#78716c", fontSize: 11 }}
               tickLine={false}
-              axisLine={{ stroke: "#262626" }}
+              axisLine={{ stroke: "#e7e5e4" }}
             />
             <YAxis
-              tick={{ fill: "#737373", fontSize: 11 }}
+              tick={{ fill: "#78716c", fontSize: 11 }}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => `${v}€`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#171717",
-                border: "1px solid #262626",
+                backgroundColor: "#ffffff",
+                border: "1px solid #e7e5e4",
                 borderRadius: "8px",
                 fontSize: "12px",
               }}
-              labelStyle={{ color: "#a3a3a3" }}
+              labelStyle={{ color: "#57534e" }}
               formatter={(value: number) => [`${value.toFixed(2)}€`]}
             />
             <Legend

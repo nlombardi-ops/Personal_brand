@@ -1,0 +1,183 @@
+import { NextRequest, NextResponse } from "next/server";
+import { readFileSync } from "fs";
+import { join } from "path";
+import Anthropic from "@anthropic-ai/sdk";
+import type { JobAnalysis, CvContent } from "@/lib/types";
+
+const TAILORED_CV_SCHEMA = {
+  type: "object",
+  properties: {
+    about: {
+      type: "string",
+      description: "2-3 sentences tailored to the role, mirroring company tone and keywords",
+    },
+    skills: {
+      type: "array",
+      items: { type: "string" },
+      description: "All skills from the profile, reordered with most-relevant-for-this-role first",
+    },
+    experience: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          company: { type: "string" },
+          role: { type: "string" },
+          period: { type: "string" },
+          bullets: {
+            type: "array",
+            items: { type: "string" },
+            description: "2-4 selected and optionally rephrased bullet points",
+          },
+        },
+        required: ["company", "role", "period", "bullets"],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ["about", "skills", "experience"],
+  additionalProperties: false,
+};
+
+function loadProfile() {
+  const raw = readFileSync(join(process.cwd(), "data/profile.json"), "utf-8");
+  return JSON.parse(raw);
+}
+
+function buildSkillsList(profile: Record<string, unknown>): string[] {
+  const skills = profile.skills as Record<string, { skills: Array<{ name: string }> }>;
+  return Object.values(skills).flatMap((cat) => cat.skills.map((s) => s.name));
+}
+
+export async function POST(request: NextRequest) {
+  const authCookie = request.cookies.get("dashboard_auth");
+  if (!authCookie?.value) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  let jobAnalysis: JobAnalysis;
+  try {
+    const body = await request.json();
+    jobAnalysis = body.job_analysis as JobAnalysis;
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  if (!jobAnalysis?.company) {
+    return NextResponse.json({ error: "Missing job_analysis" }, { status: 400 });
+  }
+
+  const profile = loadProfile();
+  const allSkills = buildSkillsList(profile);
+
+  const profileSummary = {
+    about: profile.about,
+    skills: allSkills,
+    experience: (profile.experience as Array<{
+      company: string;
+      role: string;
+      period: string;
+      start: string;
+      end: string | null;
+      bullets: string[];
+    }>).map((exp) => ({
+      company: exp.company,
+      role: exp.role,
+      period: exp.period,
+      bullets: exp.bullets,
+    })),
+  };
+
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+  // Format profile as readable text — cheaper to tokenize than JSON dump
+  const profileText = [
+    `ABOUT (long version):\n${profileSummary.about.long}`,
+    `\nEXPERIENCE:`,
+    ...profileSummary.experience.map((exp, i) =>
+      `${i + 1}. ${exp.company.toUpperCase()} | ${exp.role} | ${exp.period}\n` +
+      exp.bullets.map((b) => `   - ${b}`).join("\n")
+    ),
+    `\nSKILLS (${profileSummary.skills.length} total — return all, reordered):\n${profileSummary.skills.join(", ")}`,
+  ].join("\n");
+
+  // Format job as key-value pairs — no JSON overhead
+  const jobText = [
+    `Company: ${jobAnalysis.company}`,
+    `Role: ${jobAnalysis.role_title}`,
+    `Seniority: ${jobAnalysis.seniority}`,
+    `Industry: ${jobAnalysis.industry}`,
+    `Tone: ${jobAnalysis.company_tone}`,
+    `Role focus: ${jobAnalysis.role_focus}`,
+    `Required skills: ${jobAnalysis.required_skills.join(", ")}`,
+    `Nice to have: ${jobAnalysis.nice_to_have.join(", ")}`,
+    `CV keywords: ${jobAnalysis.keywords.join(", ")}`,
+  ].join("\n");
+
+  const response = await client.beta.messages.create({
+    model: "claude-sonnet-4-6",
+    max_tokens: 2048,
+    system: `You are a CV tailoring specialist. Output valid JSON only — no commentary.
+
+RULES:
+
+1. about (2-3 sentences, first-person):
+   - Lead with your strongest match to the role's focus
+   - Naturally use at least 2 of the CV keywords
+   - Match the company tone exactly
+   - No filler ("I am passionate about", "I believe in")
+
+2. skills:
+   - Return ALL ${profileSummary.skills.length} skills — do not add or drop any
+   - Move the 6 most relevant skills for this role to the front
+
+3. experience — include ALL ${profileSummary.experience.length} roles:
+   - Pick 2–4 bullets per role
+   - Priority order: (1) bullets with quantified results, (2) bullets overlapping required skills, (3) bullets matching seniority level
+   - You may rephrase a bullet to include 1–2 CV keywords — never invent metrics or outcomes
+
+PROFILE:
+${profileText}`,
+    messages: [
+      {
+        role: "user",
+        content: `Tailor the CV for this role:\n\n${jobText}`,
+      },
+    ],
+    output_config: {
+      format: {
+        type: "json_schema",
+        schema: TAILORED_CV_SCHEMA,
+      },
+    },
+    betas: ["structured-outputs-2025-12-15"],
+  });
+
+  const textBlock = response.content.find((b) => b.type === "text");
+  if (!textBlock || textBlock.type !== "text") {
+    return NextResponse.json({ error: "Generation failed" }, { status: 500 });
+  }
+
+  let tailored: { about: string; skills: string[]; experience: Array<{ company: string; role: string; period: string; bullets: string[] }> };
+  try {
+    tailored = JSON.parse(textBlock.text);
+  } catch {
+    return NextResponse.json({ error: "Failed to parse response" }, { status: 500 });
+  }
+
+  const cvContent: CvContent = {
+    about: tailored.about,
+    skills: tailored.skills,
+    experience: tailored.experience,
+    education: profile.education,
+    languages: profile.languages,
+    referrals: (profile.referrals as Array<{ name: string; title: string; company: string; status: string }>)
+      .filter((r) => r.status === "confirmed"),
+    meta: {
+      target_company: jobAnalysis.company,
+      target_role: jobAnalysis.role_title,
+    },
+  };
+
+  return NextResponse.json(cvContent);
+}
