@@ -1,3 +1,5 @@
+import FadeUp from "./FadeUp";
+
 const references = [
   {
     quote:
@@ -33,10 +35,13 @@ export default function References() {
   return (
     <section id="references" className="px-8 py-24 border-t border-neutral-200 bg-neutral-50">
       <div className="max-w-4xl mx-auto">
-        <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">References</p>
+        <FadeUp>
+          <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">References</p>
+        </FadeUp>
         {live.length === 0 ? (
           <p className="text-sm text-neutral-500">References available upon request.</p>
         ) : (
+          <FadeUp>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-neutral-200">
             {live.map((r, i) => (
               <div key={i} className="bg-neutral-50 p-8 flex flex-col justify-between">
@@ -48,6 +53,7 @@ export default function References() {
               </div>
             ))}
           </div>
+          </FadeUp>
         )}
       </div>
     </section>

@@ -1,17 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const links = [
+  { label: "Services", href: "#services", id: "services" },
+  { label: "Work", href: "#work", id: "work" },
+  { label: "Projects", href: "#projects", id: "projects" },
+  { label: "References", href: "#references", id: "references" },
+  { label: "Contact", href: "#contact", id: "contact" },
+];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
 
-  const links = [
-    { label: "Services", href: "#services" },
-    { label: "Work", href: "#work" },
-    { label: "Projects", href: "#projects" },
-    { label: "References", href: "#references" },
-    { label: "Contact", href: "#contact" },
-  ];
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+
+    links.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActive(id);
+        },
+        { rootMargin: "-40% 0px -55% 0px", threshold: 0 }
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
 
   return (
     <>
@@ -26,7 +48,11 @@ export default function Nav() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-neutral-900 after:transition-all hover:after:w-full"
+                className={`text-sm transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-neutral-900 after:transition-all ${
+                  active === l.id
+                    ? "text-neutral-900 after:w-full"
+                    : "text-neutral-500 hover:text-neutral-900 after:w-0 hover:after:w-full"
+                }`}
               >
                 {l.label}
               </a>
@@ -52,10 +78,7 @@ export default function Nav() {
           className="fixed inset-0 z-50 md:hidden"
           onClick={() => setOpen(false)}
         >
-          {/* Backdrop */}
           <div className="absolute inset-0 bg-black/20" />
-
-          {/* Sheet */}
           <div
             className="absolute top-0 right-0 h-full w-64 bg-[#fafafa] flex flex-col px-8 py-6"
             onClick={(e) => e.stopPropagation()}
@@ -72,7 +95,9 @@ export default function Nav() {
                 <li key={l.href}>
                   <a
                     href={l.href}
-                    className="text-base text-neutral-700 hover:text-neutral-900 transition-colors"
+                    className={`text-base transition-colors ${
+                      active === l.id ? "text-neutral-900 font-medium" : "text-neutral-700 hover:text-neutral-900"
+                    }`}
                     onClick={() => setOpen(false)}
                   >
                     {l.label}

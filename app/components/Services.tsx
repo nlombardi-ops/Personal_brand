@@ -1,3 +1,5 @@
+import FadeUp from "./FadeUp";
+
 const services = [
   {
     number: "01",
@@ -29,21 +31,22 @@ export default function Services() {
   return (
     <section id="services" className="px-8 py-24 border-t border-neutral-200 bg-neutral-50">
       <div className="max-w-4xl mx-auto">
-        <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">Services</p>
-        <ul className="space-y-0">
-          {services.map((s) => (
-            <li
-              key={s.number}
-              className="grid grid-cols-[48px_1fr] gap-8 py-8 border-b border-neutral-200"
-            >
-              <span className="text-xs text-neutral-400 pt-1 tabular-nums">{s.number}</span>
-              <div>
-                <h3 className="text-base font-medium text-neutral-900 mb-2">{s.title}</h3>
-                <p className="text-sm text-neutral-500 leading-relaxed">{s.description}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <FadeUp>
+          <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">Services</p>
+          <ul className="space-y-0">
+            {services.map((s, i) => (
+              <FadeUp key={s.number} delay={i * 0.07}>
+                <li className="grid grid-cols-[48px_1fr] gap-8 py-8 border-b border-neutral-200">
+                  <span className="text-xs text-neutral-400 pt-1 tabular-nums">{s.number}</span>
+                  <div>
+                    <h3 className="text-base font-medium text-neutral-900 mb-2">{s.title}</h3>
+                    <p className="text-sm text-neutral-500 leading-relaxed">{s.description}</p>
+                  </div>
+                </li>
+              </FadeUp>
+            ))}
+          </ul>
+        </FadeUp>
       </div>
     </section>
   );

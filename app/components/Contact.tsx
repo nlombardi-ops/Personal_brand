@@ -1,7 +1,10 @@
+import FadeUp from "./FadeUp";
+
 export default function Contact() {
   return (
     <section id="contact" className="px-8 py-24 border-t border-neutral-200">
       <div className="max-w-4xl mx-auto">
+        <FadeUp>
         <p className="text-xs text-neutral-600 uppercase tracking-widest mb-12">Contact</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-16">
           <div>
@@ -43,6 +46,7 @@ export default function Contact() {
             </a>
           </div>
         </div>
+        </FadeUp>
       </div>
       <div className="max-w-4xl mx-auto mt-24 pt-8 border-t border-neutral-100 flex justify-between items-center flex-wrap gap-4">
         <p className="text-xs text-neutral-400">© 2026 Nico Lombardi · Madrid, Spain</p>

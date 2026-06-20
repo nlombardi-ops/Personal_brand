@@ -1,3 +1,5 @@
+import FadeUp from "./FadeUp";
+
 export default function Hero() {
   return (
     <section
@@ -8,7 +10,7 @@ export default function Hero() {
         backgroundSize: "28px 28px",
       }}
     >
-      <div className="max-w-4xl relative z-10">
+      <FadeUp className="max-w-4xl relative z-10">
         <p className="text-sm text-neutral-600 tracking-widest uppercase mb-6">
           Business Development · Fintech · AI · Operations
         </p>
@@ -34,7 +36,7 @@ export default function Hero() {
             See my work →
           </a>
         </div>
-      </div>
+      </FadeUp>
     </section>
   );
 }
