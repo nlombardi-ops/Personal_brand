@@ -1,0 +1,21 @@
+{
+  "imap_server": "imap.mail.me.com",
+  "imap_port": 993,
+  "email_address": "you@icloud.com",
+  "app_password": "xxxx-xxxx-xxxx-xxxx",
+  "google_credentials_file": "credentials.json",
+  "google_token_file": "token.json",
+  "drive_root_folder_id": "YOUR_GOOGLE_DRIVE_FOLDER_ID",
+  "processed_log": "processed.json",
+  "providers": {
+    "Energy": {
+      "senders": ["soycliente@masmovilluzygas.es"]
+    },
+    "Community-Building": {
+      "senders": ["attcliente@administracionescolmenarejo.es"]
+    },
+    "Mobile-Internet": {
+      "senders": []
+    }
+  }
+}
