@@ -2,7 +2,7 @@ import { Shield, Heart, Home, Bike, Calendar, AlertCircle, ExternalLink } from "
 import AuthGuard from "../../components/dashboard/AuthGuard";
 import rawInsurance from "../../../data/insurance.json";
 import rawRates from "../../../data/rates.json";
-import type { InsurancePolicy, RatesData } from "../../lib/types";
+import type { InsurancePolicy, RatesData } from "@/lib/types";
 
 const ratesData = rawRates as RatesData;
 

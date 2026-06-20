@@ -1,7 +1,7 @@
 import { FileText, ExternalLink, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import AuthGuard from "../../components/dashboard/AuthGuard";
 import rawContracts from "../../../data/contracts.json";
-import type { Contract } from "../../lib/types";
+import type { Contract } from "@/lib/types";
 
 const contractsData = { contracts: rawContracts.contracts as Contract[] };
 

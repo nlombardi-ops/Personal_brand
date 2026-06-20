@@ -6,7 +6,7 @@ import rawBills from "../../data/bills.json";
 import rawInsurance from "../../data/insurance.json";
 import rawContracts from "../../data/contracts.json";
 import rawMortgage from "../../data/mortgage.json";
-import type { BillsData, InsurancePolicy, Contract, MortgageData } from "../lib/types";
+import type { BillsData, InsurancePolicy, Contract, MortgageData } from "@/lib/types";
 
 const billsData = rawBills as BillsData;
 const policies = rawInsurance.policies as InsurancePolicy[];

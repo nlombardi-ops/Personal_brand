@@ -4,7 +4,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import AmortizationChart from "../../components/dashboard/AmortizationChart";
 import rawMortgage from "../../../data/mortgage.json";
 import rawRates from "../../../data/rates.json";
-import type { MortgageData, RatesData } from "../../lib/types";
+import type { MortgageData, RatesData } from "@/lib/types";
 
 const m = rawMortgage as MortgageData;
 const rates = rawRates as RatesData;

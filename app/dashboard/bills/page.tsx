@@ -4,7 +4,7 @@ import StatCard from "../../components/dashboard/StatCard";
 import BillsTable from "../../components/dashboard/BillsTable";
 import StackedBarChart from "../../components/dashboard/StackedBarChart";
 import rawBills from "../../../data/bills.json";
-import type { BillsData } from "../../lib/types";
+import type { BillsData } from "@/lib/types";
 
 const billsData = rawBills as BillsData;
 
