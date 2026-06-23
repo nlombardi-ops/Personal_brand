@@ -75,19 +75,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { url?: string };
+  let body: { url?: string; text?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { url } = body;
-  if (!url || typeof url !== "string") {
-    return NextResponse.json({ error: "Missing url" }, { status: 400 });
+  const { url, text } = body;
+  if (!url && !text) {
+    return NextResponse.json({ error: "Missing url or text" }, { status: 400 });
   }
 
-  const pageText = await fetchPageText(url);
+  let pageText: string;
+  if (text && text.trim().length > 50) {
+    pageText = text.trim().slice(0, 25_000);
+  } else if (url) {
+    pageText = await fetchPageText(url);
+  } else {
+    return NextResponse.json({ error: "Provide a url or paste text" }, { status: 400 });
+  }
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -99,7 +106,7 @@ export async function POST(request: NextRequest) {
     messages: [
       {
         role: "user",
-        content: `Analyze this job posting.\n\nURL: ${url}\n\nPage content:\n${pageText}`,
+        content: `Analyze this job posting.\n\n${url ? `URL: ${url}\n\n` : ""}Page content:\n${pageText}`,
       },
     ],
     output_config: {
@@ -118,7 +125,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const analysis = JSON.parse(textBlock.text);
-    analysis.url = url;
+    analysis.url = url ?? "";
     return NextResponse.json(analysis);
   } catch {
     return NextResponse.json({ error: "Failed to parse analysis" }, { status: 500 });
