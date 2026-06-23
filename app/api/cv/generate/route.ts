@@ -14,7 +14,7 @@ const TAILORED_CV_SCHEMA = {
     skills: {
       type: "array",
       items: { type: "string" },
-      description: "All skills from the profile, reordered with most-relevant-for-this-role first",
+      description: "12–15 skills selected and scored for relevance to this specific role. Do not include all skills — pick the most powerful and directly relevant ones, ordered by relevance descending.",
     },
     experience: {
       type: "array",
@@ -56,9 +56,11 @@ export async function POST(request: NextRequest) {
   }
 
   let jobAnalysis: JobAnalysis;
+  let answers: Array<{ question: string; answer: string }> | undefined;
   try {
     const body = await request.json();
     jobAnalysis = body.job_analysis as JobAnalysis;
+    answers = body.answers;
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
@@ -119,6 +121,12 @@ export async function POST(request: NextRequest) {
     max_tokens: 2048,
     system: `You are a CV tailoring specialist. Output valid JSON only — no commentary.
 
+ONE-PAGE CONSTRAINT — mandatory:
+The CV must fit exactly one A4 page. Enforce strictly:
+- about: maximum 2 sentences
+- bullets: maximum 2–3 per role (pick the strongest)
+- skills: select and return 12–15 most relevant skills only — NOT all skills
+
 WRITING RULES — mandatory on every bullet and sentence:
 
 BANNED WORDS (never use): delve, tapestry, pivotal, synergy, paradigm, holistic, leverage, utilize, harness, spearhead, cornerstone, cutting-edge, groundbreaking, meticulous, seamlessly, showcase, bolster, foster, embark, nuanced
@@ -147,8 +155,9 @@ CONTENT RULES:
    - No filler ("I am passionate about", "I believe in", "I am excited")
 
 2. skills:
-   - Return ALL ${profileSummary.skills.length} skills — do not add or drop any
-   - Move the 6 most relevant skills for this role to the front
+   - Select 12–15 skills that are most powerful and directly relevant to this role
+   - Score and pick — do NOT return all ${profileSummary.skills.length} skills
+   - Order by relevance to the role descending
 
 3. experience — include ALL ${profileSummary.experience.length} roles:
    - Pick 2–4 bullets per role
@@ -161,7 +170,19 @@ ${profileText}`,
     messages: [
       {
         role: "user",
-        content: `Tailor the CV for this role:\n\n${jobText}`,
+        content: [
+        `Tailor the CV for this role:\n\n${jobText}`,
+        answers && answers.filter((a) => a.answer.trim().length > 10).length > 0
+          ? `\n\nCANDIDATE CONTEXT (first-hand answers — treat as evidence, weave into bullets and about where relevant):\n${
+              answers
+                .filter((a) => a.answer.trim().length > 10)
+                .map((a) => `Q: ${a.question}\nA: ${a.answer}`)
+                .join("\n\n")
+            }`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(""),
       },
     ],
     output_config: {

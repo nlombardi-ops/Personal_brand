@@ -199,7 +199,7 @@ function CvDocument({ content }: { content: CvContent }) {
       title={`CV — ${meta.target_role} at ${meta.target_company}`}
       author="Nicola Lombardi"
     >
-      <Page size="A4" style={s.page}>
+      <Page size="A4" style={s.page} wrap={false}>
         {/* ── Header ── */}
         <View>
           <Text style={s.headerName}>Nicola Lombardi</Text>

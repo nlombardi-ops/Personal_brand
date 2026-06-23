@@ -328,5 +328,6 @@
       "contact": null,
       "status": "pending"
     }
-  ]
+  ],
+  "context_enrichment": []
 }

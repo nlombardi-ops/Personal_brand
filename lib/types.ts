@@ -154,6 +154,17 @@ export interface AngleAnalysis {
   summary: string;
 }
 
+export interface HrQuestions {
+  questions: string[];
+}
+
+export interface ContextEntry {
+  id: string;
+  date: string;
+  source_role: string;
+  statements: string[];
+}
+
 export interface CvContent {
   about: string;
   skills: string[];
