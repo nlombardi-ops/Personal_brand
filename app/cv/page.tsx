@@ -46,6 +46,7 @@ export default function GeneratorPage() {
   const [generateState, setGenerateState] = useState<GenerateState>("idle");
   const [cvContent, setCvContent] = useState<CvContent | null>(null);
   const [generateError, setGenerateError] = useState("");
+  const [totalCost, setTotalCost] = useState(0);
   const [phase, setPhase] = useState(0);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -90,6 +91,7 @@ export default function GeneratorPage() {
     setGenerateState("idle");
     setCvContent(null);
     setSaved(false);
+    setTotalCost(0);
 
     try {
       const body: Record<string, string> = {};
@@ -105,7 +107,8 @@ export default function GeneratorPage() {
         const b = await res.json().catch(() => ({ error: res.statusText }));
         throw new Error(b.error ?? res.statusText);
       }
-      const data: JobAnalysis = await res.json();
+      const data: JobAnalysis & { _cost_usd?: number } = await res.json();
+      setTotalCost((c) => c + (data._cost_usd ?? 0));
       setJobAnalysis(data);
       setAnalyzeState("done");
     } catch (err) {
@@ -133,11 +136,13 @@ export default function GeneratorPage() {
     ])
       .then(async ([angleRes, questionsRes]) => {
         if (angleRes.ok) {
-          const a: AngleAnalysis = await angleRes.json();
+          const a: AngleAnalysis & { _cost_usd?: number } = await angleRes.json();
+          setTotalCost((c) => c + (a._cost_usd ?? 0));
           setAngleAnalysis(a);
         }
         if (questionsRes.ok) {
-          const q: HrQuestions = await questionsRes.json();
+          const q: HrQuestions & { _cost_usd?: number } = await questionsRes.json();
+          setTotalCost((c) => c + (q._cost_usd ?? 0));
           setHrQuestions(q.questions ?? []);
           setAnswers(new Array(q.questions?.length ?? 0).fill(""));
         }
@@ -172,7 +177,8 @@ export default function GeneratorPage() {
         body: JSON.stringify({ job_analysis: jobAnalysis, answers: answersPayload }),
       });
       if (!res.ok) throw new Error(await res.text());
-      const data: CvContent = await res.json();
+      const data: CvContent & { _cost_usd?: number } = await res.json();
+      setTotalCost((c) => c + (data._cost_usd ?? 0));
       setCvContent(data);
       setGenerateState("done");
 
@@ -527,7 +533,7 @@ export default function GeneratorPage() {
 
             {/* Action buttons + CV */}
             <div className="flex flex-col items-center py-6 px-6">
-              <div className="flex gap-3 mb-6 w-full max-w-[595px]">
+              <div className="flex items-center gap-3 mb-6 w-full max-w-[595px]">
                 <button
                   onClick={handleSave}
                   disabled={saving || saved}
@@ -546,6 +552,9 @@ export default function GeneratorPage() {
                   <Download className="h-4 w-4" />
                   Download PDF
                 </button>
+                {totalCost > 0 && (
+                  <span className="ml-auto text-[10px] text-stone-400">~${totalCost.toFixed(4)}</span>
+                )}
               </div>
               <div className="overflow-x-auto">
                 <CvPreview content={cvContent} />
