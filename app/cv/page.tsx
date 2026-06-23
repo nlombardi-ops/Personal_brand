@@ -95,12 +95,15 @@ export default function GeneratorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(body.error ?? res.statusText);
+      }
       const data: JobAnalysis = await res.json();
       setJobAnalysis(data);
       setAnalyzeState("done");
-    } catch {
-      setAnalyzeError("Analysis failed — check the URL or paste the JD text.");
+    } catch (err) {
+      setAnalyzeError(err instanceof Error ? err.message : "Analysis failed.");
       setAnalyzeState("error");
     }
   }

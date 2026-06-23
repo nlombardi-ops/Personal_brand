@@ -96,31 +96,41 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Provide a url or paste text" }, { status: 400 });
   }
 
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ error: "ANTHROPIC_API_KEY not configured on this deployment" }, { status: 500 });
+  }
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-  const response = await client.beta.messages.create({
-    model: "claude-opus-4-8",
-    max_tokens: 2048,
-    system:
-      "You are a job posting analyzer. Extract structured information from the job posting text. Set the url field to exactly the provided URL. For seniority use one of: junior, mid, senior, lead, director, executive. For company_tone describe the tone in 1-3 words. For role_focus write one concise sentence on what this role primarily does. If the page content is minimal, infer what you can from the URL and company name.",
-    messages: [
-      {
-        role: "user",
-        content: `Analyze this job posting.\n\n${url ? `URL: ${url}\n\n` : ""}Page content:\n${pageText}`,
+  let response;
+  try {
+    response = await client.beta.messages.create({
+      model: "claude-opus-4-8",
+      max_tokens: 2048,
+      system:
+        "You are a job posting analyzer. Extract structured information from the job posting text. Set the url field to the provided URL, or empty string if none. For seniority use one of: junior, mid, senior, lead, director, executive. For company_tone describe the tone in 1-3 words. For role_focus write one concise sentence on what this role primarily does.",
+      messages: [
+        {
+          role: "user",
+          content: `Analyze this job posting.\n\n${url ? `URL: ${url}\n\n` : ""}Page content:\n${pageText}`,
+        },
+      ],
+      output_config: {
+        format: {
+          type: "json_schema",
+          schema: JOB_ANALYSIS_SCHEMA,
+        },
       },
-    ],
-    output_config: {
-      format: {
-        type: "json_schema",
-        schema: JOB_ANALYSIS_SCHEMA,
-      },
-    },
-    betas: ["structured-outputs-2025-12-15"],
-  });
+      betas: ["structured-outputs-2025-12-15"],
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: `Anthropic API error: ${msg}` }, { status: 500 });
+  }
 
   const textBlock = response.content.find((b) => b.type === "text");
   if (!textBlock || textBlock.type !== "text") {
-    return NextResponse.json({ error: "No analysis returned" }, { status: 500 });
+    return NextResponse.json({ error: "No analysis returned from model" }, { status: 500 });
   }
 
   try {
@@ -128,6 +138,6 @@ export async function POST(request: NextRequest) {
     analysis.url = url ?? "";
     return NextResponse.json(analysis);
   } catch {
-    return NextResponse.json({ error: "Failed to parse analysis" }, { status: 500 });
+    return NextResponse.json({ error: `Failed to parse model response: ${textBlock.text.slice(0, 200)}` }, { status: 500 });
   }
 }
