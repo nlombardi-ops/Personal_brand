@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 import CvPreview from "@/app/components/cv/CvPreview";
-import type { JobAnalysis, CvContent } from "@/lib/types";
+import type { JobAnalysis, CvContent, AngleAnalysis } from "@/lib/types";
 
 const PHASES = [
   "Reading your profile…",
@@ -39,6 +39,7 @@ export default function GeneratorPage() {
 
   const [generateState, setGenerateState] = useState<GenerateState>("idle");
   const [cvContent, setCvContent] = useState<CvContent | null>(null);
+  const [angleAnalysis, setAngleAnalysis] = useState<AngleAnalysis | null>(null);
   const [generateError, setGenerateError] = useState("");
 
   const [phase, setPhase] = useState(0);
@@ -109,6 +110,7 @@ export default function GeneratorPage() {
     setGenerateState("generating");
     setGenerateError("");
     setCvContent(null);
+    setAngleAnalysis(null);
     setSaved(false);
     setPhase(0);
 
@@ -117,14 +119,28 @@ export default function GeneratorPage() {
     }, 4000);
 
     try {
-      const res = await fetch("/api/cv/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job_analysis: jobAnalysis }),
-      });
-      if (!res.ok) throw new Error(await res.text());
-      const data: CvContent = await res.json();
-      setCvContent(data);
+      const [cvRes, angleRes] = await Promise.all([
+        fetch("/api/cv/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ job_analysis: jobAnalysis }),
+        }),
+        fetch("/api/cv/angle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ job_analysis: jobAnalysis }),
+        }),
+      ]);
+
+      if (!cvRes.ok) throw new Error(await cvRes.text());
+      const cvData: CvContent = await cvRes.json();
+      setCvContent(cvData);
+
+      if (angleRes.ok) {
+        const angleData: AngleAnalysis = await angleRes.json();
+        setAngleAnalysis(angleData);
+      }
+
       setGenerateState("done");
     } catch {
       setGenerateError("Generation failed. Please try again.");
@@ -423,6 +439,82 @@ export default function GeneratorPage() {
 
         {generateState === "done" && cvContent && (
           <div className="flex flex-col items-center py-8 px-6">
+
+            {/* Angle analysis card */}
+            {angleAnalysis && (
+              <div className={`w-full max-w-[595px] mb-6 rounded-xl border p-5 ${
+                angleAnalysis.fit === "strong"
+                  ? "border-emerald-200 bg-emerald-50"
+                  : angleAnalysis.fit === "moderate"
+                  ? "border-amber-200 bg-amber-50"
+                  : "border-orange-200 bg-orange-50"
+              }`}>
+                {/* Header */}
+                <div className="flex items-start justify-between gap-3 mb-4">
+                  <p className="text-sm font-semibold text-stone-900 leading-snug">{angleAnalysis.headline}</p>
+                  <span className={`flex-shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
+                    angleAnalysis.fit === "strong"
+                      ? "bg-emerald-100 text-emerald-700"
+                      : angleAnalysis.fit === "moderate"
+                      ? "bg-amber-100 text-amber-700"
+                      : "bg-orange-100 text-orange-700"
+                  }`}>
+                    {angleAnalysis.fit}
+                  </span>
+                </div>
+
+                <div className="space-y-3 text-xs text-stone-700">
+                  {/* What works */}
+                  <div>
+                    <p className="font-semibold text-stone-500 uppercase tracking-wide text-[9px] mb-1">What lands</p>
+                    <ul className="space-y-0.5">
+                      {angleAnalysis.what_works.map((w, i) => (
+                        <li key={i} className="flex gap-1.5">
+                          <span className="text-emerald-500 mt-px">✓</span>
+                          <span>{w}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Honest gap */}
+                  {angleAnalysis.honest_gap && (
+                    <div>
+                      <p className="font-semibold text-stone-500 uppercase tracking-wide text-[9px] mb-1">Honest gap</p>
+                      <p className="text-stone-600">{angleAnalysis.honest_gap}</p>
+                    </div>
+                  )}
+
+                  {/* Angle */}
+                  <div className={`rounded-lg p-3 ${
+                    angleAnalysis.fit === "strong" ? "bg-emerald-100" :
+                    angleAnalysis.fit === "moderate" ? "bg-amber-100" : "bg-orange-100"
+                  }`}>
+                    <p className="font-semibold text-stone-500 uppercase tracking-wide text-[9px] mb-1">Your angle</p>
+                    <p className="leading-relaxed">{angleAnalysis.angle}</p>
+                  </div>
+
+                  {/* Use these */}
+                  <div>
+                    <p className="font-semibold text-stone-500 uppercase tracking-wide text-[9px] mb-1">Use these phrases</p>
+                    <div className="flex flex-wrap gap-1">
+                      {angleAnalysis.use_these.map((phrase, i) => (
+                        <span key={i} className="rounded-md bg-[#0f172a]/8 px-2 py-1 text-[10px] text-stone-700 font-medium">
+                          {phrase}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Avoid */}
+                  <div className="flex gap-1.5 text-stone-500">
+                    <span className="text-red-400 flex-shrink-0">✗</span>
+                    <span><span className="font-medium text-stone-600">Don&apos;t lead with:</span> {angleAnalysis.avoid}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="flex gap-3 mb-6 w-full max-w-[595px]">
               <button
                 onClick={handleSave}
