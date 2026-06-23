@@ -7,39 +7,12 @@ import type { JobAnalysis } from "@/lib/types";
 const ANGLE_SCHEMA = {
   type: "object",
   properties: {
-    fit: {
+    summary: {
       type: "string",
-      enum: ["strong", "moderate", "stretch"],
-      description: "Honest overall fit: strong = clear match, moderate = some gaps but real shot, stretch = hard sell",
-    },
-    headline: {
-      type: "string",
-      description: "One punchy line summarising the strategic situation — e.g. 'Strong fintech fit, lead with AI sales not payments ops'",
-    },
-    what_works: {
-      type: "array",
-      items: { type: "string" },
-      description: "2-3 specific things from the candidate's background that land for this role",
-    },
-    honest_gap: {
-      type: "string",
-      description: "The real gap or risk the hiring manager will clock. Be blunt. Empty string if no meaningful gap.",
-    },
-    angle: {
-      type: "string",
-      description: "The recommended framing — how to position yourself for maximum traction. 2-3 sentences.",
-    },
-    use_these: {
-      type: "array",
-      items: { type: "string" },
-      description: "3-5 specific phrases or talking points to use in the cover letter and interview",
-    },
-    avoid: {
-      type: "string",
-      description: "What NOT to lead with — one sentence on the framing that would hurt the application",
+      description: "4-6 sentences written as a senior headhunter speaking directly to the candidate. Cover: honest fit assessment, what specifically lands from their background, the real gap (if any), and the exact angle they should lead with. No headers, no bullets, no platitudes — just straight talk.",
     },
   },
-  required: ["fit", "headline", "what_works", "honest_gap", "angle", "use_these", "avoid"],
+  required: ["summary"],
   additionalProperties: false,
 };
 

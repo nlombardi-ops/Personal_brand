@@ -151,13 +151,7 @@ export interface CvExperience {
 }
 
 export interface AngleAnalysis {
-  fit: "strong" | "moderate" | "stretch";
-  headline: string;
-  what_works: string[];
-  honest_gap: string | null;
-  angle: string;
-  use_these: string[];
-  avoid: string;
+  summary: string;
 }
 
 export interface CvContent {
