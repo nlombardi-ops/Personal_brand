@@ -3,18 +3,17 @@ import AuthGuard from "../components/dashboard/AuthGuard";
 import StatCard from "../components/dashboard/StatCard";
 import CostChart from "../components/dashboard/CostChart";
 import SyncButton from "../components/dashboard/SyncButton";
-import rawBills from "../../data/bills.json";
+import { getBillsData } from "@/lib/drive/sync";
 import rawInsurance from "../../data/insurance.json";
 import rawContracts from "../../data/contracts.json";
 import rawMortgage from "../../data/mortgage.json";
 import type { BillsData, InsurancePolicy, Contract, MortgageData } from "@/lib/types";
 
-const billsData = rawBills as BillsData;
 const policies = rawInsurance.policies as InsurancePolicy[];
 const contracts = rawContracts.contracts as Contract[];
 const mortgage = rawMortgage as MortgageData;
 
-function buildMonthlyData() {
+function buildMonthlyData(billsData: BillsData) {
   const months = new Set<string>();
   billsData.energy.forEach((b) => months.add(b.month));
   billsData.community.forEach((b) => months.add(b.month));
@@ -46,8 +45,10 @@ function nextFirstOfMonth() {
   return next.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
-export default function DashboardOverview() {
-  const monthly = buildMonthlyData();
+export default async function DashboardOverview() {
+  const billsData = await getBillsData();
+
+  const monthly = buildMonthlyData(billsData);
   const latest = monthly[monthly.length - 1];
   const prev = monthly.length > 1 ? monthly[monthly.length - 2] : null;
 
