@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PDFParse } from "pdf-parse";
 
 export async function POST(request: NextRequest) {
   const authCookie = request.cookies.get("dashboard_auth");
@@ -22,8 +21,8 @@ export async function POST(request: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
 
   try {
-    const parser = new PDFParse({ data: buffer });
-    const result = await parser.getText();
+    const pdf = (await import("pdf-parse")).default;
+    const result = await pdf(buffer);
     const text = result.text.trim().slice(0, 25_000);
 
     if (text.length < 50) {
@@ -33,7 +32,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ text, pages: result.total });
+    return NextResponse.json({ text, pages: result.numpages });
   } catch {
     return NextResponse.json({ error: "Failed to parse PDF" }, { status: 500 });
   }
