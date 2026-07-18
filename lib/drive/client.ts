@@ -57,6 +57,52 @@ async function downloadFileWithToken(token: string, fileId: string): Promise<Buf
   return Buffer.from(await res.arrayBuffer());
 }
 
+async function findOrCreateFolderWithToken(token: string, name: string, parentId = "root"): Promise<string> {
+  const q = `name = '${name.replace(/'/g, "\\'")}' and mimeType = 'application/vnd.google-apps.folder' and '${parentId}' in parents and trashed = false`;
+  const url = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=${encodeURIComponent("files(id,name)")}`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (!res.ok) throw new Error(`Drive folder lookup error: ${res.status} ${await res.text()}`);
+
+  const data = await res.json();
+  const existing = ((data.files ?? []) as Array<{ id: string }>)[0];
+  if (existing) return existing.id;
+
+  const createRes = await fetch("https://www.googleapis.com/drive/v3/files?fields=id", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ name, mimeType: "application/vnd.google-apps.folder", parents: [parentId] }),
+  });
+  if (!createRes.ok) throw new Error(`Drive folder create error: ${createRes.status} ${await createRes.text()}`);
+  const created = await createRes.json();
+  return created.id as string;
+}
+
+async function uploadFileWithToken(
+  token: string,
+  name: string,
+  mimeType: string,
+  data: Buffer,
+  parentId: string
+): Promise<string> {
+  const boundary = `cvupload-${crypto.randomUUID()}`;
+  const metadata = JSON.stringify({ name, parents: [parentId] });
+  const preamble = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metadata}\r\n--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`;
+  const closing = `\r\n--${boundary}--`;
+  const body = Buffer.concat([Buffer.from(preamble, "utf-8"), data, Buffer.from(closing, "utf-8")]);
+
+  const res = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": `multipart/related; boundary=${boundary}`,
+    },
+    body,
+  });
+  if (!res.ok) throw new Error(`Drive upload error: ${res.status} ${await res.text()}`);
+  const created = await res.json();
+  return created.id as string;
+}
+
 export class DriveClient {
   private token: string;
 
@@ -75,5 +121,13 @@ export class DriveClient {
 
   downloadFile(fileId: string) {
     return downloadFileWithToken(this.token, fileId);
+  }
+
+  findOrCreateFolder(name: string, parentId?: string) {
+    return findOrCreateFolderWithToken(this.token, name, parentId);
+  }
+
+  uploadFile(name: string, mimeType: string, data: Buffer, parentId: string) {
+    return uploadFileWithToken(this.token, name, mimeType, data, parentId);
   }
 }

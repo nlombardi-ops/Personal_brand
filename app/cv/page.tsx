@@ -21,6 +21,7 @@ type AnalyzeState = "idle" | "loading" | "done" | "error";
 type QuestionState = "idle" | "loading" | "done" | "error";
 type GenerateState = "idle" | "generating" | "done" | "error";
 type EnrichState = "idle" | "saving" | "saved" | "error";
+type DriveState = "idle" | "uploading" | "uploaded" | "error";
 
 export default function GeneratorPage() {
   // ── Input ──
@@ -56,6 +57,7 @@ export default function GeneratorPage() {
     answers: Array<{ question: string; answer: string }>;
     job_context: string;
   } | null>(null);
+  const [driveState, setDriveState] = useState<DriveState>("idle");
   const phaseRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ── PDF upload ──
@@ -174,6 +176,22 @@ export default function GeneratorPage() {
     }
   }
 
+  // ── Save generated CV PDF into the "CVs" folder on Google Drive ──
+  async function saveToDrive(content: CvContent) {
+    setDriveState("uploading");
+    try {
+      const res = await fetch("/api/cv/drive-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      setDriveState("uploaded");
+    } catch {
+      setDriveState("error");
+    }
+  }
+
   // ── Generate ──
   async function handleGenerate(saveAnswers: boolean) {
     if (!jobAnalysis) return;
@@ -183,6 +201,7 @@ export default function GeneratorPage() {
     setSaved(false);
     setEnrichState("idle");
     setPendingEnrichment(null);
+    setDriveState("idle");
     setPhase(0);
 
     phaseRef.current = setInterval(() => {
@@ -214,6 +233,9 @@ export default function GeneratorPage() {
           job_context: `${jobAnalysis.role_title} at ${jobAnalysis.company}`,
         });
       }
+
+      // Every generated CV is uploaded to the "CVs" folder on Google Drive
+      saveToDrive(data);
     } catch {
       setGenerateError("Generation failed. Please try again.");
       setGenerateState("error");
@@ -578,8 +600,8 @@ export default function GeneratorPage() {
                 )}
               </div>
 
-              {enrichState !== "idle" && (
-                <div className="flex items-center gap-1.5 mb-4 w-full max-w-[595px] text-xs">
+              {(enrichState !== "idle" || driveState !== "idle") && (
+                <div className="flex flex-col gap-1 mb-4 w-full max-w-[595px] text-xs">
                   {enrichState === "saving" && (
                     <span className="flex items-center gap-1.5 text-stone-400">
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -598,6 +620,31 @@ export default function GeneratorPage() {
                       Couldn&apos;t save your answers to your profile.
                       <button
                         onClick={() => pendingEnrichment && saveEnrichment(pendingEnrichment)}
+                        className="underline font-medium"
+                      >
+                        Retry
+                      </button>
+                    </span>
+                  )}
+
+                  {driveState === "uploading" && (
+                    <span className="flex items-center gap-1.5 text-stone-400">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Saving PDF to Google Drive…
+                    </span>
+                  )}
+                  {driveState === "uploaded" && (
+                    <span className="flex items-center gap-1.5 text-emerald-600">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Saved to your Drive &ldquo;CVs&rdquo; folder
+                    </span>
+                  )}
+                  {driveState === "error" && (
+                    <span className="flex items-center gap-1.5 text-red-600">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      Couldn&apos;t save to Google Drive.
+                      <button
+                        onClick={() => cvContent && saveToDrive(cvContent)}
                         className="underline font-medium"
                       >
                         Retry
