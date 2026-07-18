@@ -52,10 +52,12 @@ export async function POST(request: NextRequest) {
 
   let jobAnalysis: JobAnalysis;
   let answers: Array<{ question: string; answer: string }> | undefined;
+  let angleSummary: string | undefined;
   try {
     const body = await request.json();
     jobAnalysis = body.job_analysis as JobAnalysis;
     answers = body.answers;
+    angleSummary = body.angle_summary;
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
@@ -150,6 +152,7 @@ CONTENT RULES:
 
 1. about (2-3 sentences, first-person):
    - Lead with your strongest match to the role's focus
+   - If a HEADHUNTER'S ANGLE is provided below, lead with that exact angle — it is a strategic read of what will actually land with this employer, not optional color
    - Naturally use at least 2 of the CV keywords
    - Match the company tone exactly
    - No filler ("I am passionate about", "I believe in", "I am excited")
@@ -172,6 +175,9 @@ ${profileText}`,
         role: "user",
         content: [
         `Tailor the CV for this role:\n\n${jobText}`,
+        angleSummary?.trim()
+          ? `\n\nHEADHUNTER'S ANGLE (strategic read of how to position this candidate — lead the "about" with this):\n${angleSummary.trim()}`
+          : "",
         answers && answers.filter((a) => a.answer.trim().length > 10).length > 0
           ? `\n\nCANDIDATE CONTEXT (first-hand answers — treat as evidence, weave into bullets and about where relevant):\n${
               answers

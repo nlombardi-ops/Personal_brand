@@ -218,7 +218,11 @@ export default function GeneratorPage() {
       const res = await fetch("/api/cv/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job_analysis: jobAnalysis, answers: answersPayload }),
+        body: JSON.stringify({
+          job_analysis: jobAnalysis,
+          answers: answersPayload,
+          angle_summary: angleAnalysis?.summary ?? "",
+        }),
       });
       if (!res.ok) throw new Error(await res.text());
       const data: CvContent & { _cost_usd?: number } = await res.json();
