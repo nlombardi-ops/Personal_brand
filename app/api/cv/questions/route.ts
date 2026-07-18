@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import type { JobAnalysis } from "@/lib/types";
+import { calcCostUsd } from "@/lib/cv/cost";
+import { getProfile } from "@/lib/cv/profile-store";
 
 const QUESTIONS_SCHEMA = {
   type: "object",
@@ -16,11 +16,6 @@ const QUESTIONS_SCHEMA = {
   required: ["questions"],
   additionalProperties: false,
 };
-
-function loadProfile() {
-  const raw = readFileSync(join(process.cwd(), "data/profile.json"), "utf-8");
-  return JSON.parse(raw);
-}
 
 export async function POST(request: NextRequest) {
   const authCookie = request.cookies.get("dashboard_auth");
@@ -40,12 +35,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing job_analysis" }, { status: 400 });
   }
 
-  const profile = loadProfile();
+  const profile = await getProfile();
 
   const recentRoles = (profile.experience as Array<{ company: string; role: string; period: string; bullets: string[] }>)
     .slice(0, 3)
     .map((e) => `${e.role} at ${e.company} (${e.period}): ${e.bullets.slice(0, 2).join(" | ")}`)
     .join("\n");
+
+  const alreadyCovered = (profile.context_enrichment ?? []).flatMap((e) => e.statements);
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -61,11 +58,17 @@ Rules:
 - Each question targets a gap between the candidate's background and the role requirements
 - Frame questions as an interviewer would: "Walk me through..." / "Give me a specific example of..." / "What was the outcome when you..."
 - Aim to uncover: deal sizes, outcomes, team sizes, tools used, client names, project results
-- Max 5 questions`,
+- Max 5 questions
+- Do not ask about anything already covered in ALREADY-KNOWN FACTS below — target genuinely new gaps`,
       messages: [
         {
           role: "user",
-          content: `Generate interview questions for this candidate applying to this role.\n\nCANDIDATE RECENT ROLES:\n${recentRoles}\n\nROLE THEY'RE APPLYING TO:\nCompany: ${jobAnalysis.company}\nRole: ${jobAnalysis.role_title}\nRequired: ${jobAnalysis.required_skills.join(", ")}\nRole focus: ${jobAnalysis.role_focus}`,
+          content: [
+            `Generate interview questions for this candidate applying to this role.\n\nCANDIDATE RECENT ROLES:\n${recentRoles}\n\nROLE THEY'RE APPLYING TO:\nCompany: ${jobAnalysis.company}\nRole: ${jobAnalysis.role_title}\nRequired: ${jobAnalysis.required_skills.join(", ")}\nRole focus: ${jobAnalysis.role_focus}`,
+            alreadyCovered.length > 0
+              ? `\n\nALREADY-KNOWN FACTS (from past interview prep — do not re-ask these):\n${alreadyCovered.map((s) => `- ${s}`).join("\n")}`
+              : "",
+          ].filter(Boolean).join(""),
         },
       ],
       output_config: {
@@ -84,7 +87,9 @@ Rules:
   }
 
   try {
-    return NextResponse.json(JSON.parse(textBlock.text));
+    const result = JSON.parse(textBlock.text);
+    const cost = calcCostUsd("claude-sonnet-4-6", response.usage.input_tokens, response.usage.output_tokens);
+    return NextResponse.json({ ...result, _cost_usd: cost });
   } catch {
     return NextResponse.json({ error: "Failed to parse response" }, { status: 500 });
   }

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import type { JobAnalysis, CvContent } from "@/lib/types";
+import { calcCostUsd } from "@/lib/cv/cost";
+import { getProfile } from "@/lib/cv/profile-store";
 
 const TAILORED_CV_SCHEMA = {
   type: "object",
@@ -39,11 +39,6 @@ const TAILORED_CV_SCHEMA = {
   additionalProperties: false,
 };
 
-function loadProfile() {
-  const raw = readFileSync(join(process.cwd(), "data/profile.json"), "utf-8");
-  return JSON.parse(raw);
-}
-
 function buildSkillsList(profile: Record<string, unknown>): string[] {
   const skills = profile.skills as Record<string, { skills: Array<{ name: string }> }>;
   return Object.values(skills).flatMap((cat) => cat.skills.map((s) => s.name));
@@ -69,7 +64,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing job_analysis" }, { status: 400 });
   }
 
-  const profile = loadProfile();
+  const profile = await getProfile();
   const allSkills = buildSkillsList(profile);
 
   const profileSummary = {
@@ -92,6 +87,8 @@ export async function POST(request: NextRequest) {
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+  const enrichmentStatements = (profile.context_enrichment ?? []).flatMap((e) => e.statements);
+
   // Format profile as readable text — cheaper to tokenize than JSON dump
   const profileText = [
     `ABOUT (long version):\n${profileSummary.about.long}`,
@@ -101,7 +98,10 @@ export async function POST(request: NextRequest) {
       exp.bullets.map((b) => `   - ${b}`).join("\n")
     ),
     `\nSKILLS (${profileSummary.skills.length} total — return all, reordered):\n${profileSummary.skills.join(", ")}`,
-  ].join("\n");
+    enrichmentStatements.length > 0
+      ? `\nADDITIONAL CAREER FACTS (from past interview prep answers — treat as evidence, weave in where relevant):\n${enrichmentStatements.map((s) => `- ${s}`).join("\n")}`
+      : "",
+  ].filter(Boolean).join("\n");
 
   // Format job as key-value pairs — no JSON overhead
   const jobText = [
@@ -220,5 +220,6 @@ ${profileText}`,
     },
   };
 
-  return NextResponse.json(cvContent);
+  const cost = calcCostUsd("claude-sonnet-4-6", response.usage.input_tokens, response.usage.output_tokens);
+  return NextResponse.json({ ...cvContent, _cost_usd: cost });
 }

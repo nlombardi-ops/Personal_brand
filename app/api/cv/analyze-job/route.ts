@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { calcCostUsd } from "@/lib/cv/cost";
 
 const JOB_ANALYSIS_SCHEMA = {
   type: "object",
@@ -136,6 +137,7 @@ export async function POST(request: NextRequest) {
   try {
     const analysis = JSON.parse(textBlock.text);
     analysis.url = url ?? "";
+    analysis._cost_usd = calcCostUsd("claude-opus-4-8", response.usage.input_tokens, response.usage.output_tokens);
     return NextResponse.json(analysis);
   } catch {
     return NextResponse.json({ error: `Failed to parse model response: ${textBlock.text.slice(0, 200)}` }, { status: 500 });

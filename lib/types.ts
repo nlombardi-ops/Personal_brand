@@ -165,6 +165,17 @@ export interface ContextEntry {
   statements: string[];
 }
 
+export interface Profile {
+  about: { long: string; [key: string]: unknown };
+  experience: unknown[];
+  skills: unknown;
+  education: Array<{ degree: string; institution: string; location: string; year: number }>;
+  languages: Array<{ language: string; level: string }>;
+  referrals: unknown[];
+  context_enrichment?: ContextEntry[];
+  [key: string]: unknown;
+}
+
 export interface CvContent {
   about: string;
   skills: string[];

@@ -20,6 +20,7 @@ type InputMode = "url" | "text";
 type AnalyzeState = "idle" | "loading" | "done" | "error";
 type QuestionState = "idle" | "loading" | "done" | "error";
 type GenerateState = "idle" | "generating" | "done" | "error";
+type EnrichState = "idle" | "saving" | "saved" | "error";
 
 export default function GeneratorPage() {
   // ── Input ──
@@ -50,6 +51,11 @@ export default function GeneratorPage() {
   const [phase, setPhase] = useState(0);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [enrichState, setEnrichState] = useState<EnrichState>("idle");
+  const [pendingEnrichment, setPendingEnrichment] = useState<{
+    answers: Array<{ question: string; answer: string }>;
+    job_context: string;
+  } | null>(null);
   const phaseRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ── PDF upload ──
@@ -151,6 +157,23 @@ export default function GeneratorPage() {
       .catch(() => setQuestionState("error"));
   }, [analyzeState, jobAnalysis]);
 
+  // ── Profile enrichment (save HR-question answers into the candidate's full context) ──
+  async function saveEnrichment(payload: { answers: Array<{ question: string; answer: string }>; job_context: string }) {
+    setEnrichState("saving");
+    setPendingEnrichment(payload);
+    try {
+      const res = await fetch("/api/cv/enrich-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      setEnrichState("saved");
+    } catch {
+      setEnrichState("error");
+    }
+  }
+
   // ── Generate ──
   async function handleGenerate(saveAnswers: boolean) {
     if (!jobAnalysis) return;
@@ -158,6 +181,8 @@ export default function GeneratorPage() {
     setGenerateError("");
     setCvContent(null);
     setSaved(false);
+    setEnrichState("idle");
+    setPendingEnrichment(null);
     setPhase(0);
 
     phaseRef.current = setInterval(() => {
@@ -182,16 +207,12 @@ export default function GeneratorPage() {
       setCvContent(data);
       setGenerateState("done");
 
-      // Fire-and-forget: enrich profile if answers given
+      // Save the answered questions into the candidate's full profile context
       if (answersPayload.length > 0 && jobAnalysis) {
-        fetch("/api/cv/enrich-profile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            answers: answersPayload,
-            job_context: `${jobAnalysis.role_title} at ${jobAnalysis.company}`,
-          }),
-        }).catch(() => {/* silent */});
+        saveEnrichment({
+          answers: answersPayload,
+          job_context: `${jobAnalysis.role_title} at ${jobAnalysis.company}`,
+        });
       }
     } catch {
       setGenerateError("Generation failed. Please try again.");
@@ -540,9 +561,9 @@ export default function GeneratorPage() {
                   className="flex items-center gap-2 rounded-lg border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-50 transition"
                 >
                   {saved ? (
-                    <><CheckCircle2 className="h-4 w-4 text-emerald-600" />Saved</>
+                    <><CheckCircle2 className="h-4 w-4 text-emerald-600" />Saved to history</>
                   ) : (
-                    <><Bookmark className="h-4 w-4" />{saving ? "Saving…" : "Save"}</>
+                    <><Bookmark className="h-4 w-4" />{saving ? "Saving…" : "Save to History"}</>
                   )}
                 </button>
                 <button
@@ -556,6 +577,36 @@ export default function GeneratorPage() {
                   <span className="ml-auto text-[10px] text-stone-400">~${totalCost.toFixed(4)}</span>
                 )}
               </div>
+
+              {enrichState !== "idle" && (
+                <div className="flex items-center gap-1.5 mb-4 w-full max-w-[595px] text-xs">
+                  {enrichState === "saving" && (
+                    <span className="flex items-center gap-1.5 text-stone-400">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Saving your answers to your profile…
+                    </span>
+                  )}
+                  {enrichState === "saved" && (
+                    <span className="flex items-center gap-1.5 text-emerald-600">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Answers saved to your profile — they&apos;ll inform future CVs
+                    </span>
+                  )}
+                  {enrichState === "error" && (
+                    <span className="flex items-center gap-1.5 text-red-600">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      Couldn&apos;t save your answers to your profile.
+                      <button
+                        onClick={() => pendingEnrichment && saveEnrichment(pendingEnrichment)}
+                        className="underline font-medium"
+                      >
+                        Retry
+                      </button>
+                    </span>
+                  )}
+                </div>
+              )}
+
               <div className="overflow-x-auto">
                 <CvPreview content={cvContent} />
               </div>

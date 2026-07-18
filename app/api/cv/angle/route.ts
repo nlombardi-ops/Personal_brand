@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import type { JobAnalysis } from "@/lib/types";
+import { calcCostUsd } from "@/lib/cv/cost";
 
 const ANGLE_SCHEMA = {
   type: "object",
@@ -95,7 +96,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const analysis = JSON.parse(textBlock.text);
-    return NextResponse.json(analysis);
+    const cost = calcCostUsd("claude-opus-4-8", response.usage.input_tokens, response.usage.output_tokens);
+    return NextResponse.json({ ...analysis, _cost_usd: cost });
   } catch {
     return NextResponse.json({ error: "Failed to parse analysis" }, { status: 500 });
   }

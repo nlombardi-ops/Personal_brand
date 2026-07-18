@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync, writeFileSync } from "fs";
-import { join } from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import type { ContextEntry } from "@/lib/types";
+import { getProfile, saveProfile } from "@/lib/cv/profile-store";
 
 const POLISH_SCHEMA = {
   type: "object",
@@ -16,8 +15,6 @@ const POLISH_SCHEMA = {
   required: ["statements"],
   additionalProperties: false,
 };
-
-const PROFILE_PATH = join(process.cwd(), "data/profile.json");
 
 export async function POST(request: NextRequest) {
   const authCookie = request.cookies.get("dashboard_auth");
@@ -87,9 +84,9 @@ Rules:
     return NextResponse.json({ error: "Failed to parse response" }, { status: 500 });
   }
 
-  // Append to profile.json context_enrichment
+  // Append to profile.context_enrichment (Vercel Blob-backed — see lib/cv/profile-store.ts)
   try {
-    const profile = JSON.parse(readFileSync(PROFILE_PATH, "utf-8"));
+    const profile = await getProfile();
     const entry: ContextEntry = {
       id: crypto.randomUUID(),
       date: new Date().toISOString().slice(0, 10),
@@ -100,7 +97,7 @@ Rules:
       profile.context_enrichment = [];
     }
     profile.context_enrichment.push(entry);
-    writeFileSync(PROFILE_PATH, JSON.stringify(profile, null, 2));
+    await saveProfile(profile);
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: `Failed to save to profile: ${msg}` }, { status: 500 });
