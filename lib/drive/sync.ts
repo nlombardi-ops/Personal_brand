@@ -47,6 +47,7 @@ async function storeBillsData(data: BillsData): Promise<void> {
       access: "private",
       contentType: "application/json",
       addRandomSuffix: false,
+      allowOverwrite: true,
     });
   } else {
     // Local dev fallback
