@@ -7,7 +7,7 @@ import {
   extractTextFromHtml,
   parsePepephoneBill,
   parseCommunityBill,
-  parseEndesaBill,
+  parseMasmovilEnergyBill,
 } from "./parsers";
 import type { BillsData, EnergyBill, InternetBill, CommunityBill } from "@/lib/types";
 
@@ -101,7 +101,7 @@ async function syncEnergy(drive: DriveClient): Promise<EnergyBill[]> {
     try {
       const buf = await drive.downloadFile(f.id);
       const text = await extractTextFromPdf(buf);
-      const parsed = parseEndesaBill(text);
+      const parsed = parseMasmovilEnergyBill(text);
       if (parsed) bills.push(parsed);
     } catch {
       // skip unparseable file

@@ -40,24 +40,33 @@ export function parsePepephoneBill(text: string): Omit<InternetBill, never> | nu
   let month: string | null = null;
   let plan: string | null = null;
 
-  // Total
-  let m = text.match(/(\d+[.,]\d{2})\s*€\s+TOTAL A PAGAR/);
+  // Total — since the Pepephone-to-MasMovil rebrand, "TOTAL A PAGAR" is
+  // rendered before the amount with no space ("TOTAL A PAGAR37,18€"); the
+  // older Pepephone template had the amount before the label instead.
+  let m = text.match(/TOTAL A PAGAR\s*(\d+[.,]\d{2})\s*€/);
   if (m) total = parseFloat(m[1].replace(",", "."));
   if (!total) {
-    m = text.match(/Total factura\s+(\d+[.,]\d{2})\s*€/);
+    m = text.match(/(\d+[.,]\d{2})\s*€\s+TOTAL A PAGAR/);
+    if (m) total = parseFloat(m[1].replace(",", "."));
+  }
+  if (!total) {
+    m = text.match(/Total factura\s*(\d+[.,]\d{2})\s*€/);
     if (m) total = parseFloat(m[1].replace(",", "."));
   }
 
-  // Month (use end date of billing period)
-  m = text.match(
-    /Periodo\s+facturado\s*:\s*Del\s+\d{2}\/\d{2}\/\d{4}\s+al\s+(\d{2})\/(\d{2})\/(\d{4})/
-  );
+  // Month (use end date of billing period). The rebranded template glues
+  // "Del" and "al" directly to the end date with no spacing in between,
+  // e.g. "Delal21/06/2026" — the older template had full spacing.
+  m = text.match(/[Dd]el\s*(?:\d{2}\/\d{2}\/\d{4})?\s*al\s*(\d{2})\/(\d{2})\/(\d{4})/);
   if (m) {
     month = `${m[3]}-${m[2]}`;
   } else {
-    m = text.match(/Del\s+\d{2}\/\d{2}\/\d{4}\s+al\s+(\d{2})\/(\d{2})\/(\d{4})/);
-    if (m) month = `${m[3]}-${m[2]}`;
-    else {
+    m = text.match(
+      /Periodo\s+facturado\s*:\s*Del\s+\d{2}\/\d{2}\/\d{4}\s+al\s+(\d{2})\/(\d{2})\/(\d{4})/
+    );
+    if (m) {
+      month = `${m[3]}-${m[2]}`;
+    } else {
       m = text.match(/Fecha de emisi.n:\s*(\d{2})\/(\d{2})\/(\d{4})/);
       if (m) month = `${m[3]}-${m[2]}`;
     }
@@ -68,7 +77,7 @@ export function parsePepephoneBill(text: string): Omit<InternetBill, never> | nu
   if (m) plan = m[1].trim();
 
   if (!total || !month) return null;
-  return { month, total, provider: "Pepephone", plan: plan ?? undefined };
+  return { month, total, provider: "MasMovil", plan: plan ?? undefined };
 }
 
 // ─── Community / Adm. Colmenarejo ─────────────────────────────────────────
@@ -127,9 +136,9 @@ export function parseCommunityBill(text: string): Omit<CommunityBill, never> | n
   return { month, cuota, water, extraordinary, provider: "Adm. Colmenarejo" };
 }
 
-// ─── Endesa ───────────────────────────────────────────────────────────────
+// ─── MasMovil Luz y Gas ────────────────────────────────────────────────────
 
-export function parseEndesaBill(text: string): Omit<EnergyBill, never> | null {
+export function parseMasmovilEnergyBill(text: string): Omit<EnergyBill, never> | null {
   text = normalizeText(text);
 
   let total: number | null = null;
@@ -138,60 +147,53 @@ export function parseEndesaBill(text: string): Omit<EnergyBill, never> | null {
   let consumo: number | null = null;
   let iva: number | null = null;
 
-  // Total
-  for (const pat of [
-    /Total a pagar\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
-    /Importe total\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
-    /TOTAL\s+A\s+PAGAR\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
-    /Total factura\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
-    /Importe de la factura\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
-  ]) {
-    const m = text.match(pat);
-    if (m) { total = parseFloat(m[1].replace(",", ".")); break; }
+  // Total — "Total a pagar" is followed a few lines later (after a
+  // "RESUMEN DE LA FACTURA" header) by the amount; grab the nearest one.
+  let m = text.match(/Total a pagar[\s\S]*?(\d+[.,]\d{2})\s*€/i);
+  if (m) total = parseFloat(m[1].replace(",", "."));
+  if (!total) {
+    m = text.match(/\bTotal\s+(\d+[.,]\d{2})\s*€/);
+    if (m) total = parseFloat(m[1].replace(",", "."));
+  }
+  if (!total) {
+    for (const pat of [
+      /Importe total\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
+      /TOTAL\s+A\s+PAGAR\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
+      /Importe de la factura\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
+    ]) {
+      const mx = text.match(pat);
+      if (mx) { total = parseFloat(mx[1].replace(",", ".")); break; }
+    }
   }
 
-  // Month (use end date of billing period)
-  let m = text.match(
-    /[Dd]el?\s+(\d{2})[/\-](\d{2})[/\-](\d{2,4})\s+al?\s+(\d{2})[/\-](\d{2})[/\-](\d{2,4})/
-  );
+  // Month — stated directly as "Factura de la luz de <mes> <yyyy>"
+  m = text.match(/Factura de la luz de\s+(\w+)\s+(\d{4})/i);
   if (m) {
-    const yr = m[6].length === 2 ? `20${m[6]}` : m[6];
-    month = `${yr}-${m[5]}`;
-  } else {
+    const monthNum = MONTH_MAP_ES[m[1].toLowerCase()];
+    if (monthNum) month = `${m[2]}-${monthNum}`;
+  }
+  if (!month) {
     m = text.match(
-      /[Pp]er[íi]odo.*?(\d{2})[/\-](\d{2})[/\-](\d{2,4})\s*[-–]\s*(\d{2})[/\-](\d{2})[/\-](\d{2,4})/
+      /[Dd]el?\s+(\d{2})[/\-](\d{2})[/\-](\d{2,4})\s+al?\s+(\d{2})[/\-](\d{2})[/\-](\d{2,4})/
     );
     if (m) {
       const yr = m[6].length === 2 ? `20${m[6]}` : m[6];
       month = `${yr}-${m[5]}`;
-    } else {
-      m = text.match(/Fecha de factura[:\s]+(\d{2})[/\-](\d{2})[/\-](\d{4})/i);
-      if (m) month = `${m[3]}-${m[2]}`;
     }
   }
 
-  // Potencia (fixed charge) — use [\s\S] instead of dotAll flag for compat
-  for (const pat of [
-    /[Tt][ée]rmino de potencia[\s\S]*?(\d+[.,]\d{2})\s*€/,
-    /Potencia contratada[\s\S]*?(\d+[.,]\d{2})\s*€/,
-    /Potencia[\s\S]*?(\d+[.,]\d{2})\s*€/,
-  ]) {
-    const mx = text.match(pat);
-    if (mx) { potencia = parseFloat(mx[1].replace(",", ".")); break; }
-  }
+  // Potencia (fixed charge) — summary line reads "Potencia24,39 €"
+  m = text.match(/Potencia\s*(\d+[.,]\d{2})\s*€/);
+  if (m) potencia = parseFloat(m[1].replace(",", "."));
 
-  // Consumo / Energía (variable charge)
-  for (const pat of [
-    /[Tt][ée]rmino de energ[íi]a[\s\S]*?(\d+[.,]\d{2})\s*€/,
-    /Energ[íi]a activa[\s\S]*?(\d+[.,]\d{2})\s*€/,
-    /Consumo[\s\S]*?(\d+[.,]\d{2})\s*€/,
-  ]) {
-    const mx = text.match(pat);
-    if (mx) { consumo = parseFloat(mx[1].replace(",", ".")); break; }
-  }
+  // Energía (variable / consumption charge) — "Energía64,14 €"
+  m = text.match(/Energ[íi]a\s*(\d+[.,]\d{2})\s*€/);
+  if (m) consumo = parseFloat(m[1].replace(",", "."));
 
-  // IVA
-  m = text.match(/IVA.*?(\d+[.,]\d{2})\s*€/i);
+  // IVA — summary line reads "IVA 21% (sobre 86,01 €)18,06 €"; the real tax
+  // charged is the amount AFTER the parenthetical taxable base, not before.
+  m = text.match(/IVA\s+\d+%\s*\(sobre\s+\d+[.,]\d{2}\s*€\)\s*(\d+[.,]\d{2})\s*€/i);
+  if (!m) m = text.match(/IVA.*?(\d+[.,]\d{2})\s*€/i);
   if (m) iva = parseFloat(m[1].replace(",", "."));
 
   if (!total || !month) return null;
@@ -201,6 +203,6 @@ export function parseEndesaBill(text: string): Omit<EnergyBill, never> | null {
     potencia: potencia ?? 0,
     consumo: consumo ?? 0,
     iva: iva ?? 0,
-    provider: "Endesa",
+    provider: "MasMovil Luz y Gas",
   };
 }
