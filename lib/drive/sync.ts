@@ -1,6 +1,6 @@
 import { writeFileSync, readFileSync } from "fs";
 import { join } from "path";
-import { list, put } from "@vercel/blob";
+import { get, put } from "@vercel/blob";
 import { DriveClient } from "./client";
 import {
   extractTextFromPdf,
@@ -24,11 +24,10 @@ const BLOB_PATHNAME = "bills.json";
 export async function getBillsData(): Promise<BillsData> {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const { blobs } = await list({ prefix: "bills" });
-      const blob = blobs.find((b) => b.pathname === BLOB_PATHNAME);
-      if (blob) {
-        const res = await fetch(blob.url);
-        if (res.ok) return res.json() as Promise<BillsData>;
+      const result = await get(BLOB_PATHNAME, { access: "private" });
+      if (result) {
+        const text = await new Response(result.stream).text();
+        return JSON.parse(text) as BillsData;
       }
     } catch {
       // fall through to local
@@ -42,7 +41,7 @@ async function storeBillsData(data: BillsData): Promise<void> {
   const json = JSON.stringify(data, null, 2);
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     await put(BLOB_PATHNAME, json, {
-      access: "public",
+      access: "private",
       contentType: "application/json",
       addRandomSuffix: false,
     });
