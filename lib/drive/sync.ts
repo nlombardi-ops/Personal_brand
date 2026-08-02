@@ -24,7 +24,10 @@ const BLOB_PATHNAME = "bills.json";
 export async function getBillsData(): Promise<BillsData> {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const result = await get(BLOB_PATHNAME, { access: "private" });
+      // useCache: false bypasses Vercel's CDN cache layer — needed because
+      // the pathname is stable (addRandomSuffix: false), so the CDN would
+      // otherwise keep serving the pre-sync copy after every write.
+      const result = await get(BLOB_PATHNAME, { access: "private", useCache: false });
       if (result) {
         const text = await new Response(result.stream).text();
         return JSON.parse(text) as BillsData;
