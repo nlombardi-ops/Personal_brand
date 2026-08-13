@@ -167,6 +167,7 @@ export interface ContextEntry {
 
 export interface Profile {
   about: { long: string; [key: string]: unknown };
+  contact: { name: string; email: string; phone: string; location: string; [key: string]: unknown };
   experience: unknown[];
   skills: unknown;
   education: Array<{ degree: string; institution: string; location: string; year: number }>;
@@ -174,6 +175,14 @@ export interface Profile {
   referrals: unknown[];
   context_enrichment?: ContextEntry[];
   [key: string]: unknown;
+}
+
+export interface VoiceSample {
+  id: string;
+  date: string;
+  source: "seed" | "cover_letter_answer";
+  context?: string;
+  text: string;
 }
 
 export interface CvContent {

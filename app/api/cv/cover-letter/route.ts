@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 import Anthropic from "@anthropic-ai/sdk";
-import type { JobAnalysis } from "@/lib/types";
-
-function loadProfile() {
-  const raw = readFileSync(join(process.cwd(), "data/profile.json"), "utf-8");
-  return JSON.parse(raw);
-}
+import type { JobAnalysis, Profile } from "@/lib/types";
+import { getProfile } from "@/lib/cv/profile-store";
+import { getVoiceSamples } from "@/lib/cv/voice-store";
+import { getVoiceProfileGuide } from "@/lib/cv/voice-profile";
+import { calcCostUsd } from "@/lib/cv/cost";
 
 export async function POST(request: NextRequest) {
   const authCookie = request.cookies.get("dashboard_auth");
@@ -16,9 +13,11 @@ export async function POST(request: NextRequest) {
   }
 
   let jobAnalysis: JobAnalysis;
+  let answers: Array<{ question: string; answer: string }> | undefined;
   try {
     const body = await request.json();
     jobAnalysis = body.job_analysis as JobAnalysis;
+    answers = body.answers;
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
@@ -27,7 +26,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing job_analysis" }, { status: 400 });
   }
 
-  const profile = loadProfile();
+  const profile = (await getProfile()) as Profile;
+  const voiceSamples = await getVoiceSamples();
 
   const profileContext = [
     `ABOUT:\n${profile.about.long}`,
@@ -50,6 +50,27 @@ export async function POST(request: NextRequest) {
     `Required skills: ${jobAnalysis.required_skills.join(", ")}`,
     `Keywords: ${jobAnalysis.keywords.join(", ")}`,
   ].join("\n");
+
+  const voiceGuide = getVoiceProfileGuide();
+  const voiceGuideBlock = voiceGuide
+    ? `\n\nCANDIDATE'S OWN VOICE GUIDE — follow this over the generic "business-grade" instructions above wherever the two conflict:\n${voiceGuide}`
+    : "";
+
+  const recentVoiceSamples = voiceSamples.slice(-6);
+  const voiceReference =
+    recentVoiceSamples.length > 0
+      ? `\n\nREAL EXCERPTS OF HOW THE CANDIDATE WRITES (their own past emails/messages/answers — supporting evidence for the voice guide above; mirror sentence rhythm, vocabulary level, and directness, do NOT quote or repeat this content verbatim):\n${recentVoiceSamples
+          .map((s) => `"${s.text}"`)
+          .join("\n")}`
+      : "";
+
+  const validAnswers = (answers ?? []).filter((a) => a.answer.trim().length > 10);
+  const motivationContext =
+    validAnswers.length > 0
+      ? `\n\nMOTIVATION CONTEXT (the candidate's own first-hand answers — let the "why this appeals" answer inform the opening hook authentically, and the "what to remember" answer inform the closing line, in substance, not verbatim):\n${validAnswers
+          .map((a) => `Q: ${a.question}\nA: ${a.answer}`)
+          .join("\n\n")}`
+      : "";
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -74,11 +95,11 @@ STRUCTURAL RULES:
 - Bullets or sentences must NOT end with vague -ing phrases ("...contributing to improved outcomes" — bad)
 - No defensive language about career pivots or background gaps
 
-Output the letter body only — no date, no address, no "Dear [Name]", no signature block. Start directly with P1.`,
+Output the letter body only — no date, no address, no "Dear [Name]", no signature block. Start directly with P1.${voiceGuideBlock}${voiceReference}`,
     messages: [
       {
         role: "user",
-        content: `Write the cover letter.\n\nJOB:\n${jobContext}\n\nPROFILE:\n${profileContext}`,
+        content: `Write the cover letter.\n\nJOB:\n${jobContext}\n\nPROFILE:\n${profileContext}${motivationContext}`,
       },
     ],
   });
@@ -90,6 +111,7 @@ Output the letter body only — no date, no address, no "Dear [Name]", no signat
 
   const text = textBlock.text.trim();
   const word_count = text.split(/\s+/).filter(Boolean).length;
+  const cost = calcCostUsd("claude-sonnet-4-6", response.usage.input_tokens, response.usage.output_tokens);
 
-  return NextResponse.json({ text, word_count });
+  return NextResponse.json({ text, word_count, _cost_usd: cost });
 }

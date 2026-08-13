@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, AlertCircle, Copy, CheckCircle2, RefreshCw } from "lucide-react";
+import { Loader2, AlertCircle, Copy, CheckCircle2, RefreshCw, Download } from "lucide-react";
 import type { JobAnalysis } from "@/lib/types";
+
+const FIXED_QUESTIONS = [
+  "Why does this job appeal to you?",
+  "After they read this, what's the one thing you want them to remember about you?",
+];
 
 type AnalyzeState = "idle" | "loading" | "done" | "error";
 type GenerateState = "idle" | "generating" | "done" | "error";
+type VoiceSaveState = "idle" | "saving" | "saved" | "error";
 
 export default function CoverLetterPage() {
   const [url, setUrl] = useState("");
@@ -13,11 +19,14 @@ export default function CoverLetterPage() {
   const [jobAnalysis, setJobAnalysis] = useState<JobAnalysis | null>(null);
   const [analyzeError, setAnalyzeError] = useState("");
 
+  const [answers, setAnswers] = useState<string[]>(["", ""]);
+
   const [generateState, setGenerateState] = useState<GenerateState>("idle");
   const [clText, setClText] = useState("");
   const [wordCount, setWordCount] = useState(0);
   const [generateError, setGenerateError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [voiceSaveState, setVoiceSaveState] = useState<VoiceSaveState>("idle");
 
   async function handleAnalyze(e: React.FormEvent) {
     e.preventDefault();
@@ -37,9 +46,25 @@ export default function CoverLetterPage() {
       const data: JobAnalysis = await res.json();
       setJobAnalysis(data);
       setAnalyzeState("done");
+      setAnswers(["", ""]);
     } catch {
       setAnalyzeError("Couldn't reach this URL. Try again.");
       setAnalyzeState("error");
+    }
+  }
+
+  async function saveVoiceSamples(entries: Array<{ text: string; context: string }>) {
+    setVoiceSaveState("saving");
+    try {
+      const res = await fetch("/api/cv/voice-samples", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entries }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      setVoiceSaveState("saved");
+    } catch {
+      setVoiceSaveState("error");
     }
   }
 
@@ -48,17 +73,32 @@ export default function CoverLetterPage() {
     setGenerateState("generating");
     setGenerateError("");
     setClText("");
+    setVoiceSaveState("idle");
+
+    const answersPayload = FIXED_QUESTIONS
+      .map((q, i) => ({ question: q, answer: answers[i] ?? "" }))
+      .filter((a) => a.answer.trim().length > 10);
+
     try {
       const res = await fetch("/api/cv/cover-letter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ job_analysis: jobAnalysis }),
+        body: JSON.stringify({ job_analysis: jobAnalysis, answers: answersPayload }),
       });
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
       setClText(data.text);
       setWordCount(data.word_count);
       setGenerateState("done");
+
+      if (answersPayload.length > 0) {
+        saveVoiceSamples(
+          answersPayload.map((a) => ({
+            text: a.answer,
+            context: `${jobAnalysis.role_title} at ${jobAnalysis.company}`,
+          }))
+        );
+      }
     } catch {
       setGenerateError("Generation failed. Please try again.");
       setGenerateState("error");
@@ -69,6 +109,22 @@ export default function CoverLetterPage() {
     await navigator.clipboard.writeText(clText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function handleDownloadPdf() {
+    if (!clText || !jobAnalysis) return;
+    const res = await fetch("/api/cv/cover-letter/render", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: clText, company: jobAnalysis.company }),
+    });
+    const blob = await res.blob();
+    const href = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = href;
+    a.download = `cover-letter-${jobAnalysis.company.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.pdf`;
+    a.click();
+    URL.revokeObjectURL(href);
   }
 
   const hasAnalysis = analyzeState === "done" && jobAnalysis;
@@ -133,6 +189,33 @@ export default function CoverLetterPage() {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Fixed HR questions */}
+          {hasAnalysis && (
+            <div className="mb-4 space-y-3">
+              {FIXED_QUESTIONS.map((q, i) => (
+                <div key={i}>
+                  <label className="block text-xs font-medium text-stone-600 mb-1.5">{q}</label>
+                  <textarea
+                    value={answers[i] ?? ""}
+                    onChange={(e) =>
+                      setAnswers((prev) => {
+                        const next = [...prev];
+                        next[i] = e.target.value;
+                        return next;
+                      })
+                    }
+                    placeholder="Type your answer, in your own words…"
+                    rows={2}
+                    className="w-full rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-xs text-stone-700 placeholder-stone-400 outline-none focus:border-stone-400 focus:bg-white resize-none transition"
+                  />
+                </div>
+              ))}
+              <p className="text-[10px] text-stone-400">
+                Optional, but this is how the letter learns to sound like you.
+              </p>
             </div>
           )}
 
@@ -221,23 +304,50 @@ export default function CoverLetterPage() {
                   {wordCount < 220 ? "too short" : wordCount > 310 ? "too long" : "good length"}
                 </p>
               </div>
-              <button
-                onClick={handleCopy}
-                className="flex items-center gap-2 rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50 transition"
-              >
-                {copied ? (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleCopy}
+                  className="flex items-center gap-2 rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 hover:bg-stone-50 transition"
+                >
+                  {copied ? (
+                    <>
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5" />
+                      Copy
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={handleDownloadPdf}
+                  className="flex items-center gap-2 rounded-lg bg-[#0f172a] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#1e293b] transition"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Download PDF
+                </button>
+              </div>
+            </div>
+
+            {voiceSaveState !== "idle" && (
+              <p className="mb-3 flex items-center gap-1.5 text-[11px] text-stone-400">
+                {voiceSaveState === "saving" && (
                   <>
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                    Copied
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3.5 w-3.5" />
-                    Copy
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Saving your answers to your voice profile…
                   </>
                 )}
-              </button>
-            </div>
+                {voiceSaveState === "saved" && (
+                  <span className="flex items-center gap-1.5 text-emerald-600">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Saved to your voice profile — future letters will sound more like you
+                  </span>
+                )}
+                {voiceSaveState === "error" && "Couldn't save your answers to your voice profile."}
+              </p>
+            )}
 
             {/* Letter paper */}
             <div className="bg-white rounded-xl border border-stone-200 shadow-sm p-10">
