@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Save, Loader2, CheckCircle2 } from "lucide-react";
+import { Save, Loader2, CheckCircle2, Trash2 } from "lucide-react";
+import type { ContextEntry } from "@/lib/types";
 
 interface Profile {
   about: Record<string, string>;
@@ -14,6 +15,7 @@ interface Profile {
   skills: Record<string, { label: string; skills: Array<{ name: string; proficiency: string }> }>;
   languages: Array<{ language: string; level: string }>;
   education: Array<{ degree: string; institution: string; year: number }>;
+  context_enrichment?: ContextEntry[];
 }
 
 type SaveState = "idle" | "saving" | "saved" | "error";
@@ -21,6 +23,7 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/cv/profile")
@@ -77,6 +80,23 @@ export default function ProfilePage() {
       exp[expIdx] = { ...exp[expIdx], bullets };
       return { ...p, experience: exp };
     });
+  }
+
+  async function removeEnrichment(id: string) {
+    if (!profile) return;
+    setRemovingId(id);
+    const context_enrichment = (profile.context_enrichment ?? []).filter((e) => e.id !== id);
+    try {
+      const res = await fetch("/api/cv/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ context_enrichment }),
+      });
+      if (!res.ok) throw new Error();
+      setProfile((p) => (p ? { ...p, context_enrichment } : p));
+    } finally {
+      setRemovingId(null);
+    }
   }
 
   if (!profile) {
@@ -196,6 +216,48 @@ export default function ProfilePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Memory — learned from your interview-prep answers */}
+      <section className="mb-8">
+        <h2 className="text-sm font-semibold text-stone-900 mb-1 pb-2 border-b border-stone-200">
+          Memory
+        </h2>
+        <p className="text-xs text-stone-500 mb-3">
+          Facts learned from your interview-prep answers when generating CVs. These feed future generations automatically.
+        </p>
+        {(!profile.context_enrichment || profile.context_enrichment.length === 0) ? (
+          <p className="text-sm text-stone-400 italic">Nothing learned yet — answer the interview-prep questions next time you generate a CV.</p>
+        ) : (
+          <div className="space-y-3">
+            {profile.context_enrichment.map((entry) => (
+              <div key={entry.id} className="rounded-lg border border-stone-200 bg-white p-4">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <p className="text-xs font-semibold text-stone-700">{entry.source_role}</p>
+                    <p className="text-[10px] text-stone-400">{entry.date}</p>
+                  </div>
+                  <button
+                    onClick={() => removeEnrichment(entry.id)}
+                    disabled={removingId === entry.id}
+                    className="text-stone-300 hover:text-red-400 transition-colors disabled:opacity-50"
+                    title="Remove"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <ul className="space-y-1">
+                  {entry.statements.map((s, i) => (
+                    <li key={i} className="text-xs text-stone-600 flex gap-1.5">
+                      <span className="text-stone-300">•</span>
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Languages + Education (read-only for now) */}

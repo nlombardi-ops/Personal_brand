@@ -6,7 +6,6 @@ import {
   AlertCircle,
   CheckCircle2,
   Download,
-  Bookmark,
   FileText,
   Link,
   X,
@@ -22,6 +21,7 @@ type QuestionState = "idle" | "loading" | "done" | "error";
 type GenerateState = "idle" | "generating" | "done" | "error";
 type EnrichState = "idle" | "saving" | "saved" | "error";
 type DriveState = "idle" | "uploading" | "uploaded" | "error";
+type HistoryState = "idle" | "saving" | "saved" | "error";
 
 export default function GeneratorPage() {
   // ── Input ──
@@ -50,8 +50,7 @@ export default function GeneratorPage() {
   const [generateError, setGenerateError] = useState("");
   const [totalCost, setTotalCost] = useState(0);
   const [phase, setPhase] = useState(0);
-  const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [historyState, setHistoryState] = useState<HistoryState>("idle");
   const [enrichState, setEnrichState] = useState<EnrichState>("idle");
   const [pendingEnrichment, setPendingEnrichment] = useState<{
     answers: Array<{ question: string; answer: string }>;
@@ -98,7 +97,7 @@ export default function GeneratorPage() {
     setAnswers([]);
     setGenerateState("idle");
     setCvContent(null);
-    setSaved(false);
+    setHistoryState("idle");
     setTotalCost(0);
 
     try {
@@ -192,13 +191,29 @@ export default function GeneratorPage() {
     }
   }
 
+  // ── Save every generated CV into History — every job analyzed gets a record ──
+  async function saveToHistory(content: CvContent) {
+    setHistoryState("saving");
+    try {
+      const res = await fetch("/api/cv/versions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content, job_url: url }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      setHistoryState("saved");
+    } catch {
+      setHistoryState("error");
+    }
+  }
+
   // ── Generate ──
-  async function handleGenerate(saveAnswers: boolean) {
+  async function handleGenerate() {
     if (!jobAnalysis) return;
     setGenerateState("generating");
     setGenerateError("");
     setCvContent(null);
-    setSaved(false);
+    setHistoryState("idle");
     setEnrichState("idle");
     setPendingEnrichment(null);
     setDriveState("idle");
@@ -208,11 +223,9 @@ export default function GeneratorPage() {
       setPhase((p) => Math.min(p + 1, GEN_PHASES.length - 1));
     }, 4000);
 
-    const answersPayload = saveAnswers
-      ? hrQuestions
-          .map((q, i) => ({ question: q, answer: answers[i] ?? "" }))
-          .filter((a) => a.answer.trim().length > 10)
-      : [];
+    const answersPayload = hrQuestions
+      .map((q, i) => ({ question: q, answer: answers[i] ?? "" }))
+      .filter((a) => a.answer.trim().length > 10);
 
     try {
       const res = await fetch("/api/cv/generate", {
@@ -239,27 +252,14 @@ export default function GeneratorPage() {
       }
 
       // Every generated CV is uploaded to the "CVs" folder on Google Drive
+      // and recorded in History — every job analyzed gets a permanent record
       saveToDrive(data);
+      saveToHistory(data);
     } catch {
       setGenerateError("Generation failed. Please try again.");
       setGenerateState("error");
     } finally {
       if (phaseRef.current) clearInterval(phaseRef.current);
-    }
-  }
-
-  async function handleSave() {
-    if (!cvContent || saving) return;
-    setSaving(true);
-    try {
-      await fetch("/api/cv/versions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: cvContent, job_url: url }),
-      });
-      setSaved(true);
-    } finally {
-      setSaving(false);
     }
   }
 
@@ -502,34 +502,18 @@ export default function GeneratorPage() {
               </>
             )}
 
-            {/* Action buttons */}
-            {questionState === "done" && (
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={() => handleGenerate(false)}
-                  className="flex-1 rounded-lg border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-700 hover:border-stone-400 hover:bg-stone-100 transition"
-                >
-                  Skip &amp; Generate
-                </button>
-                <button
-                  onClick={() => handleGenerate(true)}
-                  disabled={answers.every((a) => !a.trim())}
-                  className="flex-1 rounded-lg border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-700 hover:border-stone-400 hover:bg-stone-100 disabled:opacity-40 transition"
-                >
-                  Save Answers &amp; Generate
-                </button>
-              </div>
-            )}
-
-            {/* If questions failed silently, still allow skip */}
-            {questionState === "error" && (
+            {/* Action button */}
+            {(questionState === "done" || questionState === "error") && (
               <div className="mt-6">
                 <button
-                  onClick={() => handleGenerate(false)}
-                  className="w-full rounded-lg border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-stone-700 hover:border-stone-400 hover:bg-stone-100 transition"
+                  onClick={() => handleGenerate()}
+                  className="w-full rounded-lg bg-[#0f172a] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#1e293b] transition"
                 >
                   Generate CV
                 </button>
+                <p className="mt-2 text-[10px] text-stone-400 text-center">
+                  Anything you typed above is saved to your profile automatically.
+                </p>
               </div>
             )}
           </div>
@@ -560,7 +544,7 @@ export default function GeneratorPage() {
           <div className="flex h-full items-center justify-center">
             <div className="rounded-xl border border-red-100 bg-red-50 px-6 py-5 text-center max-w-sm">
               <p className="text-sm text-red-700 mb-3">{generateError}</p>
-              <button onClick={() => handleGenerate(false)} className="text-sm font-medium text-red-700 underline">Try again</button>
+              <button onClick={() => handleGenerate()} className="text-sm font-medium text-red-700 underline">Try again</button>
             </div>
           </div>
         )}
@@ -582,17 +566,6 @@ export default function GeneratorPage() {
             <div className="flex flex-col items-center py-6 px-6">
               <div className="flex items-center gap-3 mb-6 w-full max-w-[595px]">
                 <button
-                  onClick={handleSave}
-                  disabled={saving || saved}
-                  className="flex items-center gap-2 rounded-lg border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50 disabled:opacity-50 transition"
-                >
-                  {saved ? (
-                    <><CheckCircle2 className="h-4 w-4 text-emerald-600" />Saved to history</>
-                  ) : (
-                    <><Bookmark className="h-4 w-4" />{saving ? "Saving…" : "Save to History"}</>
-                  )}
-                </button>
-                <button
                   onClick={handleDownload}
                   className="flex items-center gap-2 rounded-lg bg-[#0f172a] px-4 py-2 text-sm font-medium text-white hover:bg-[#1e293b] transition"
                 >
@@ -604,8 +577,33 @@ export default function GeneratorPage() {
                 )}
               </div>
 
-              {(enrichState !== "idle" || driveState !== "idle") && (
+              {(historyState !== "idle" || enrichState !== "idle" || driveState !== "idle") && (
                 <div className="flex flex-col gap-1 mb-4 w-full max-w-[595px] text-xs">
+                  {historyState === "saving" && (
+                    <span className="flex items-center gap-1.5 text-stone-400">
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Saving to History…
+                    </span>
+                  )}
+                  {historyState === "saved" && (
+                    <span className="flex items-center gap-1.5 text-emerald-600">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Saved to History
+                    </span>
+                  )}
+                  {historyState === "error" && (
+                    <span className="flex items-center gap-1.5 text-red-600">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      Couldn&apos;t save to History.
+                      <button
+                        onClick={() => cvContent && saveToHistory(cvContent)}
+                        className="underline font-medium"
+                      >
+                        Retry
+                      </button>
+                    </span>
+                  )}
+
                   {enrichState === "saving" && (
                     <span className="flex items-center gap-1.5 text-stone-400">
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />

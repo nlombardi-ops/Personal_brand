@@ -2,6 +2,8 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { FileText, Send, TrendingUp, Handshake, Ghost } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 function read<T>(file: string): T[] {
   try {
     return JSON.parse(readFileSync(join(process.cwd(), file), "utf-8"));
