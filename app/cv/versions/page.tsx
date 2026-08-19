@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Download, ExternalLink } from "lucide-react";
-import type { CvVersion } from "@/app/api/cv/versions/route";
-import type { Application } from "@/app/api/cv/applications/route";
+import type { CvVersion, Application } from "@/lib/types";
 
 const STATUS_OPTIONS = ["applied", "interview_1", "interview_2", "offer", "rejected", "ghosted"] as const;
 type Status = (typeof STATUS_OPTIONS)[number];

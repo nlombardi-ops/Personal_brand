@@ -1,15 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
-import type { CvVersion } from "../route";
-
-function readVersions(): CvVersion[] {
-  try {
-    return JSON.parse(readFileSync(join(process.cwd(), "data/cv-versions.json"), "utf-8"));
-  } catch {
-    return [];
-  }
-}
+import { getVersions } from "@/lib/cv/versions-store";
 
 export async function GET(
   request: NextRequest,
@@ -21,7 +11,7 @@ export async function GET(
   }
 
   const { id } = await params;
-  const version = readVersions().find((v) => v.id === id);
+  const version = (await getVersions()).find((v) => v.id === id);
   if (!version) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }

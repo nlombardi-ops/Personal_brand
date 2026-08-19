@@ -1,34 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync, writeFileSync } from "fs";
-import { join } from "path";
-
-export interface Application {
-  id: string;
-  cv_version_id: string;
-  applied_at: string;
-  status: "applied" | "interview_1" | "interview_2" | "offer" | "rejected" | "ghosted";
-  notes: string;
-  salary_discussed: number | null;
-}
-
-function readApplications(): Application[] {
-  try {
-    return JSON.parse(readFileSync(join(process.cwd(), "data/applications.json"), "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function saveApplications(apps: Application[]) {
-  writeFileSync(join(process.cwd(), "data/applications.json"), JSON.stringify(apps, null, 2));
-}
+import { getApplications, saveApplications } from "@/lib/cv/applications-store";
+import type { Application } from "@/lib/types";
 
 export async function GET(request: NextRequest) {
   const authCookie = request.cookies.get("dashboard_auth");
   if (!authCookie?.value) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  return NextResponse.json(readApplications());
+  return NextResponse.json(await getApplications());
 }
 
 export async function POST(request: NextRequest) {
@@ -47,9 +26,9 @@ export async function POST(request: NextRequest) {
     salary_discussed: body.salary_discussed ?? null,
   };
 
-  const apps = readApplications();
+  const apps = await getApplications();
   apps.push(app);
-  saveApplications(apps);
+  await saveApplications(apps);
 
   return NextResponse.json(app, { status: 201 });
 }

@@ -1,19 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync, writeFileSync } from "fs";
-import { join } from "path";
-import type { Application } from "../route";
-
-function readApplications(): Application[] {
-  try {
-    return JSON.parse(readFileSync(join(process.cwd(), "data/applications.json"), "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function saveApplications(apps: Application[]) {
-  writeFileSync(join(process.cwd(), "data/applications.json"), JSON.stringify(apps, null, 2));
-}
+import { getApplications, saveApplications } from "@/lib/cv/applications-store";
 
 export async function PATCH(
   request: NextRequest,
@@ -27,14 +13,14 @@ export async function PATCH(
   const { id } = await params;
   const updates = await request.json();
 
-  const apps = readApplications();
+  const apps = await getApplications();
   const idx = apps.findIndex((a) => a.id === id);
   if (idx === -1) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   apps[idx] = { ...apps[idx], ...updates };
-  saveApplications(apps);
+  await saveApplications(apps);
 
   return NextResponse.json(apps[idx]);
 }

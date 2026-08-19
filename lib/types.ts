@@ -185,6 +185,25 @@ export interface VoiceSample {
   text: string;
 }
 
+export interface CvVersion {
+  id: string;
+  job_url: string;
+  company: string;
+  role_title: string;
+  generated_at: string;
+  cv_content: CvContent;
+  pdf_path: string;
+}
+
+export interface Application {
+  id: string;
+  cv_version_id: string;
+  applied_at: string;
+  status: "applied" | "interview_1" | "interview_2" | "offer" | "rejected" | "ghosted";
+  notes: string;
+  salary_discussed: number | null;
+}
+
 export interface CvContent {
   about: string;
   skills: string[];

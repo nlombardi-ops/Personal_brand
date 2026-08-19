@@ -1,15 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
-import type { Application } from "../applications/route";
-
-function read<T>(file: string): T[] {
-  try {
-    return JSON.parse(readFileSync(join(process.cwd(), file), "utf-8"));
-  } catch {
-    return [];
-  }
-}
+import { getVersions } from "@/lib/cv/versions-store";
+import { getApplications } from "@/lib/cv/applications-store";
 
 export async function GET(request: NextRequest) {
   const authCookie = request.cookies.get("dashboard_auth");
@@ -17,8 +8,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const versions = read<{ id: string }>("data/cv-versions.json");
-  const apps = read<Application>("data/applications.json");
+  const versions = await getVersions();
+  const apps = await getApplications();
 
   const total = apps.length;
   const interviews = apps.filter((a) =>

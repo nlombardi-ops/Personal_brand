@@ -1,16 +1,8 @@
-import { readFileSync } from "fs";
-import { join } from "path";
 import { FileText, Send, TrendingUp, Handshake, Ghost } from "lucide-react";
+import { getVersions } from "@/lib/cv/versions-store";
+import { getApplications } from "@/lib/cv/applications-store";
 
 export const dynamic = "force-dynamic";
-
-function read<T>(file: string): T[] {
-  try {
-    return JSON.parse(readFileSync(join(process.cwd(), file), "utf-8"));
-  } catch {
-    return [];
-  }
-}
 
 function StatCard({
   label,
@@ -39,9 +31,9 @@ function StatCard({
   );
 }
 
-export default function StatsPage() {
-  const versions = read<{ id: string }>("data/cv-versions.json");
-  const apps = read<{ status: string }>("data/applications.json");
+export default async function StatsPage() {
+  const versions = await getVersions();
+  const apps = await getApplications();
 
   const total = apps.length;
   const interviews = apps.filter((a) =>
