@@ -39,9 +39,12 @@ function latestMonth(entries: Array<{ month: string }>) {
   return entries.map((e) => e.month).sort().at(-1)!;
 }
 
-function nextFirstOfMonth() {
+// Mirrors vercel.json's cron schedule ("0 6 * * 1" — every Monday 06:00 UTC).
+// Update this alongside vercel.json if the schedule ever changes.
+function nextMonday() {
   const now = new Date();
-  const next = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const daysUntilMonday = (8 - now.getUTCDay()) % 7 || 7;
+  const next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + daysUntilMonday, 6, 0, 0));
   return next.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
@@ -101,7 +104,7 @@ export default async function DashboardOverview() {
             communityLatest={communityLatest}
             energyLatest={energyLatest}
             internetLatest={internetLatest}
-            nextSync={nextFirstOfMonth()}
+            nextSync={nextMonday()}
           />
         </div>
 

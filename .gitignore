@@ -40,6 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# stray personal docs dropped at repo root (this folder lives inside Google Drive)
+/*.pdf
+/*.docx
+/Untitled
+
 # email-organizer secrets (never commit)
 scripts/email-organizer/config.json
 scripts/email-organizer/credentials.json

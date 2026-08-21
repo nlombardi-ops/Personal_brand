@@ -1,5 +1,6 @@
-import { Shield, Heart, Home, Bike, Calendar, AlertCircle, ExternalLink } from "lucide-react";
+import { Shield, Heart, Home, Bike, ExternalLink } from "lucide-react";
 import AuthGuard from "../../components/dashboard/AuthGuard";
+import StatCard from "../../components/dashboard/StatCard";
 import rawInsurance from "../../../data/insurance.json";
 import rawRates from "../../../data/rates.json";
 import type { InsurancePolicy, RatesData } from "@/lib/types";
@@ -7,10 +8,10 @@ import type { InsurancePolicy, RatesData } from "@/lib/types";
 const ratesData = rawRates as RatesData;
 
 const TYPE_CONFIG: Record<string, { icon: typeof Shield; color: string; bgColor: string }> = {
-  health: { icon: Heart, color: "text-rose-400", bgColor: "bg-rose-900/50" },
-  home: { icon: Home, color: "text-amber-400", bgColor: "bg-amber-900/50" },
-  life: { icon: Shield, color: "text-blue-400", bgColor: "bg-blue-900/50" },
-  bike: { icon: Bike, color: "text-emerald-400", bgColor: "bg-emerald-900/50" },
+  health: { icon: Heart, color: "text-rose-600", bgColor: "bg-rose-50" },
+  home: { icon: Home, color: "text-amber-600", bgColor: "bg-amber-50" },
+  life: { icon: Shield, color: "text-blue-600", bgColor: "bg-blue-50" },
+  bike: { icon: Bike, color: "text-emerald-600", bgColor: "bg-emerald-50" },
 };
 
 function fmt(n: number) {
@@ -18,15 +19,15 @@ function fmt(n: number) {
 }
 
 function getPermanenciaStatus(end: string | null): { label: string; color: string } {
-  if (!end) return { label: "No permanencia", color: "bg-emerald-900/50 text-emerald-300" };
+  if (!end) return { label: "No permanencia", color: "bg-emerald-50 text-emerald-700" };
 
   const endDate = new Date(end);
   const now = new Date();
   const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
-  if (daysLeft <= 0) return { label: "Free", color: "bg-emerald-900/50 text-emerald-300" };
-  if (daysLeft <= 90) return { label: `${daysLeft}d left`, color: "bg-amber-900/50 text-amber-300" };
-  return { label: `Until ${end}`, color: "bg-red-900/50 text-red-300" };
+  if (daysLeft <= 0) return { label: "Free", color: "bg-emerald-50 text-emerald-700" };
+  if (daysLeft <= 90) return { label: `${daysLeft}d left`, color: "bg-amber-50 text-amber-700" };
+  return { label: `Until ${end}`, color: "bg-red-50 text-red-600" };
 }
 
 export default function InsurancePage() {
@@ -38,31 +39,35 @@ export default function InsurancePage() {
     <AuthGuard>
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Insurance</h1>
-        <p className="text-sm text-neutral-500">
+        <h1 className="text-2xl font-bold text-stone-900">Insurance</h1>
+        <p className="text-sm text-stone-500">
           All active policies — coverage, costs & market comparison
         </p>
       </div>
 
       {/* Summary */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">Monthly Cost</p>
-          <p className="mt-1 text-2xl font-bold text-white">{totalMonthly > 0 ? fmt(totalMonthly) : "Included"}</p>
-          <p className="text-xs text-neutral-500">{policies.length} active policies</p>
-        </div>
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">Annual Cost</p>
-          <p className="mt-1 text-2xl font-bold text-white">{totalAnnual > 0 ? fmt(totalAnnual) : "Included"}</p>
-          <p className="text-xs text-neutral-500">across all policies</p>
-        </div>
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-          <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">Market Offers</p>
-          <p className="mt-1 text-2xl font-bold text-white">{ratesData.insurance_offers.length || "Pending"}</p>
-          <p className="text-xs text-neutral-500">
-            {ratesData.last_updated ? `Last scraped ${ratesData.last_updated}` : "Scraper not yet configured"}
-          </p>
-        </div>
+        <StatCard
+          label="Monthly Cost"
+          value={totalMonthly > 0 ? fmt(totalMonthly) : "Included"}
+          sub={`${policies.length} active policies`}
+          icon={Shield}
+          color="bg-purple-50"
+        />
+        <StatCard
+          label="Annual Cost"
+          value={totalAnnual > 0 ? fmt(totalAnnual) : "Included"}
+          sub="across all policies"
+          icon={Shield}
+          color="bg-indigo-50"
+        />
+        <StatCard
+          label="Market Offers"
+          value={String(ratesData.insurance_offers.length || "Pending")}
+          sub={ratesData.last_updated ? `Last scraped ${ratesData.last_updated}` : "Scraper not yet configured"}
+          icon={ExternalLink}
+          color="bg-stone-100"
+        />
       </div>
 
       {/* Policy Cards */}
@@ -73,15 +78,15 @@ export default function InsurancePage() {
           const perm = getPermanenciaStatus(policy.permanencia_end);
 
           return (
-            <div key={policy.id} className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
+            <div key={policy.id} className="rounded-xl border border-stone-200 bg-white p-5">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${typeConf.bgColor}`}>
                     <Icon className={`h-5 w-5 ${typeConf.color}`} />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-white">{policy.name}</h3>
-                    <p className="text-xs text-neutral-500">{policy.provider}</p>
+                    <h3 className="text-sm font-semibold text-stone-900">{policy.name}</h3>
+                    <p className="text-xs text-stone-500">{policy.provider}</p>
                   </div>
                 </div>
                 <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${perm.color}`}>
@@ -91,14 +96,14 @@ export default function InsurancePage() {
 
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-xs text-neutral-500">Monthly</p>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-xs text-stone-500">Monthly</p>
+                  <p className="text-sm font-semibold text-stone-900">
                     {policy.monthly_cost > 0 ? fmt(policy.monthly_cost) : policy.included_in ? `Included` : "—"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-neutral-500">Annual</p>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-xs text-stone-500">Annual</p>
+                  <p className="text-sm font-semibold text-stone-900">
                     {policy.annual_cost > 0 ? fmt(policy.annual_cost) : policy.annual_limit ? `Limit ${fmt(policy.annual_limit)}` : "—"}
                   </p>
                 </div>
@@ -106,10 +111,10 @@ export default function InsurancePage() {
 
               {policy.coverage && policy.coverage.length > 0 && (
                 <div className="mt-4">
-                  <p className="text-xs font-medium text-neutral-500 mb-2">Coverage</p>
+                  <p className="text-xs font-medium text-stone-500 mb-2">Coverage</p>
                   <div className="flex flex-wrap gap-1.5">
                     {policy.coverage.map((item) => (
-                      <span key={item} className="inline-flex rounded-md bg-neutral-800 px-2 py-0.5 text-xs text-neutral-400">
+                      <span key={item} className="inline-flex rounded-md bg-stone-100 px-2 py-0.5 text-xs text-stone-600">
                         {item}
                       </span>
                     ))}
@@ -118,7 +123,7 @@ export default function InsurancePage() {
               )}
 
               {policy.notes && (
-                <p className="mt-3 text-xs text-neutral-600">{policy.notes}</p>
+                <p className="mt-3 text-xs text-stone-500">{policy.notes}</p>
               )}
             </div>
           );
@@ -126,10 +131,10 @@ export default function InsurancePage() {
       </div>
 
       {/* Market comparison placeholder */}
-      <div className="rounded-xl border border-dashed border-neutral-700 bg-neutral-900/50 p-8 text-center">
-        <ExternalLink className="mx-auto h-8 w-8 text-neutral-700" />
-        <p className="mt-2 text-sm text-neutral-500">Market Comparison</p>
-        <p className="text-xs text-neutral-600">
+      <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50 p-8 text-center">
+        <ExternalLink className="mx-auto h-8 w-8 text-stone-300" />
+        <p className="mt-2 text-sm text-stone-500">Market Comparison</p>
+        <p className="text-xs text-stone-400">
           Insurance market offers will appear here once the monthly scraper is configured.
           Sources: Rastreator, Acierto, direct insurers.
         </p>

@@ -50,8 +50,8 @@ export default function BillsPage() {
     <AuthGuard>
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Bills</h1>
-        <p className="text-sm text-neutral-500">
+        <h1 className="text-2xl font-bold text-stone-900">Bills</h1>
+        <p className="text-sm text-stone-500">
           Energy, community, water & internet — monthly breakdown
         </p>
       </div>
@@ -62,7 +62,7 @@ export default function BillsPage() {
           value={fmt(avgEnergy)}
           sub={`${billsData.energy.length} months`}
           icon={Zap}
-          color="bg-amber-900/50"
+          color="bg-amber-50"
           trend={{ value: energyTrend, label: "last month" }}
         />
         <StatCard
@@ -70,21 +70,21 @@ export default function BillsPage() {
           value={fmt(avgCommunity)}
           sub="monthly cuota"
           icon={Building2}
-          color="bg-emerald-900/50"
+          color="bg-emerald-50"
         />
         <StatCard
           label="Avg. Water"
           value={fmt(avgWater)}
           sub="quarterly, distributed"
           icon={Droplets}
-          color="bg-cyan-900/50"
+          color="bg-cyan-50"
         />
         <StatCard
           label="Internet"
           value={billsData.internet.length ? fmt(billsData.internet[0].total) : "Pending"}
           sub="Pepephone"
           icon={Wifi}
-          color="bg-indigo-900/50"
+          color="bg-indigo-50"
         />
       </div>
 
@@ -100,27 +100,27 @@ export default function BillsPage() {
 
       <BillsTable rows={rows} />
 
-      <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-        <h3 className="mb-3 text-sm font-semibold text-white">Energy Bill Detail</h3>
+      <div className="rounded-xl border border-stone-200 bg-white p-5">
+        <h3 className="mb-3 text-sm font-semibold text-stone-900">Energy Bill Detail</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-neutral-800 text-left">
-                <th className="px-3 py-2 text-xs font-medium uppercase tracking-wider text-neutral-500">Month</th>
-                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-neutral-500">Potencia</th>
-                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-neutral-500">Consumo</th>
-                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-neutral-500">IVA</th>
-                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-neutral-500">Total</th>
+              <tr className="border-b border-stone-200 text-left">
+                <th className="px-3 py-2 text-xs font-medium uppercase tracking-wider text-stone-500">Month</th>
+                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-stone-500">Potencia</th>
+                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-stone-500">Consumo</th>
+                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-stone-500">IVA</th>
+                <th className="px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-stone-500">Total</th>
               </tr>
             </thead>
             <tbody>
               {billsData.energy.map((bill) => (
-                <tr key={bill.month} className="border-b border-neutral-800/50 hover:bg-neutral-800/30 transition-colors">
-                  <td className="px-3 py-2 text-neutral-300">{bill.month}</td>
-                  <td className="px-3 py-2 text-right text-neutral-400">{fmt(bill.potencia)}</td>
-                  <td className="px-3 py-2 text-right text-neutral-400">{fmt(bill.consumo)}</td>
-                  <td className="px-3 py-2 text-right text-neutral-400">{fmt(bill.iva)}</td>
-                  <td className="px-3 py-2 text-right font-semibold text-amber-400">{fmt(bill.total)}</td>
+                <tr key={bill.month} className="border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                  <td className="px-3 py-2 text-stone-700">{bill.month}</td>
+                  <td className="px-3 py-2 text-right text-stone-600">{fmt(bill.potencia)}</td>
+                  <td className="px-3 py-2 text-right text-stone-600">{fmt(bill.consumo)}</td>
+                  <td className="px-3 py-2 text-right text-stone-600">{fmt(bill.iva)}</td>
+                  <td className="px-3 py-2 text-right font-semibold text-amber-600">{fmt(bill.total)}</td>
                 </tr>
               ))}
             </tbody>

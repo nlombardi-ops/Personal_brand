@@ -1,5 +1,6 @@
 import { FileText, ExternalLink, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import AuthGuard from "../../components/dashboard/AuthGuard";
+import ContractsChat from "../../components/dashboard/ContractsChat";
 import rawContracts from "../../../data/contracts.json";
 import type { Contract } from "@/lib/types";
 
@@ -7,16 +8,16 @@ const contractsData = { contracts: rawContracts.contracts as Contract[] };
 
 function getStatusConfig(contract: typeof contractsData.contracts[0]) {
   if (!contract.permanencia_end) {
-    return { icon: CheckCircle, label: "No permanencia", color: "text-emerald-400", bgColor: "bg-emerald-900/50" };
+    return { icon: CheckCircle, label: "No permanencia", color: "text-emerald-700", bgColor: "bg-emerald-50" };
   }
 
   const endDate = new Date(contract.permanencia_end);
   const now = new Date();
   const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
-  if (daysLeft <= 0) return { icon: CheckCircle, label: "Free to cancel", color: "text-emerald-400", bgColor: "bg-emerald-900/50" };
-  if (daysLeft <= 90) return { icon: Clock, label: `${daysLeft} days left`, color: "text-amber-400", bgColor: "bg-amber-900/50" };
-  return { icon: AlertTriangle, label: `Locked until ${contract.permanencia_end}`, color: "text-red-400", bgColor: "bg-red-900/50" };
+  if (daysLeft <= 0) return { icon: CheckCircle, label: "Free to cancel", color: "text-emerald-700", bgColor: "bg-emerald-50" };
+  if (daysLeft <= 90) return { icon: Clock, label: `${daysLeft} days left`, color: "text-amber-700", bgColor: "bg-amber-50" };
+  return { icon: AlertTriangle, label: `Locked until ${contract.permanencia_end}`, color: "text-red-600", bgColor: "bg-red-50" };
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -35,25 +36,25 @@ export default function ContractsPage() {
     <AuthGuard>
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Contracts</h1>
-        <p className="text-sm text-neutral-500">
+        <h1 className="text-2xl font-bold text-stone-900">Contracts</h1>
+        <p className="text-sm text-stone-500">
           All active contracts — permanencia status, key terms & links
         </p>
       </div>
 
       {/* Summary bar */}
       <div className="flex gap-4">
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 px-5 py-3">
-          <span className="text-xs text-neutral-500">Active</span>
-          <span className="ml-2 text-lg font-bold text-white">{active.length}</span>
+        <div className="rounded-xl border border-stone-200 bg-white px-5 py-3">
+          <span className="text-xs text-stone-500">Active</span>
+          <span className="ml-2 text-lg font-bold text-stone-900">{active.length}</span>
         </div>
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 px-5 py-3">
-          <span className="text-xs text-neutral-500">Free to cancel</span>
-          <span className="ml-2 text-lg font-bold text-emerald-400">{freeToLeave}</span>
+        <div className="rounded-xl border border-stone-200 bg-white px-5 py-3">
+          <span className="text-xs text-stone-500">Free to cancel</span>
+          <span className="ml-2 text-lg font-bold text-emerald-600">{freeToLeave}</span>
         </div>
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900 px-5 py-3">
-          <span className="text-xs text-neutral-500">With permanencia</span>
-          <span className="ml-2 text-lg font-bold text-red-400">{active.length - freeToLeave}</span>
+        <div className="rounded-xl border border-stone-200 bg-white px-5 py-3">
+          <span className="text-xs text-stone-500">With permanencia</span>
+          <span className="ml-2 text-lg font-bold text-red-600">{active.length - freeToLeave}</span>
         </div>
       </div>
 
@@ -66,25 +67,25 @@ export default function ContractsPage() {
           return (
             <div
               key={contract.id}
-              className="rounded-xl border border-neutral-800 bg-neutral-900 p-5 transition-colors hover:border-neutral-700"
+              className="rounded-xl border border-stone-200 bg-white p-5 transition-colors hover:border-stone-300"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-neutral-800">
-                    <FileText className="h-5 w-5 text-neutral-400" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-stone-100">
+                    <FileText className="h-5 w-5 text-stone-500" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-white">{contract.name}</h3>
+                    <h3 className="text-sm font-semibold text-stone-900">{contract.name}</h3>
                     <div className="mt-0.5 flex items-center gap-2">
-                      <span className="text-xs text-neutral-500">{contract.provider}</span>
-                      <span className="text-neutral-700">·</span>
-                      <span className="text-xs text-neutral-500">
+                      <span className="text-xs text-stone-500">{contract.provider}</span>
+                      <span className="text-stone-300">·</span>
+                      <span className="text-xs text-stone-500">
                         {TYPE_LABELS[contract.type] || contract.type}
                       </span>
                       {contract.start_date && (
                         <>
-                          <span className="text-neutral-700">·</span>
-                          <span className="text-xs text-neutral-500">Since {contract.start_date}</span>
+                          <span className="text-stone-300">·</span>
+                          <span className="text-xs text-stone-500">Since {contract.start_date}</span>
                         </>
                       )}
                     </div>
@@ -100,9 +101,9 @@ export default function ContractsPage() {
               </div>
 
               {contract.key_terms && (
-                <div className="mt-3 rounded-lg bg-neutral-800/50 px-4 py-3">
-                  <p className="text-xs font-medium text-neutral-500 mb-1">Key Terms</p>
-                  <p className="text-sm text-neutral-400 leading-relaxed">{contract.key_terms}</p>
+                <div className="mt-3 rounded-lg bg-stone-50 px-4 py-3">
+                  <p className="text-xs font-medium text-stone-500 mb-1">Key Terms</p>
+                  <p className="text-sm text-stone-600 leading-relaxed">{contract.key_terms}</p>
                 </div>
               )}
 
@@ -111,7 +112,7 @@ export default function ContractsPage() {
                   href={contract.drive_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+                  className="mt-3 inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-stone-700 transition-colors"
                 >
                   <ExternalLink className="h-3 w-3" />
                   View in Google Drive
@@ -122,16 +123,8 @@ export default function ContractsPage() {
         })}
       </div>
 
-      {/* Q&A placeholder */}
-      <div className="rounded-xl border border-dashed border-neutral-700 bg-neutral-900/50 p-8 text-center">
-        <FileText className="mx-auto h-8 w-8 text-neutral-700" />
-        <p className="mt-2 text-sm text-neutral-500">Contract Q&A Assistant</p>
-        <p className="text-xs text-neutral-600">
-          Ask questions about your contracts — &quot;Can I cancel my energy contract?&quot;,
-          &quot;When does my permanencia end?&quot;, &quot;What does my home insurance cover?&quot;
-        </p>
-        <p className="mt-2 text-xs text-neutral-700">Coming in a future update</p>
-      </div>
+      {/* Q&A assistant */}
+      <ContractsChat />
     </div>
     </AuthGuard>
   );
