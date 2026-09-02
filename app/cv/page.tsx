@@ -23,6 +23,17 @@ type EnrichState = "idle" | "saving" | "saved" | "error";
 type DriveState = "idle" | "uploading" | "uploaded" | "error";
 type HistoryState = "idle" | "saving" | "saved" | "error";
 
+// API routes return { error: "..." } as JSON — surface that message, not a generic string
+async function extractErrorMessage(res: Response): Promise<string> {
+  const text = await res.text();
+  try {
+    const parsed = JSON.parse(text);
+    return parsed.error ?? text;
+  } catch {
+    return text;
+  }
+}
+
 export default function GeneratorPage() {
   // ── Input ──
   const [inputMode, setInputMode] = useState<InputMode>("url");
@@ -51,12 +62,15 @@ export default function GeneratorPage() {
   const [totalCost, setTotalCost] = useState(0);
   const [phase, setPhase] = useState(0);
   const [historyState, setHistoryState] = useState<HistoryState>("idle");
+  const [historyError, setHistoryError] = useState("");
   const [enrichState, setEnrichState] = useState<EnrichState>("idle");
+  const [enrichError, setEnrichError] = useState("");
   const [pendingEnrichment, setPendingEnrichment] = useState<{
     answers: Array<{ question: string; answer: string }>;
     job_context: string;
   } | null>(null);
   const [driveState, setDriveState] = useState<DriveState>("idle");
+  const [driveError, setDriveError] = useState("");
   const phaseRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // ── PDF upload ──
@@ -98,6 +112,7 @@ export default function GeneratorPage() {
     setGenerateState("idle");
     setCvContent(null);
     setHistoryState("idle");
+    setHistoryError("");
     setTotalCost(0);
 
     try {
@@ -161,6 +176,7 @@ export default function GeneratorPage() {
   // ── Profile enrichment (save HR-question answers into the candidate's full context) ──
   async function saveEnrichment(payload: { answers: Array<{ question: string; answer: string }>; job_context: string }) {
     setEnrichState("saving");
+    setEnrichError("");
     setPendingEnrichment(payload);
     try {
       const res = await fetch("/api/cv/enrich-profile", {
@@ -168,9 +184,11 @@ export default function GeneratorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) throw new Error(await extractErrorMessage(res));
       setEnrichState("saved");
-    } catch {
+    } catch (err) {
+      console.error("saveEnrichment failed:", err);
+      setEnrichError(err instanceof Error ? err.message : String(err));
       setEnrichState("error");
     }
   }
@@ -178,15 +196,18 @@ export default function GeneratorPage() {
   // ── Save generated CV PDF into the "CVs" folder on Google Drive ──
   async function saveToDrive(content: CvContent) {
     setDriveState("uploading");
+    setDriveError("");
     try {
       const res = await fetch("/api/cv/drive-upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) throw new Error(await extractErrorMessage(res));
       setDriveState("uploaded");
-    } catch {
+    } catch (err) {
+      console.error("saveToDrive failed:", err);
+      setDriveError(err instanceof Error ? err.message : String(err));
       setDriveState("error");
     }
   }
@@ -194,15 +215,18 @@ export default function GeneratorPage() {
   // ── Save every generated CV into History — every job analyzed gets a record ──
   async function saveToHistory(content: CvContent) {
     setHistoryState("saving");
+    setHistoryError("");
     try {
       const res = await fetch("/api/cv/versions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content, job_url: url }),
       });
-      if (!res.ok) throw new Error(await res.text());
+      if (!res.ok) throw new Error(await extractErrorMessage(res));
       setHistoryState("saved");
-    } catch {
+    } catch (err) {
+      console.error("saveToHistory failed:", err);
+      setHistoryError(err instanceof Error ? err.message : String(err));
       setHistoryState("error");
     }
   }
@@ -214,9 +238,12 @@ export default function GeneratorPage() {
     setGenerateError("");
     setCvContent(null);
     setHistoryState("idle");
+    setHistoryError("");
     setEnrichState("idle");
+    setEnrichError("");
     setPendingEnrichment(null);
     setDriveState("idle");
+    setDriveError("");
     setPhase(0);
 
     phaseRef.current = setInterval(() => {
@@ -592,16 +619,19 @@ export default function GeneratorPage() {
                     </span>
                   )}
                   {historyState === "error" && (
-                    <span className="flex items-center gap-1.5 text-red-600">
-                      <AlertCircle className="h-3.5 w-3.5" />
-                      Couldn&apos;t save to History.
-                      <button
-                        onClick={() => cvContent && saveToHistory(cvContent)}
-                        className="underline font-medium"
-                      >
-                        Retry
-                      </button>
-                    </span>
+                    <div className="text-red-600">
+                      <span className="flex items-center gap-1.5">
+                        <AlertCircle className="h-3.5 w-3.5" />
+                        Couldn&apos;t save to History.
+                        <button
+                          onClick={() => cvContent && saveToHistory(cvContent)}
+                          className="underline font-medium"
+                        >
+                          Retry
+                        </button>
+                      </span>
+                      {historyError && <span className="ml-5 text-[11px] text-red-500">{historyError}</span>}
+                    </div>
                   )}
 
                   {enrichState === "saving" && (
@@ -617,16 +647,19 @@ export default function GeneratorPage() {
                     </span>
                   )}
                   {enrichState === "error" && (
-                    <span className="flex items-center gap-1.5 text-red-600">
-                      <AlertCircle className="h-3.5 w-3.5" />
-                      Couldn&apos;t save your answers to your profile.
-                      <button
-                        onClick={() => pendingEnrichment && saveEnrichment(pendingEnrichment)}
-                        className="underline font-medium"
-                      >
-                        Retry
-                      </button>
-                    </span>
+                    <div className="text-red-600">
+                      <span className="flex items-center gap-1.5">
+                        <AlertCircle className="h-3.5 w-3.5" />
+                        Couldn&apos;t save your answers to your profile.
+                        <button
+                          onClick={() => pendingEnrichment && saveEnrichment(pendingEnrichment)}
+                          className="underline font-medium"
+                        >
+                          Retry
+                        </button>
+                      </span>
+                      {enrichError && <span className="ml-5 text-[11px] text-red-500">{enrichError}</span>}
+                    </div>
                   )}
 
                   {driveState === "uploading" && (
@@ -642,16 +675,19 @@ export default function GeneratorPage() {
                     </span>
                   )}
                   {driveState === "error" && (
-                    <span className="flex items-center gap-1.5 text-red-600">
-                      <AlertCircle className="h-3.5 w-3.5" />
-                      Couldn&apos;t save to Google Drive.
-                      <button
-                        onClick={() => cvContent && saveToDrive(cvContent)}
-                        className="underline font-medium"
-                      >
-                        Retry
-                      </button>
-                    </span>
+                    <div className="text-red-600">
+                      <span className="flex items-center gap-1.5">
+                        <AlertCircle className="h-3.5 w-3.5" />
+                        Couldn&apos;t save to Google Drive.
+                        <button
+                          onClick={() => cvContent && saveToDrive(cvContent)}
+                          className="underline font-medium"
+                        >
+                          Retry
+                        </button>
+                      </span>
+                      {driveError && <span className="ml-5 text-[11px] text-red-500">{driveError}</span>}
+                    </div>
                   )}
                 </div>
               )}

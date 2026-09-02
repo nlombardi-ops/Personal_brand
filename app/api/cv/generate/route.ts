@@ -9,7 +9,8 @@ const TAILORED_CV_SCHEMA = {
   properties: {
     about: {
       type: "string",
-      description: "2-3 sentences tailored to the role, mirroring company tone and keywords",
+      description:
+        "2 sentences: first states the candidate's real deliverables and soft-skill positioning (grounded in their own long-form About, not company-specific); second lightly tailors emphasis and keywords to this role",
     },
     skills: {
       type: "array",
@@ -150,12 +151,12 @@ WRITE LIKE THIS:
 
 CONTENT RULES:
 
-1. about (2-3 sentences, first-person):
-   - Lead with your strongest match to the role's focus
-   - If a HEADHUNTER'S ANGLE is provided below, lead with that exact angle — it is a strategic read of what will actually land with this employer, not optional color
-   - Naturally use at least 2 of the CV keywords
-   - Match the company tone exactly
+1. about (2 sentences, first-person):
+   - Sentence 1: what you actually deliver and how you work, grounded in the candidate's own ABOUT (long version) below — real capabilities and soft-skill positioning (e.g. generalist across strategy/ops/people, end-to-end delivery owner), not a claim about what this specific company needs
+   - Sentence 2: tailor to this role by choosing which of those real capabilities to foreground and naturally using 1-2 CV keywords, matching the company tone
+   - If a HEADHUNTER'S ANGLE is provided below, use it only to decide which capability to foreground in sentence 2 — do not quote it or turn it into a sentence about the company's specific needs/product/initiative
    - No filler ("I am passionate about", "I believe in", "I am excited")
+   - Never invent a deliverable, client, or outcome not present in the candidate's ABOUT or EXPERIENCE below
 
 2. skills:
    - Select 12–15 skills that are most powerful and directly relevant to this role
@@ -176,7 +177,7 @@ ${profileText}`,
         content: [
         `Tailor the CV for this role:\n\n${jobText}`,
         angleSummary?.trim()
-          ? `\n\nHEADHUNTER'S ANGLE (strategic read of how to position this candidate — lead the "about" with this):\n${angleSummary.trim()}`
+          ? `\n\nHEADHUNTER'S ANGLE (strategic read of positioning — use only to pick which real capability "about" sentence 2 foregrounds; do not paraphrase this into a company-specific claim):\n${angleSummary.trim()}`
           : "",
         answers && answers.filter((a) => a.answer.trim().length > 10).length > 0
           ? `\n\nCANDIDATE CONTEXT (first-hand answers — treat as evidence, weave into bullets and about where relevant):\n${

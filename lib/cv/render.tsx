@@ -4,10 +4,12 @@ import {
   Page,
   View,
   Text,
+  Image,
   StyleSheet,
   renderToBuffer,
 } from "@react-pdf/renderer";
 import type { CvContent } from "../types";
+import { HEADSHOT_JPEG_BASE64 } from "./photo";
 
 const DARK = "#111111";
 const MID = "#555555";
@@ -26,29 +28,41 @@ const s = StyleSheet.create({
   },
 
   // ── Header ─────────────────────────────────────────────────────────
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  headerTextBlock: {
+    flex: 1,
+  },
   headerName: {
     fontFamily: "Helvetica-Bold",
     fontSize: 26,
     letterSpacing: 3,
     color: DARK,
-    textAlign: "center",
     textTransform: "uppercase",
   },
   headerTagline: {
     fontSize: 8,
-    letterSpacing: 5,
+    letterSpacing: 2,
     color: MID,
-    textAlign: "center",
     marginTop: 4,
     textTransform: "uppercase",
   },
   headerContact: {
     flexDirection: "row",
-    justifyContent: "center",
     gap: 20,
     marginTop: 8,
     fontSize: 8,
     color: "#444444",
+  },
+  headerPhoto: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    marginLeft: 20,
+    objectFit: "cover",
   },
 
   // ── Dividers ────────────────────────────────────────────────────────
@@ -201,16 +215,19 @@ function CvDocument({ content }: { content: CvContent }) {
     >
       <Page size="A4" style={s.page} wrap={false}>
         {/* ── Header ── */}
-        <View>
-          <Text style={s.headerName}>Nicola Lombardi</Text>
-          <Text style={s.headerTagline}>
-            Business Development · Fintech · AI · Operations
-          </Text>
-          <View style={s.headerContact}>
-            <Text>+34 603 376 602</Text>
-            <Text>nicolalombardi@mac.com</Text>
-            <Text>Madrid, Spain</Text>
+        <View style={s.headerRow}>
+          <View style={s.headerTextBlock}>
+            <Text style={s.headerName}>Nicola Lombardi</Text>
+            <Text style={s.headerTagline}>
+              Business Development · Fintech · AI · Operations
+            </Text>
+            <View style={s.headerContact}>
+              <Text>+34 603 376 602</Text>
+              <Text>nicolalombardi@mac.com</Text>
+              <Text>Madrid, Spain</Text>
+            </View>
           </View>
+          <Image style={s.headerPhoto} src={`data:image/jpeg;base64,${HEADSHOT_JPEG_BASE64}`} />
         </View>
 
         <View style={s.hrFull} />

@@ -30,6 +30,7 @@ export async function saveProfile(profile: Profile): Promise<void> {
       access: "public",
       contentType: "application/json",
       addRandomSuffix: false,
+      allowOverwrite: true,
     });
   } else {
     writeFileSync(LOCAL_PATH, json);
