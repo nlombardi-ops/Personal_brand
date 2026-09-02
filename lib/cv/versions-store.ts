@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { list, put } from "@vercel/blob";
+import { get, put } from "@vercel/blob";
 import type { CvVersion } from "@/lib/types";
 
 const BLOB_PATHNAME = "cv-versions.json";
@@ -9,11 +9,13 @@ const LOCAL_PATH = join(process.cwd(), "data/cv-versions.json");
 export async function getVersions(): Promise<CvVersion[]> {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
-      const { blobs } = await list({ prefix: "cv-versions" });
-      const blob = blobs.find((b) => b.pathname === BLOB_PATHNAME);
-      if (blob) {
-        const res = await fetch(blob.url);
-        if (res.ok) return res.json() as Promise<CvVersion[]>;
+      // useCache: false bypasses Vercel's CDN cache layer — needed because
+      // the pathname is stable (addRandomSuffix: false), so the CDN would
+      // otherwise keep serving the pre-save copy after every write.
+      const result = await get(BLOB_PATHNAME, { access: "private", useCache: false });
+      if (result) {
+        const text = await new Response(result.stream).text();
+        return JSON.parse(text) as CvVersion[];
       }
     } catch {
       // fall through to local
@@ -30,7 +32,7 @@ export async function saveVersions(versions: CvVersion[]): Promise<void> {
   const json = JSON.stringify(versions, null, 2);
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     await put(BLOB_PATHNAME, json, {
-      access: "public",
+      access: "private",
       contentType: "application/json",
       addRandomSuffix: false,
       allowOverwrite: true,
