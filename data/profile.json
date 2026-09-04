@@ -21,91 +21,125 @@
     ]
   },
   "about": {
-    "tagline": "AI Consulting  ·  Commercial Strategy  ·  Operations & Delivery  ·  Business Development",
+    "tagline": "AI Consulting  \u00b7  Commercial Strategy  \u00b7  Operations & Delivery  \u00b7  Business Development",
     "short": "Co-founder and COO of Mottum Analytica. AI consulting and operations leader with 10+ years across fintech, consulting, and mobility. Based in Madrid.",
-    "medium": "I build and run the operational and commercial side of AI consulting projects. Co-founder and COO of Mottum Analytica — a Madrid-based AI/data consultancy serving multilateral organisations (UNDP, IDB), European public administrations, and enterprise clients across Spain and Latin America.",
-    "long": "I build and run the operational and commercial side of AI consulting projects. Co-founder and COO of Mottum Analytica — a Madrid-based AI/data consultancy serving multilateral organisations (UNDP, IDB), European public administrations, and enterprise clients across Spain and Latin America. I lead end-to-end delivery: from closing the contract to managing the team, shipping the deliverable, and running the commercial pipeline in parallel. Generalist by design — equally at home structuring a proposal, running a stakeholder workshop, and shipping a live product. Strongest at the intersection of strategy, operations, and people.",
-    "linkedin": "I work at the intersection of strategy and execution — building pipelines, structuring deals, and turning ideas into revenue. Co-founder and COO of Mottum Analytica, an AI and data consultancy. Previously: Uber Direct, Polestar, Capgemini Invent, Amadeus IT. 10+ years in consulting, AI/data, and operations.",
-    "recruiter": "10+ years in consulting and operations, with a track record of delivering AI projects for multilateral organisations (UNDP, IDB) and enterprise clients. Co-founder and COO of Mottum Analytica. Previously: Uber Direct, Polestar, Capgemini Invent, Amadeus IT. Education: IE Business School (MSc Business Analytics & Big Data), Warwick Business School (MSc Economics & Finance), Università Cattolica Milan (BA Economics & Management). Fluent in Italian, English, Spanish, French."
+    "medium": "I build and run the operational and commercial side of AI consulting projects. Co-founder and COO of Mottum Analytica \u2014 a Madrid-based AI/data consultancy serving multilateral organisations (UNDP, IDB), European public administrations, and enterprise clients across Spain and Latin America.",
+    "long": "I build and run the operational and commercial side of AI consulting projects. Co-founder and COO of Mottum Analytica \u2014 a Madrid-based AI/data consultancy serving multilateral organisations (UNDP, IDB), European public administrations, and enterprise clients across Spain and Latin America. I lead end-to-end delivery: from closing the contract to managing the team, shipping the deliverable, and running the commercial pipeline in parallel. Generalist by design \u2014 equally at home structuring a proposal, running a stakeholder workshop, and shipping a live product. Strongest at the intersection of strategy, operations, and people.",
+    "linkedin": "I work at the intersection of strategy and execution \u2014 building pipelines, structuring deals, and turning ideas into revenue. Co-founder and COO of Mottum Analytica, an AI and data consultancy. Previously: Uber Direct, Polestar, Capgemini Invent, Amadeus IT. 10+ years in consulting, AI/data, and operations.",
+    "recruiter": "10+ years in consulting and operations, with a track record of delivering AI projects for multilateral organisations (UNDP, IDB) and enterprise clients. Co-founder and COO of Mottum Analytica. Previously: Uber Direct, Polestar, Capgemini Invent, Amadeus IT. Education: IE Business School (MSc Business Analytics & Big Data), Warwick Business School (MSc Economics & Finance), Universit\u00e0 Cattolica Milan (BA Economics & Management). Fluent in Italian, English, Spanish, French."
   },
   "experience": [
     {
       "company": "Mottum Analytica",
       "role": "COO & Head of AI Consulting",
-      "period": "2025 – Present",
+      "period": "2025 \u2013 Present",
       "start": "2025-01",
       "end": null,
       "location": "Madrid, Spain",
       "type": "founder",
       "summary": "Co-founded and lead operations, delivery, and commercial strategy across AI/data consulting projects for multilateral organisations, public administrations, and enterprises.",
       "bullets": [
-        "Lead operations, delivery, and team coordination across AI/data consulting projects — multi-disciplinary teams and client relationships in Spain, the EU, and Latin America.",
-        "Closed and executed partnership agreements with the UN Development Programme (UNDP/AccLab Mexico) to embed AI tools in public institutions — total contract value ~$38k across two engagements.",
+        "Lead operations, delivery, and team coordination across AI/data consulting projects \u2014 multi-disciplinary teams and client relationships in Spain, the EU, and Latin America.",
+        "Closed and executed partnership agreements with the UN Development Programme (UNDP/AccLab Mexico) to embed AI tools in public institutions \u2014 total contract value ~$38k across two engagements.",
         "Lead PM and delivery on SITA III Suriname (IDB-financed, $50,352): Central Repository Tool, CRM advisory, and live service portal for the Suriname Investment & Trade Agency.",
-        "Co-founded and launched Noetia (noetia.io, live May 2025): AI-powered public procurement platform automating licitación discovery, eligibility filtering, and bid intelligence for B2G consultancies.",
-        "Built and launched Mottum AI Academy — executive platform simplifying AI and data concepts for non-technical public-sector audiences.",
+        "Co-founded and launched Noetia (noetia.io, live May 2025): AI-powered public procurement platform automating licitaci\u00f3n discovery, eligibility filtering, and bid intelligence for B2G consultancies.",
+        "Built and launched Mottum AI Academy \u2014 executive platform simplifying AI and data concepts for non-technical public-sector audiences.",
         "Own the full commercial pipeline: prospecting (Apollo), cold outreach, pricing strategy, proposal writing, and contract conversion.",
         "Designed and delivered AI product GTM strategy including market mapping, ICP definition, and outreach sequencing for Noetia."
       ],
-      "tags": ["AI", "Strategy", "GTM", "BD", "Founder", "Consulting", "Public Sector", "UNDP", "IDB"]
+      "tags": [
+        "AI",
+        "Strategy",
+        "GTM",
+        "BD",
+        "Founder",
+        "Consulting",
+        "Public Sector",
+        "UNDP",
+        "IDB"
+      ]
     },
     {
       "company": "Uber Direct",
       "role": "Strategic Operations Manager",
-      "period": "Jan – Jun 2025",
+      "period": "Jan \u2013 Jun 2025",
       "start": "2025-01",
       "end": "2025-06",
       "location": "Madrid, Spain",
       "type": "employee",
-      "summary": "Drove operations strategy for Uber Direct — one of Uber's fastest-growing last-mile delivery services — focusing on delivery performance, issue resolution, and cross-functional alignment.",
+      "summary": "Drove operations strategy for Uber Direct \u2014 one of Uber's fastest-growing last-mile delivery services \u2014 focusing on delivery performance, issue resolution, and cross-functional alignment.",
       "bullets": [
-        "Drove operations strategy for Uber Direct — one of Uber's fastest-growing last-mile delivery services — focusing on delivery performance, issue resolution, and cross-functional alignment.",
+        "Drove operations strategy for Uber Direct \u2014 one of Uber's fastest-growing last-mile delivery services \u2014 focusing on delivery performance, issue resolution, and cross-functional alignment.",
         "Led deep-dive investigations into critical KPIs (delivery failures, cancellation rates, fraud signals) to identify root causes and design operational countermeasures.",
         "Spearheaded a project to reduce high-cost drop-off cancellations: developed mitigation strategies that improved customer experience and reduced account manager workload.",
         "Collaborated with global product teams to design scalable improvements; served as the bridge between operations, product, and commercial teams to align priorities and translate data insights into business actions.",
         "Designed KPI frameworks and real-time dashboards for operational performance and financial risk tracking; delivered weekly executive reporting to senior stakeholders."
       ],
-      "tags": ["Operations", "Fintech", "Risk", "Fraud", "KPIs", "Last-Mile"]
+      "tags": [
+        "Operations",
+        "Fintech",
+        "Risk",
+        "Fraud",
+        "KPIs",
+        "Last-Mile"
+      ]
     },
     {
       "company": "Polestar",
       "role": "Fleet & Commercial Operations Manager",
-      "period": "Sep 2022 – Jul 2024",
+      "period": "Sep 2022 \u2013 Jul 2024",
       "start": "2022-09",
       "end": "2024-07",
       "location": "Madrid, Spain",
       "type": "employee",
       "summary": "Pioneered Polestar's telematics service for B2B fleet clients in Spain from pre-launch to fully commercialised.",
       "bullets": [
-        "Pioneered Polestar's telematics service for B2B fleet clients in Spain from pre-launch to fully commercialised — the strategy and direction set during this period have since been consolidated into a live, fully developed service through strong telematics partnerships.",
-        "Led commercial strategy and launch end-to-end: built the go-to-market approach, telematics partner ecosystem, and client acquisition playbook — drove 15% B2B revenue growth in year one.",
+        "Pioneered Polestar's telematics service for B2B fleet clients in Spain from pre-launch to fully commercialised \u2014 the strategy and direction set during this period have since been consolidated into a live, fully developed service through strong telematics partnerships.",
+        "Led commercial strategy and launch end-to-end: built the go-to-market approach, telematics partner ecosystem, and client acquisition playbook \u2014 drove 15% B2B revenue growth in year one.",
         "Managed the full B2B engagement cycle: prospecting, pitching, negotiation, and contract close; coordinated with product and technical teams to translate client requirements into roadmap priorities.",
         "Built a market entry and delivery playbook that was later adopted as a template across other European markets; produced Power BI dashboards for sales leadership and executive reporting."
       ],
-      "tags": ["BD", "B2B", "Commercial", "Fleet", "Telematics", "Mobility", "Power BI"]
+      "tags": [
+        "BD",
+        "B2B",
+        "Commercial",
+        "Fleet",
+        "Telematics",
+        "Mobility",
+        "Power BI"
+      ]
     },
     {
       "company": "Capgemini Invent",
       "role": "Senior Consultant",
-      "period": "Mar 2019 – Jul 2022",
+      "period": "Mar 2019 \u2013 Jul 2022",
       "start": "2019-03",
       "end": "2022-07",
       "location": "Madrid, Spain",
       "type": "employee",
       "summary": "Strategy and CX consulting for top-tier clients in insurance and automotive. Led CX transformation across 10+ European markets.",
       "bullets": [
-        "Led CX and NPS transformation programme across 10+ European markets for a top-tier insurance client — managed delivery workstreams and C-level stakeholder relationships.",
+        "Led CX and NPS transformation programme across 10+ European markets for a top-tier insurance client \u2014 managed delivery workstreams and C-level stakeholder relationships.",
         "Developed go-to-market strategy, digital transformation roadmap, and Spanish launch plan for Polestar Iberia.",
         "Built business cases and ROI models for digital transformation initiatives to support executive decision-making.",
         "Ran client workshops and executive presentations, translating technical AI/data solutions into business outcomes.",
         "Delivered BI tools and data analytics solutions for European public-sector clients."
       ],
-      "tags": ["Consulting", "GTM", "CX", "NPS", "Strategy", "Insurance", "Automotive", "BI"]
+      "tags": [
+        "Consulting",
+        "GTM",
+        "CX",
+        "NPS",
+        "Strategy",
+        "Insurance",
+        "Automotive",
+        "BI"
+      ]
     },
     {
       "company": "Omdena",
       "role": "Technical Project Manager (pro-bono)",
-      "period": "Sep 2020 – Feb 2021",
+      "period": "Sep 2020 \u2013 Feb 2021",
       "start": "2020-09",
       "end": "2021-02",
       "location": "Remote",
@@ -114,28 +148,40 @@
       "bullets": [
         "Coordinated a global distributed team of 20+ developers to deliver an AI-powered Agritech solution; end-to-end project management across multiple time zones."
       ],
-      "tags": ["AI", "Project Management", "Agritech", "Pro-bono"]
+      "tags": [
+        "AI",
+        "Project Management",
+        "Agritech",
+        "Pro-bono"
+      ]
     },
     {
       "company": "Amadeus IT",
       "role": "Customer Success Manager / Product Manager",
-      "period": "Sep 2017 – Mar 2019",
+      "period": "Sep 2017 \u2013 Mar 2019",
       "start": "2017-09",
       "end": "2019-03",
       "location": "Madrid, Spain",
       "type": "employee",
       "summary": "Managed analytics platforms and customer success for B2B travel clients.",
       "bullets": [
-        "Managed a portfolio of B2B clients on Amadeus analytics platforms; primary liaison between clients and product teams — improved client engagement by 30%.",
+        "Managed a portfolio of B2B clients on Amadeus analytics platforms; primary liaison between clients and product teams \u2014 improved client engagement by 30%.",
         "Reduced onboarding time-to-value from 6 weeks to 3 weeks via structured training and delivery frameworks.",
         "Built client health scorecards to proactively identify at-risk accounts; managed roadmap and product adoption programmes."
       ],
-      "tags": ["Analytics", "B2B", "SaaS", "Customer Success", "Product", "Travel Tech"]
+      "tags": [
+        "Analytics",
+        "B2B",
+        "SaaS",
+        "Customer Success",
+        "Product",
+        "Travel Tech"
+      ]
     }
   ],
   "projects": [
     {
-      "name": "SITA III — Suriname (IDB)",
+      "name": "SITA III \u2014 Suriname (IDB)",
       "value": "$50,352",
       "status": "live",
       "role": "PM/Lead",
@@ -143,14 +189,14 @@
       "reference": "IDB Loan SU-L1056"
     },
     {
-      "name": "PNUD Mexico — CEA Querétaro",
+      "name": "PNUD Mexico \u2014 CEA Quer\u00e9taro",
       "value": "~$28k",
       "status": "delivered",
       "role": "PM & AI Consultant",
       "description": "Generative AI assistant for water utility factibilidades process. 3 deliverables accepted by UNDP AccLab Mexico."
     },
     {
-      "name": "PNUD Mexico — Zacatecas",
+      "name": "PNUD Mexico \u2014 Zacatecas",
       "value": "$9,943",
       "status": "delivered",
       "role": "PM & AI Consultant",
@@ -161,7 +207,7 @@
       "value": "SaaS",
       "status": "live",
       "role": "Co-founder",
-      "description": "AI public procurement platform: licitación discovery, eligibility filtering, bid intelligence. Live May 2025.",
+      "description": "AI public procurement platform: licitaci\u00f3n discovery, eligibility filtering, bid intelligence. Live May 2025.",
       "url": "https://noetia.io"
     },
     {
@@ -172,7 +218,7 @@
       "description": "Geospatial AI platform combining STAC-compliant satellite data with a Geo-RAG intelligence layer for forest monitoring."
     },
     {
-      "name": "KED / Red.es — Quotta.ai",
+      "name": "KED / Red.es \u2014 Quotta.ai",
       "value": null,
       "status": "delivered",
       "role": "Project Lead",
@@ -183,7 +229,7 @@
       "value": null,
       "status": "live",
       "role": "Founder",
-      "description": "Executive AI literacy platform — simplifying AI and data concepts for non-technical audiences."
+      "description": "Executive AI literacy platform \u2014 simplifying AI and data concepts for non-technical audiences."
     },
     {
       "name": "SITA License Strategy",
@@ -208,7 +254,7 @@
     },
     {
       "degree": "Bachelor, International Management & Economics",
-      "institution": "Università Cattolica del Sacro Cuore",
+      "institution": "Universit\u00e0 Cattolica del Sacro Cuore",
       "location": "Milan, Italy",
       "year": 2015
     }
@@ -217,90 +263,234 @@
     "delivery_operations": {
       "label": "Delivery & Operations",
       "skills": [
-        { "name": "Project Management", "proficiency": "expert" },
-        { "name": "AI Delivery", "proficiency": "expert" },
-        { "name": "Process Design", "proficiency": "advanced" },
-        { "name": "KPI Frameworks", "proficiency": "expert" },
-        { "name": "Risk Management", "proficiency": "advanced" },
-        { "name": "Agile Delivery", "proficiency": "advanced" },
-        { "name": "Cross-Functional Team Leadership", "proficiency": "expert" }
+        {
+          "name": "Project Management",
+          "proficiency": "expert"
+        },
+        {
+          "name": "AI Delivery",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Process Design",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "KPI Frameworks",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Risk Management",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Agile Delivery",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Cross-Functional Team Leadership",
+          "proficiency": "expert"
+        }
       ]
     },
     "commercial_gtm": {
       "label": "Commercial & GTM",
       "skills": [
-        { "name": "B2B & B2G Sales", "proficiency": "expert" },
-        { "name": "Proposal Writing", "proficiency": "expert" },
-        { "name": "Pricing Strategy", "proficiency": "advanced" },
-        { "name": "Partnership Structuring", "proficiency": "expert" },
-        { "name": "Market Entry", "proficiency": "expert" },
-        { "name": "ICP Definition", "proficiency": "advanced" },
-        { "name": "Deal Negotiation", "proficiency": "expert" },
-        { "name": "Contract Close", "proficiency": "expert" }
+        {
+          "name": "B2B & B2G Sales",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Proposal Writing",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Pricing Strategy",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Partnership Structuring",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Market Entry",
+          "proficiency": "expert"
+        },
+        {
+          "name": "ICP Definition",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Deal Negotiation",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Contract Close",
+          "proficiency": "expert"
+        }
       ]
     },
     "public_procurement": {
       "label": "Public Procurement (B2G)",
       "skills": [
-        { "name": "Licitaciones (LCSP)", "proficiency": "advanced" },
-        { "name": "Memoria Técnica", "proficiency": "advanced" },
-        { "name": "Pliego Analysis", "proficiency": "advanced" },
-        { "name": "Scoring Strategy", "proficiency": "advanced" },
-        { "name": "Consortium Management (UTE)", "proficiency": "advanced" },
-        { "name": "Multilateral Procurement (UNDP, IDB)", "proficiency": "advanced" }
+        {
+          "name": "Licitaciones (LCSP)",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Memoria T\u00e9cnica",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Pliego Analysis",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Scoring Strategy",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Consortium Management (UTE)",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Multilateral Procurement (UNDP, IDB)",
+          "proficiency": "advanced"
+        }
       ]
     },
     "ai_product": {
       "label": "AI & Product",
       "skills": [
-        { "name": "AI Strategy & Consulting", "proficiency": "expert" },
-        { "name": "AI Product GTM", "proficiency": "expert" },
-        { "name": "RAG Systems", "proficiency": "advanced" },
-        { "name": "Stakeholder Alignment", "proficiency": "expert" },
-        { "name": "Workshop Facilitation", "proficiency": "advanced" },
-        { "name": "Product Roadmap", "proficiency": "advanced" },
-        { "name": "Business Case Development", "proficiency": "advanced" }
+        {
+          "name": "AI Strategy & Consulting",
+          "proficiency": "expert"
+        },
+        {
+          "name": "AI Product GTM",
+          "proficiency": "expert"
+        },
+        {
+          "name": "RAG Systems",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Stakeholder Alignment",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Workshop Facilitation",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Product Roadmap",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Business Case Development",
+          "proficiency": "advanced"
+        }
       ]
     },
     "data_analytics": {
       "label": "Data & Analytics",
       "skills": [
-        { "name": "SQL", "proficiency": "working" },
-        { "name": "Python", "proficiency": "working" },
-        { "name": "Power BI", "proficiency": "advanced" },
-        { "name": "Tableau", "proficiency": "working" },
-        { "name": "HubSpot", "proficiency": "advanced" },
-        { "name": "Notion", "proficiency": "advanced" },
-        { "name": "OpenAI / Claude APIs", "proficiency": "advanced" },
-        { "name": "BI Strategy", "proficiency": "advanced" },
-        { "name": "KPI Design", "proficiency": "expert" },
-        { "name": "Dashboard Reporting", "proficiency": "expert" }
+        {
+          "name": "SQL",
+          "proficiency": "working"
+        },
+        {
+          "name": "Python",
+          "proficiency": "working"
+        },
+        {
+          "name": "Power BI",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Tableau",
+          "proficiency": "working"
+        },
+        {
+          "name": "HubSpot",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Notion",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "OpenAI / Claude APIs",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "BI Strategy",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "KPI Design",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Dashboard Reporting",
+          "proficiency": "expert"
+        }
       ]
     },
     "cx_stakeholder": {
       "label": "CX & Stakeholder",
       "skills": [
-        { "name": "CX Strategy", "proficiency": "advanced" },
-        { "name": "NPS Programmes", "proficiency": "advanced" },
-        { "name": "Customer Journey Mapping", "proficiency": "advanced" },
-        { "name": "Executive Presentations", "proficiency": "expert" },
-        { "name": "C-Level Relationship Management", "proficiency": "expert" },
-        { "name": "Account Management", "proficiency": "advanced" }
+        {
+          "name": "CX Strategy",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "NPS Programmes",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Customer Journey Mapping",
+          "proficiency": "advanced"
+        },
+        {
+          "name": "Executive Presentations",
+          "proficiency": "expert"
+        },
+        {
+          "name": "C-Level Relationship Management",
+          "proficiency": "expert"
+        },
+        {
+          "name": "Account Management",
+          "proficiency": "advanced"
+        }
       ]
     }
   },
   "languages": [
-    { "language": "Italian", "level": "Native" },
-    { "language": "English", "level": "Fluent" },
-    { "language": "Spanish", "level": "Fluent" },
-    { "language": "French", "level": "Professional" }
+    {
+      "language": "Italian",
+      "level": "Native"
+    },
+    {
+      "language": "English",
+      "level": "Fluent"
+    },
+    {
+      "language": "Spanish",
+      "level": "Fluent"
+    },
+    {
+      "language": "French",
+      "level": "Professional"
+    }
   ],
   "referrals": [
     {
       "name": "Adrien Palumbo",
       "title": "Managing Director Spain",
       "company": "Polestar",
-      "quote": "Nico has a rare ability to bridge commercial strategy and operational execution. He was instrumental in building our Iberian go-to-market — precise, fast, and deeply reliable.",
+      "quote": "Nico has a rare ability to bridge commercial strategy and operational execution. He was instrumental in building our Iberian go-to-market \u2014 precise, fast, and deeply reliable.",
       "contact": null,
       "status": "confirmed"
     },
