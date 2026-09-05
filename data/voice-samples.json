@@ -1,3 +1,18 @@
 {
-  "samples": []
+  "samples": [
+    {
+      "id": "73105b0a-c266-4d48-a12d-7b546f291afd",
+      "date": "2026-09-05",
+      "source": "cover_letter_answer",
+      "context": "Key Account Manager at Ontop",
+      "text": "remote, sales, international, young team, fintech"
+    },
+    {
+      "id": "05431af9-2dc8-4448-b7af-2643ad99be91",
+      "date": "2026-09-05",
+      "source": "cover_letter_answer",
+      "context": "Key Account Manager at Ontop",
+      "text": "I am a fresh energy with experience and charisma in 4 languages. Recently in a start up environment, want to bring structure in sales and sales ops"
+    }
+  ]
 }
