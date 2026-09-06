@@ -128,6 +128,30 @@ Branding improvement roadmap. Ordered by impact. Each item is self-contained.
 
 ---
 
+## Data & content — keep the CV Builder honest
+_Moved here from the AIOS workspace 2026-09-06 — this is the app's job, not the portfolio's._
+
+### D1. Refresh `data/profile.json`
+`meta.last_updated` is 2026-06-21. The "about" text (all registers) still says
+"Co-founder and COO of Mottum Analytica" as current — Mottum closed Aug 2026.
+Update to reflect the close + the current positioning (AI + Commercial double
+lane, ops as the bridge). The honest spine is in
+`~/Desktop/AIOS /context/import/carriera/cv/2026-09-06_NicolaLombardi-CV.md`.
+
+### D2. Add real writing samples to `data/voice-samples.json`
+Currently `{ "samples": [] }`. The voice profile (`docs/voice-profile.md`) is a
+v1 inferred from form answers only, ~60–70% confidence. Add 3–5 real samples
+(client emails, LinkedIn posts, long team messages) and regenerate — gets it to
+~90%. Note: `docs/voice-profile.md` is mirrored in the AIOS workspace and must
+stay byte-identical.
+
+### D3. Start populating `profile.context_enrichment[]` (the experience bank)
+Empty. It fills as you answer the generated interview questions during real
+applications (`app/api/cv/questions`). Or seed it once via
+`app/api/cv/enrich-profile` from the Mottum dossier +
+`~/Desktop/AIOS /context/import/personal-brand/toolkit/04-memoria-sesiones.md`.
+
+
 ## Done (reference)
 
 - ✅ Dashboard removed from primary nav → moved to footer
