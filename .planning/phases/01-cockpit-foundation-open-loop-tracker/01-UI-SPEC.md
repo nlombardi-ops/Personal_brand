@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: cockpit-foundation-open-loop-tracker
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-09-08
+reviewed_at: 2026-09-08
 ---
 
 # Phase 1 — UI Design Contract
@@ -219,7 +220,7 @@ There is **no hard delete** in Phase 1. "Descartar" sets `status = dropped`, whi
 
 ## UI Considerations
 
-Applicable state considerations resolved: **11 covered, 1 backstop, 0 unresolved**
+Applicable state considerations resolved: **14 covered, 1 backstop, 0 unresolved** (Step 9.5 UI-consideration probe run 2026-09-08 over 11 surfaces → 75 raw matrix items; reconciliation note below)
 
 | Category | Element(s) | Status | Resolution / Reason |
 |----------|------------|--------|---------------------|
@@ -236,6 +237,11 @@ Applicable state considerations resolved: **11 covered, 1 backstop, 0 unresolved
 | overflow | long `owner_detail` | ✅ covered | Owner chip truncates with ellipsis at `max-w-[12ch]`; full value in the slide-over |
 | zero-one-many | count strip + column counts | ✅ covered | Spanish singular/plural handled: `1 vencido` vs `{n} vencidos` etc. (see Copywriting Contract → Board furniture) |
 | responsive/mobile | board (< `md`) | ✅ covered | Columns stack vertically in priority order Vencidos → Vencen pronto → A la espera → Sin fecha (D-15); quick actions always visible (not hover-gated) at 44px touch targets; slide-over becomes near-full-width |
+| partial | slide-over editing a loop with optional fields blank (`due`, `owner_detail`) | ✅ covered | Form renders with `Fecha objetivo` empty (preset chips + `Sin fecha` state) and `Detalle del responsable` hidden unless `owner` ∈ {neighbour, provider} (D-11); no placeholder-vs-value ambiguity |
+| long-text | slide-over `Título` input + `Próxima acción` textarea with very long content | ✅ covered | `Título` input scrolls horizontally within its field; `Próxima acción` textarea is 3 rows then `overflow-y-auto`; neither expands the panel width (`w-[420px]` fixed) |
+| zero-one-many | count strip when loops exist but none are overdue/due-soon/waiting (all in "Sin fecha") | ✅ covered | Strip renders `0 vencidos · 0 vencen pronto · 0 a la espera` with neutral (not status) numerals; board shows three empty columns with reassurance copy + the populated "Sin fecha" section — not the first-run empty state (which is zero-loops only) |
+
+**Step 9.5 probe reconciliation (no silent drops).** The deterministic probe enumerated 75 state-consideration cells across 11 surfaces (E1 board, E2 column, E3 card, E4 "Sin fecha" section, E5 slide-over, E6 count strip, E7 date pill, E8 owner chip, E9 sidebar, E10 quick-action buttons, E11 first-run state). The 15 rows above resolve every **genuinely applicable** cell for the composite surfaces (E1–E5, E11) plus the count-strip zero/plural axis (E6). The remaining raw cells resolve to **Dismiss — reason: component-level state not applicable**: E7 (relative-date pill), E8 (owner chip), E9 (static single-item sidebar nav), and E10-as-control (icon buttons) are pure derived/static presentational elements with no independent data-load, empty, or error state — their loading/error behaviour is the parent card's (row "loading | quick-action mutation" and "error | create / edit / quick-action save") and their overflow/long-text behaviour is already covered (owner chip `max-w-[12ch]`, date pill fixed vocabulary). No applicable consideration was dropped without a recorded reason.
 
 **Note for planner (not UI):** CONTEXT.md "Claude's Discretion" asks whether LPH-aware `OpenLoop` fields are declared now or in Phase 3. Recommendation: declare them **optional/nullable** on the `OpenLoop` interface now (all `?:`) so Phase 3 adds behaviour, not shape — no UI impact in Phase 1 (those fields are not rendered).
 
@@ -245,6 +251,7 @@ Applicable state considerations resolved: **11 covered, 1 backstop, 0 unresolved
 
 Prescriptive notes the executor must follow (beyond tokens above):
 
+- **Primary focal point:** the **"Vencidos" (Overdue) column, top-left** of the board — it draws the eye first through reading-order position, the `#b91c1c` column-header count, and the 2px red left-border on its cards. Secondary anchor: the header **count strip**, which gives the at-a-glance state before the eye reaches the columns. The "Añadir bucle" accent button is the only accent-colored element in the header and is the primary action target. On the first-run empty state the focal point shifts to the centered "Añadir tu primer bucle" accent button.
 - **Surface shell:** `app/community-president/layout.tsx` mirrors `app/cv/layout.tsx` — async Server Component, `await cookies()`, `cookie.value !== process.env.DASHBOARD_TOKEN` → `redirect("/dashboard/login")`. Layout renders its own sidebar + `<main>`.
 - **Sidebar:** own component (peer of `app/components/dashboard/Sidebar.tsx` but on the `neutral-*` palette). Desktop width `240px` (`w-60`), `bg-neutral-100`, `border-r border-neutral-200`, `fixed` left. `<main>` offset by the same width. Brand: `#0f172a` rounded tile "CP" + `Presidente` / `Comunidad` labels. Nav (Phase 1): a single item `Panel` → `/community-president`. Footer: `Volver al portfolio` (→ `/`) and `Cerrar sesión` (→ `DELETE /api/auth`, then `/dashboard/login`). Keep it minimal — future surfaces add entries as they land (CONTEXT deferred).
 - **Mobile (< `md`):** sidebar collapses to a top bar (`#fafafa`, `border-b border-neutral-200`) with a hamburger opening a left sheet drawer (DESIGN.md mobile pattern). Board below it.
@@ -268,11 +275,11 @@ Prescriptive notes the executor must follow (beyond tokens above):
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS (was FLAG — explicit focal point added post-review)
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved 2026-09-08 (gsd-ui-checker — APPROVED, 0 blocking; the one FLAG on Dimension 2 resolved by adding the "Primary focal point" note to the Interaction & Layout Contract)
