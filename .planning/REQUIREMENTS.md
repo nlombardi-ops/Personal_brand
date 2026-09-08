@@ -83,28 +83,35 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LOOP-01 | — | Pending |
-| LOOP-02 | — | Pending |
-| LOOP-03 | — | Pending |
-| LOOP-04 | — | Pending |
-| LPH-01 | — | Pending |
-| LPH-02 | — | Pending |
-| LPH-03 | — | Pending |
-| LPH-04 | — | Pending |
-| LPH-05 | — | Pending |
-| QA-01 | — | Pending |
-| PRICE-01 | — | Pending |
-| INGEST-01 | — | Pending |
-| INGEST-02 | — | Pending |
-| PLAT-01 | — | Pending |
-| PLAT-02 | — | Pending |
-| PLAT-03 | — | Pending |
+| LOOP-01 | Phase 1 | Pending |
+| LOOP-02 | Phase 2 | Pending |
+| LOOP-03 | Phase 2 | Pending |
+| LOOP-04 | Phase 1 | Pending |
+| LPH-01 | Phase 3 | Pending |
+| LPH-02 | Phase 3 | Pending |
+| LPH-03 | Phase 3 | Pending |
+| LPH-04 | Phase 3 | Pending |
+| LPH-05 | Phase 3 | Pending |
+| QA-01 | Phase 4 | Pending |
+| PRICE-01 | Phase 4 | Pending |
+| INGEST-01 | Phase 2 | Pending |
+| INGEST-02 | Phase 5 | Pending |
+| PLAT-01 | Phase 1 | Pending |
+| PLAT-02 | Phase 1 | Pending |
+| PLAT-03 | Phase 1 | Pending |
 
 **Coverage:**
 - v1 requirements: 16 total
-- Mapped to phases: 0
-- Unmapped: 16 ⚠️ (roadmap not yet created)
+- Mapped to phases: 16
+- Unmapped: 0 ✓
+
+**Phase distribution:**
+- Phase 1 — Cockpit Foundation & Open-Loop Tracker: PLAT-01, PLAT-02, PLAT-03, LOOP-01, LOOP-04
+- Phase 2 — Documents & Presupuestos Workflow: INGEST-01, LOOP-02, LOOP-03
+- Phase 3 — LPH Deadline Engine: LPH-01, LPH-02, LPH-03, LPH-04, LPH-05
+- Phase 4 — Claude-Assisted Advice (LPH Q&A + Presupuesto Pricing): QA-01, PRICE-01
+- Phase 5 — Administrador Email Ingestion: INGEST-02
 
 ---
 *Requirements defined: 2026-09-08*
-*Last updated: 2026-09-08 after initial definition*
+*Last updated: 2026-09-08 after roadmap creation — 16/16 v1 requirements mapped across 5 phases*
