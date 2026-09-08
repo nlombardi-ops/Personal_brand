@@ -42,7 +42,13 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. On opening the cockpit Nicola sees his OpenLoops split into overdue / due-soon / waiting-on-others groups, ordered by urgency, with no manual filtering.
   4. Any request to a `/api/community/*` route with a missing or wrong token is rejected with 401 via a shared `requireAuth()` helper doing a strong `=== DASHBOARD_TOKEN` comparison.
   5. Every stored OpenLoop carries a `source` field that already accepts a `neighbour_form` value, and no president-internal field (LPH data, owner routing, presupuestos) is defined on a shared/neighbour-visible shape.
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Slice 1 (wave 1): authenticated `/community-president` surface + sidebar, `OpenLoop`/`Submission` types, dual-mode store, `requireAuth()`, and creating the first loop in the slide-over so it survives a reload
+- [ ] 01-02-PLAN.md — Slice 2 (wave 2): the passive urgency board — tested `groupLoopsByUrgency` (D-01…D-07), three columns + collapsed "Sin fecha", relative-date cards, and the D-17 count strip
+- [ ] 01-03-PLAN.md — Slice 3 (wave 3): allow-listed PATCH endpoint, slide-over edit + "Descartar", inline quick actions (D-12), mobile stacking (D-15), and the PLAT-03 / SC-5 audit
+
 **UI hint**: yes
 
 ### Phase 2: Documents & Presupuestos Workflow
@@ -114,7 +120,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Cockpit Foundation & Open-Loop Tracker | 0/TBD | Not started | - |
+| 1. Cockpit Foundation & Open-Loop Tracker | 0/3 | Planned | - |
 | 2. Documents & Presupuestos Workflow | 0/TBD | Not started | - |
 | 3. LPH Deadline Engine | 0/TBD | Not started | - |
 | 4. Claude-Assisted Advice (LPH Q&A + Presupuesto Pricing) | 0/TBD | Not started | - |
