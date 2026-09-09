@@ -9,7 +9,7 @@ Requirements for the initial private president's cockpit. Each maps to a roadmap
 
 ### Open Loops
 
-- [ ] **LOOP-01**: User can create and edit an `OpenLoop` with kind (commitment / incidencia / obra / follow_up / permiso), status (open / waiting_on_other / blocked / done / dropped), owner (me / neighbour / administrador / provider / junta), next action, and soft due date
+- [x] **LOOP-01**: User can create and edit an `OpenLoop` with kind (commitment / incidencia / obra / follow_up / permiso), status (open / waiting_on_other / blocked / done / dropped), owner (me / neighbour / administrador / provider / junta), next action, and soft due date
 - [ ] **LOOP-02**: User can attach one or more `Document`s (acta / contract / presupuesto / carta) to an OpenLoop and open them in the browser
 - [ ] **LOOP-03**: User can record multiple `Presupuesto`s on an obra-kind OpenLoop (provider, amount, scope, received/valid dates, document) and compare them side by side
 - [ ] **LOOP-04**: User sees a passive cockpit view of OpenLoops grouped by due / overdue / waiting-on-others, sorted by urgency, on opening the surface
@@ -37,9 +37,9 @@ Requirements for the initial private president's cockpit. Each maps to a roadmap
 
 ### Platform
 
-- [ ] **PLAT-01**: The cockpit is a standalone `app/community-president/` surface with its own `layout.tsx` auth gate (mirroring `app/cv/layout.tsx`) and its own sidebar
-- [ ] **PLAT-02**: Every `/api/community/*` route enforces authentication via a shared `requireAuth()` helper doing a strong `=== DASHBOARD_TOKEN` comparison
-- [ ] **PLAT-03**: The data model keeps `OpenLoop` and a future `Submission` separate — president-internal fields (LPH data, owner routing, presupuestos) live only on `OpenLoop`, and `OpenLoop.source` supports a `neighbour_form` value — so a neighbour intake form can be added later without a rewrite
+- [x] **PLAT-01**: The cockpit is a standalone `app/community-president/` surface with its own `layout.tsx` auth gate (mirroring `app/cv/layout.tsx`) and its own sidebar
+- [x] **PLAT-02**: Every `/api/community/*` route enforces authentication via a shared `requireAuth()` helper doing a strong `=== DASHBOARD_TOKEN` comparison
+- [x] **PLAT-03**: The data model keeps `OpenLoop` and a future `Submission` separate — president-internal fields (LPH data, owner routing, presupuestos) live only on `OpenLoop`, and `OpenLoop.source` supports a `neighbour_form` value — so a neighbour intake form can be added later without a rewrite
 
 ## v2 Requirements
 
@@ -83,7 +83,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| LOOP-01 | Phase 1 | Pending |
+| LOOP-01 | Phase 1 | Complete |
 | LOOP-02 | Phase 2 | Pending |
 | LOOP-03 | Phase 2 | Pending |
 | LOOP-04 | Phase 1 | Pending |
@@ -96,16 +96,18 @@ Which phases cover which requirements. Populated during roadmap creation.
 | PRICE-01 | Phase 4 | Pending |
 | INGEST-01 | Phase 2 | Pending |
 | INGEST-02 | Phase 5 | Pending |
-| PLAT-01 | Phase 1 | Pending |
-| PLAT-02 | Phase 1 | Pending |
-| PLAT-03 | Phase 1 | Pending |
+| PLAT-01 | Phase 1 | Complete |
+| PLAT-02 | Phase 1 | Complete |
+| PLAT-03 | Phase 1 | Complete |
 
 **Coverage:**
+
 - v1 requirements: 16 total
 - Mapped to phases: 16
 - Unmapped: 0 ✓
 
 **Phase distribution:**
+
 - Phase 1 — Cockpit Foundation & Open-Loop Tracker: PLAT-01, PLAT-02, PLAT-03, LOOP-01, LOOP-04
 - Phase 2 — Documents & Presupuestos Workflow: INGEST-01, LOOP-02, LOOP-03
 - Phase 3 — LPH Deadline Engine: LPH-01, LPH-02, LPH-03, LPH-04, LPH-05
