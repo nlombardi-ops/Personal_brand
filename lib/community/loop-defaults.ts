@@ -123,6 +123,72 @@ export function validateLoopInput(
   return null;
 }
 
+// ── PATCH allow-list (LOOP-01 edit half, PLAT-02) ─────────────────────────
+// The ONLY keys a PATCH body may touch. `id`, `created_at`, `source` and every
+// LPH-aware field are server-owned and absent here, so they cannot be set from
+// the wire. `__proto__` / `constructor` are likewise absent, so a
+// prototype-polluting key is structurally unreachable — not filtered by name.
+// This frozen list is the single choke point protecting the stored document
+// from mass assignment; if a handler ever spreads the raw body instead, both
+// protections vanish at once.
+export const PATCHABLE_KEYS = Object.freeze([
+  "title",
+  "kind",
+  "status",
+  "owner",
+  "owner_detail",
+  "next_action",
+  "due",
+] as const);
+
+/**
+ * Builds the next OpenLoop by copying `existing` and overlaying ONLY the
+ * allow-listed keys that are own properties of `patch`. The raw patch object is
+ * never spread, so `id` stays stable, server-owned fields cannot be overwritten,
+ * and polluting keys can never be read. Refreshes `updated_at`. Call only after
+ * validateLoopInput(patch, { create: false }) has returned null.
+ */
+export function applyPatch(
+  existing: OpenLoop,
+  patch: Record<string, unknown>,
+): OpenLoop {
+  const next: OpenLoop = { ...existing };
+
+  for (const key of PATCHABLE_KEYS) {
+    if (!Object.prototype.hasOwnProperty.call(patch, key)) continue;
+    const value = patch[key];
+
+    switch (key) {
+      case "title":
+      case "next_action":
+        if (typeof value === "string") next[key] = value.trim();
+        break;
+      case "kind":
+        next.kind = value as OpenLoopKind;
+        break;
+      case "status":
+        next.status = value as OpenLoopStatus;
+        break;
+      case "owner":
+        next.owner = value as OpenLoopOwner;
+        break;
+      case "owner_detail":
+        if (typeof value === "string" && value.trim()) {
+          next.owner_detail = value.trim();
+        } else {
+          delete next.owner_detail;
+        }
+        break;
+      case "due":
+        next.due = typeof value === "string" ? value : null;
+        break;
+    }
+  }
+
+  next.updated_at = new Date().toISOString();
+  return next;
+}
+
 type NewLoopFields = Omit<OpenLoop, "id" | "created_at" | "updated_at">;
 
 /**

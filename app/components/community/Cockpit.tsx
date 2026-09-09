@@ -7,7 +7,10 @@ import FadeUp from "@/app/components/FadeUp";
 import EmptyState from "./EmptyState";
 import LoopColumn from "./LoopColumn";
 import NoDateSection from "./NoDateSection";
-import LoopSlideOver, { type CreateLoopPayload } from "./LoopSlideOver";
+import LoopSlideOver, {
+  type CreateLoopPayload,
+  type LoopPatch,
+} from "./LoopSlideOver";
 import CountStrip from "./CountStrip";
 import type { GroupedLoops } from "@/lib/community/urgency";
 import type { OpenLoop } from "@/lib/types";
@@ -25,11 +28,17 @@ export default function Cockpit({ loops, grouped }: Props) {
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  // Forward-wiring for D-16 card click → edit slide-over. Edit mode itself lands
-  // in plan 03; the setter is called now so the board's onOpen contract is real.
-  const [, setEditingLoop] = useState<OpenLoop | null>(null);
+  // null → the slide-over opens in create mode; a loop → edit mode.
+  const [editingLoop, setEditingLoop] = useState<OpenLoop | null>(null);
 
   function openSlideOver() {
+    setEditingLoop(null);
+    setSaveError(null);
+    setSlideOverOpen(true);
+  }
+
+  function openEdit(loop: OpenLoop) {
+    setEditingLoop(loop);
     setSaveError(null);
     setSlideOverOpen(true);
   }
@@ -59,6 +68,41 @@ export default function Cockpit({ loops, grouped }: Props) {
     } finally {
       setPending(false);
     }
+  }
+
+  async function patchEditingLoop(body: LoopPatch | { status: "dropped" }) {
+    if (!editingLoop) return;
+    setPending(true);
+    setSaveError(null);
+    try {
+      const res = await fetch(
+        `/api/community/open-loops/${editingLoop.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        },
+      );
+      if (!res.ok) {
+        setSaveError(SAVE_ERROR);
+        return;
+      }
+      router.refresh();
+      setSlideOverOpen(false);
+      setEditingLoop(null);
+    } catch {
+      setSaveError(SAVE_ERROR);
+    } finally {
+      setPending(false);
+    }
+  }
+
+  function handleSave(patch: LoopPatch) {
+    void patchEditingLoop(patch);
+  }
+
+  function handleDiscard() {
+    void patchEditingLoop({ status: "dropped" });
   }
 
   return (
@@ -98,33 +142,36 @@ export default function Cockpit({ loops, grouped }: Props) {
               tone="overdue"
               loops={grouped.overdue}
               emptyCopy="Nada vencido"
-              onOpen={setEditingLoop}
+              onOpen={openEdit}
             />
             <LoopColumn
               title="Vencen pronto"
               tone="dueSoon"
               loops={grouped.dueSoon}
               emptyCopy="Nada vence en los próximos 14 días"
-              onOpen={setEditingLoop}
+              onOpen={openEdit}
             />
             <LoopColumn
               title="A la espera de otros"
               tone="waiting"
               loops={grouped.waiting}
               emptyCopy="No estás esperando a nadie"
-              onOpen={setEditingLoop}
+              onOpen={openEdit}
             />
           </div>
-          <NoDateSection loops={grouped.noDate} onOpen={setEditingLoop} />
+          <NoDateSection loops={grouped.noDate} onOpen={openEdit} />
         </FadeUp>
       )}
 
       <LoopSlideOver
         open={slideOverOpen}
+        editingLoop={editingLoop}
         pending={pending}
         saveError={saveError}
         onClose={closeSlideOver}
         onCreate={handleCreate}
+        onSave={handleSave}
+        onDiscard={handleDiscard}
       />
     </>
   );
