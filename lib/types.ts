@@ -228,3 +228,79 @@ export interface CvContent {
     target_role: string;
   };
 }
+
+// ── Smart Community President ──────────────────────────────────────────────
+
+// Locked vocabularies (CONTEXT D-10). The single source of truth for kind /
+// status / owner / source across the type, the validator, the form and the
+// Spanish label records in lib/community/loop-defaults.ts.
+export type OpenLoopKind =
+  | "commitment"
+  | "incidencia"
+  | "obra"
+  | "follow_up"
+  | "permiso";
+export type OpenLoopStatus =
+  | "open"
+  | "waiting_on_other"
+  | "blocked"
+  | "done"
+  | "dropped";
+export type OpenLoopOwner =
+  | "me"
+  | "neighbour"
+  | "administrador"
+  | "provider"
+  | "junta";
+// PLAT-03 / SC-5: "neighbour_form" is present now even though nothing produces
+// it in v1 — an OpenLoop is later created FROM a Submission with this source.
+export type OpenLoopSource = "acta" | "email" | "manual" | "neighbour_form";
+
+export interface OpenLoop {
+  id: string;
+  title: string;
+  kind: OpenLoopKind;
+  status: OpenLoopStatus; // default "open"
+  owner: OpenLoopOwner; // default "me"
+  next_action: string; // required to create (D-09)
+  source: OpenLoopSource; // default "manual"
+  created_at: string; // ISO 8601
+  updated_at: string; // ISO 8601
+  owner_detail?: string; // shown only when owner is "neighbour" | "provider" (D-11)
+  due?: string | null; // plain "YYYY-MM-DD" calendar date, no time component (RESEARCH A3)
+  source_ref?: string; // link/id to the originating acta or email thread
+
+  // LPH-aware fields — declared optional now, populated by Phase 3, rendered by
+  // nobody in Phase 1. Declaring the shape now is the resolved answer to
+  // CONTEXT's "Claude's Discretion" item: Phase 3 adds behaviour, not shape.
+  acuerdo_id?: string;
+  acta_date?: string;
+  majority_type?:
+    | "simple"
+    | "doble_simple"
+    | "tres_quintos"
+    | "simple_total"
+    | "un_tercio"
+    | "unanimidad";
+  majority_achieved?: boolean;
+  ejecutividad_date?: string;
+  impugnacion_deadline?: string;
+  ausentes_notified_at?: string;
+  budget_annual?: number;
+  mensualidad_ordinaria?: number;
+}
+
+// Neighbour-portal intake shape (v2). Defined now, empty of president-internal
+// data: NEVER add LPH fields, responsible-party routing, or presupuesto
+// references here. This shape becomes neighbour-visible in v2, and an OpenLoop
+// is created FROM a Submission with source: "neighbour_form". This separation
+// is PLAT-03 and Phase 1 success criterion 5.
+export interface Submission {
+  id: string;
+  submitter_name: string;
+  submitter_unit: string;
+  description: string;
+  photos?: string[];
+  status: "triage";
+  created_at: string;
+}
