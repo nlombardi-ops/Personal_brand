@@ -8,6 +8,7 @@ import EmptyState from "./EmptyState";
 import LoopColumn from "./LoopColumn";
 import NoDateSection from "./NoDateSection";
 import LoopSlideOver, { type CreateLoopPayload } from "./LoopSlideOver";
+import CountStrip from "./CountStrip";
 import type { GroupedLoops } from "@/lib/community/urgency";
 import type { OpenLoop } from "@/lib/types";
 
@@ -62,19 +63,26 @@ export default function Cockpit({ loops, grouped }: Props) {
 
   return (
     <>
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-[28px] font-semibold leading-[1.2] text-neutral-900">
-          Bucles abiertos
-        </h1>
+      <div className="mb-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-[28px] font-semibold leading-[1.2] text-neutral-900">
+            Bucles abiertos
+          </h1>
+          {loops.length > 0 && (
+            <button
+              type="button"
+              onClick={openSlideOver}
+              className="inline-flex items-center gap-2 rounded-lg bg-[#0f172a] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1e293b] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
+            >
+              <Plus className="h-4 w-4" />
+              Añadir bucle
+            </button>
+          )}
+        </div>
+        {/* D-17: at-a-glance state directly under the title, before the board.
+            Not shown on the zero-loops first-run state. */}
         {loops.length > 0 && (
-          <button
-            type="button"
-            onClick={openSlideOver}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#0f172a] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1e293b] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f172a] focus-visible:ring-offset-2"
-          >
-            <Plus className="h-4 w-4" />
-            Añadir bucle
-          </button>
+          <CountStrip counts={grouped.counts} className="mt-2" />
         )}
       </div>
 

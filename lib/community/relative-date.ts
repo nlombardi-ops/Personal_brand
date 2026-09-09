@@ -36,18 +36,29 @@ export function formatRelativeDue(dueYmd: string, now: Date = new Date()): strin
   return `vence en ${days} días`;
 }
 
-const segment = (n: number, one: string, many: string) =>
-  `${n} ${n === 1 ? one : many}`;
+// D-17 vocabulary — the ONLY place the count-strip words live. `countStrip`
+// below and the CountStrip component both read from here, so the singular forms
+// ("a la espera" is invariant) cannot drift from the unit test.
+export const COUNT_LABELS: Record<
+  keyof LoopCounts,
+  { one: string; many: string }
+> = {
+  overdue: { one: "vencido", many: "vencidos" },
+  dueSoon: { one: "vence pronto", many: "vencen pronto" },
+  waiting: { one: "a la espera", many: "a la espera" },
+};
+
+const segment = (n: number, key: keyof LoopCounts) =>
+  `${n} ${n === 1 ? COUNT_LABELS[key].one : COUNT_LABELS[key].many}`;
 
 /**
  * The D-17 header strip: `{X} vencidos · {Y} vencen pronto · {Z} a la espera`
- * with the UI-SPEC singular forms `1 vencido`, `1 vence pronto`, `1 a la espera`
- * ("a la espera" is invariant).
+ * with the UI-SPEC singular forms `1 vencido`, `1 vence pronto`, `1 a la espera`.
  */
 export function countStrip(counts: LoopCounts): string {
   return [
-    segment(counts.overdue, "vencido", "vencidos"),
-    segment(counts.dueSoon, "vence pronto", "vencen pronto"),
-    segment(counts.waiting, "a la espera", "a la espera"),
+    segment(counts.overdue, "overdue"),
+    segment(counts.dueSoon, "dueSoon"),
+    segment(counts.waiting, "waiting"),
   ].join(" · ");
 }
