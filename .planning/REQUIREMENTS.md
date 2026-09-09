@@ -12,7 +12,7 @@ Requirements for the initial private president's cockpit. Each maps to a roadmap
 - [x] **LOOP-01**: User can create and edit an `OpenLoop` with kind (commitment / incidencia / obra / follow_up / permiso), status (open / waiting_on_other / blocked / done / dropped), owner (me / neighbour / administrador / provider / junta), next action, and soft due date
 - [ ] **LOOP-02**: User can attach one or more `Document`s (acta / contract / presupuesto / carta) to an OpenLoop and open them in the browser
 - [ ] **LOOP-03**: User can record multiple `Presupuesto`s on an obra-kind OpenLoop (provider, amount, scope, received/valid dates, document) and compare them side by side
-- [ ] **LOOP-04**: User sees a passive cockpit view of OpenLoops grouped by due / overdue / waiting-on-others, sorted by urgency, on opening the surface
+- [x] **LOOP-04**: User sees a passive cockpit view of OpenLoops grouped by due / overdue / waiting-on-others, sorted by urgency, on opening the surface
 
 ### LPH Engine
 
@@ -86,7 +86,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | LOOP-01 | Phase 1 | Complete |
 | LOOP-02 | Phase 2 | Pending |
 | LOOP-03 | Phase 2 | Pending |
-| LOOP-04 | Phase 1 | Pending |
+| LOOP-04 | Phase 1 | Complete |
 | LPH-01 | Phase 3 | Pending |
 | LPH-02 | Phase 3 | Pending |
 | LPH-03 | Phase 3 | Pending |

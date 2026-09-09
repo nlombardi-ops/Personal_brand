@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 01
 current_phase_name: Cockpit Foundation & Open-Loop Tracker
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-09-09T14:20:20.959Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-09-09T14:33:10.675Z"
 last_activity: 2026-09-09
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 ## Current Position
 
 Phase: 01 (Cockpit Foundation & Open-Loop Tracker) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-09-09 — Phase 01 execution started
 
-Progress: [███░░░░░░░] 33%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [███░░░░░░░] 33%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 50min | 2 tasks | 12 files |
+| Phase 01 P02 | 35min | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,8 @@ Recent decisions affecting current work:
 - Deadline awareness is passive (shown on open); cron digest + per-loop reminders are v2.
 - [Phase ?]: OpenLoop LPH-aware fields declared optional now (Phase 3 adds behaviour, not shape); Submission ships empty of president internals (PLAT-03/SC-5).
 - [Phase ?]: Community surface uses portfolio neutral-* palette on #fafafa; requireAuth() + layout gate both use the three-part fail-closed token guard.
+- [Phase ?]: 01-02: urgency buckets are a disjoint priority cascade (Vencidos > Vencen pronto > A la espera) — D-02/D-04 'show in both' satisfied by the owner chip, not dual-column membership (assumption A1, confirm at UAT)
+- [Phase ?]: 01-02: added allowImportingTsExtensions to tsconfig so tsc accepts the .ts import specifiers Node's built-in test runner requires (first test file in the repo, node --test, local only)
 
 ### Pending Todos
 
@@ -97,6 +100,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-09-09T14:20:14.421Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-09-09T14:33:02.866Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None

@@ -46,7 +46,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Any request to a `/api/community/*` route with a missing or wrong token is rejected with 401 via a shared `requireAuth()` helper doing a strong `=== DASHBOARD_TOKEN` comparison.
   5. Every stored OpenLoop carries a `source` field that already accepts a `neighbour_form` value, and no president-internal field (LPH data, owner routing, presupuestos) is defined on a shared/neighbour-visible shape.
 
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 **Wave 1**
@@ -55,7 +55,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — Slice 2 (wave 2): the passive urgency board — tested `groupLoopsByUrgency` (D-01…D-07), three columns + collapsed "Sin fecha", relative-date cards, and the D-17 count strip
+- [x] 01-02-PLAN.md — Slice 2 (wave 2): the passive urgency board — tested `groupLoopsByUrgency` (D-01…D-07), three columns + collapsed "Sin fecha", relative-date cards, and the D-17 count strip
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -144,7 +144,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Cockpit Foundation & Open-Loop Tracker | 1/3 | In Progress|  |
+| 1. Cockpit Foundation & Open-Loop Tracker | 2/3 | In Progress|  |
 | 2. Documents & Presupuestos Workflow | 0/TBD | Not started | - |
 | 3. LPH Deadline Engine | 0/TBD | Not started | - |
 | 4. Claude-Assisted Advice (LPH Q&A + Presupuesto Pricing) | 0/TBD | Not started | - |
