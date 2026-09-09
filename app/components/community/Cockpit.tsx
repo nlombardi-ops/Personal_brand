@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import FadeUp from "@/app/components/FadeUp";
 import EmptyState from "./EmptyState";
-import LoopColumn from "./LoopColumn";
+import LoopColumn, { type QuickState } from "./LoopColumn";
 import NoDateSection from "./NoDateSection";
+import type { QuickActionKey } from "./QuickActions";
 import LoopSlideOver, {
   type CreateLoopPayload,
   type LoopPatch,
@@ -30,6 +31,9 @@ export default function Cockpit({ loops, grouped }: Props) {
   const [saveError, setSaveError] = useState<string | null>(null);
   // null → the slide-over opens in create mode; a loop → edit mode.
   const [editingLoop, setEditingLoop] = useState<OpenLoop | null>(null);
+  // Per-card quick-action state keyed by loop id — two cards never share one
+  // spinner, and the rest of the board stays interactive during a mutation.
+  const [quickState, setQuickState] = useState<QuickState>({});
 
   function openSlideOver() {
     setEditingLoop(null);
@@ -105,6 +109,23 @@ export default function Cockpit({ loops, grouped }: Props) {
     void patchEditingLoop({ status: "dropped" });
   }
 
+  // Cockpit owns the per-card quick-action state; QuickActions performs the
+  // PATCH + router.refresh() and reports the transitions back here so the
+  // spinner and error notice stay isolated to the tapped card.
+  function quickStart(loopId: string, key: QuickActionKey) {
+    setQuickState((m) => ({
+      ...m,
+      [loopId]: { pendingAction: key, error: false },
+    }));
+  }
+
+  function quickSettle(loopId: string, ok: boolean) {
+    setQuickState((m) => ({
+      ...m,
+      [loopId]: { pendingAction: null, error: !ok },
+    }));
+  }
+
   return (
     <>
       <div className="mb-8">
@@ -143,6 +164,9 @@ export default function Cockpit({ loops, grouped }: Props) {
               loops={grouped.overdue}
               emptyCopy="Nada vencido"
               onOpen={openEdit}
+              quickState={quickState}
+              onQuickStart={quickStart}
+              onQuickSettle={quickSettle}
             />
             <LoopColumn
               title="Vencen pronto"
@@ -150,6 +174,9 @@ export default function Cockpit({ loops, grouped }: Props) {
               loops={grouped.dueSoon}
               emptyCopy="Nada vence en los próximos 14 días"
               onOpen={openEdit}
+              quickState={quickState}
+              onQuickStart={quickStart}
+              onQuickSettle={quickSettle}
             />
             <LoopColumn
               title="A la espera de otros"
@@ -157,9 +184,18 @@ export default function Cockpit({ loops, grouped }: Props) {
               loops={grouped.waiting}
               emptyCopy="No estás esperando a nadie"
               onOpen={openEdit}
+              quickState={quickState}
+              onQuickStart={quickStart}
+              onQuickSettle={quickSettle}
             />
           </div>
-          <NoDateSection loops={grouped.noDate} onOpen={openEdit} />
+          <NoDateSection
+            loops={grouped.noDate}
+            onOpen={openEdit}
+            quickState={quickState}
+            onQuickStart={quickStart}
+            onQuickSettle={quickSettle}
+          />
         </FadeUp>
       )}
 

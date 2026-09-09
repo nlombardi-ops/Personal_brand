@@ -1,7 +1,18 @@
 "use client";
 
 import LoopCard, { type UrgencyTone } from "./LoopCard";
+import type { QuickActionKey } from "./QuickActions";
 import type { OpenLoop } from "@/lib/types";
+
+export type QuickState = Record<
+  string,
+  { pendingAction: QuickActionKey | null; error: boolean }
+>;
+
+export interface QuickActionHandlers {
+  onQuickStart: (loopId: string, key: QuickActionKey) => void;
+  onQuickSettle: (loopId: string, ok: boolean) => void;
+}
 
 const COUNT_COLOR: Record<UrgencyTone, string> = {
   overdue: "text-[#b91c1c]",
@@ -10,12 +21,13 @@ const COUNT_COLOR: Record<UrgencyTone, string> = {
   noDate: "text-neutral-500",
 };
 
-interface Props {
+interface Props extends QuickActionHandlers {
   title: string;
   tone: UrgencyTone;
   loops: OpenLoop[];
   emptyCopy: string;
   onOpen: (loop: OpenLoop) => void;
+  quickState: QuickState;
 }
 
 // One board column. Transparent background — status colour touches only the
@@ -27,6 +39,9 @@ export default function LoopColumn({
   loops,
   emptyCopy,
   onOpen,
+  quickState,
+  onQuickStart,
+  onQuickSettle,
 }: Props) {
   return (
     <section className="flex flex-col bg-transparent">
@@ -46,7 +61,16 @@ export default function LoopColumn({
           <p className="text-xs leading-5 text-neutral-500">{emptyCopy}</p>
         ) : (
           loops.map((loop) => (
-            <LoopCard key={loop.id} loop={loop} tone={tone} onOpen={onOpen} />
+            <LoopCard
+              key={loop.id}
+              loop={loop}
+              tone={tone}
+              onOpen={onOpen}
+              pendingAction={quickState[loop.id]?.pendingAction ?? null}
+              quickError={quickState[loop.id]?.error ?? false}
+              onQuickStart={onQuickStart}
+              onQuickSettle={onQuickSettle}
+            />
           ))
         )}
       </div>
