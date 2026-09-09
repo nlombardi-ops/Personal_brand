@@ -56,7 +56,10 @@ export default function LoopColumn({
         </span>
       </div>
 
-      <div className="flex flex-col gap-2 overflow-y-auto lg:max-h-[calc(100vh-16rem)]">
+      {/* Bounded scroll only on desktop (lg) so the three columns align; in the
+          stacked mobile layout the column grows with its content — no nested
+          scroll trap (D-15). */}
+      <div className="flex flex-col gap-2 lg:max-h-[calc(100vh-16rem)] lg:overflow-y-auto">
         {loops.length === 0 ? (
           <p className="text-xs leading-5 text-neutral-500">{emptyCopy}</p>
         ) : (
