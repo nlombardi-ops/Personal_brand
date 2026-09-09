@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import FadeUp from "@/app/components/FadeUp";
 import EmptyState from "./EmptyState";
+import LoopColumn from "./LoopColumn";
+import NoDateSection from "./NoDateSection";
 import LoopSlideOver, { type CreateLoopPayload } from "./LoopSlideOver";
-import { KIND_LABELS, OWNER_LABELS } from "@/lib/community/loop-defaults";
+import type { GroupedLoops } from "@/lib/community/urgency";
 import type { OpenLoop } from "@/lib/types";
 
 const SAVE_ERROR =
@@ -14,13 +16,17 @@ const SAVE_ERROR =
 
 interface Props {
   loops: OpenLoop[];
+  grouped: GroupedLoops;
 }
 
-export default function Cockpit({ loops }: Props) {
+export default function Cockpit({ loops, grouped }: Props) {
   const router = useRouter();
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  // Forward-wiring for D-16 card click → edit slide-over. Edit mode itself lands
+  // in plan 03; the setter is called now so the board's onOpen contract is real.
+  const [, setEditingLoop] = useState<OpenLoop | null>(null);
 
   function openSlideOver() {
     setSaveError(null);
@@ -75,20 +81,33 @@ export default function Cockpit({ loops }: Props) {
       {loops.length === 0 ? (
         <EmptyState onAdd={openSlideOver} />
       ) : (
-        <FadeUp className="flex flex-col gap-2">
-          {loops.map((loop) => (
-            <div
-              key={loop.id}
-              className="rounded-lg border border-neutral-200 bg-white p-4"
-            >
-              <p className="text-sm font-semibold text-neutral-900">
-                {loop.title}
-              </p>
-              <p className="mt-1 text-xs text-neutral-500">
-                {KIND_LABELS[loop.kind]} · {OWNER_LABELS[loop.owner]}
-              </p>
-            </div>
-          ))}
+        <FadeUp>
+          {/* Column order is load-bearing: Vencidos top-left is the UI-SPEC
+              primary focal point. Read-only board — no drag-and-drop (D-14). */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <LoopColumn
+              title="Vencidos"
+              tone="overdue"
+              loops={grouped.overdue}
+              emptyCopy="Nada vencido"
+              onOpen={setEditingLoop}
+            />
+            <LoopColumn
+              title="Vencen pronto"
+              tone="dueSoon"
+              loops={grouped.dueSoon}
+              emptyCopy="Nada vence en los próximos 14 días"
+              onOpen={setEditingLoop}
+            />
+            <LoopColumn
+              title="A la espera de otros"
+              tone="waiting"
+              loops={grouped.waiting}
+              emptyCopy="No estás esperando a nadie"
+              onOpen={setEditingLoop}
+            />
+          </div>
+          <NoDateSection loops={grouped.noDate} onOpen={setEditingLoop} />
         </FadeUp>
       )}
 
