@@ -1,20 +1,24 @@
 ---
 phase: 01-cockpit-foundation-open-loop-tracker
 verified: 2026-09-09T00:00:00Z
-status: human_needed
+status: passed
 score: 5/5 must-haves verified
 behavior_unverified: 0
 overrides_applied: 0
 human_verification:
+
   - test: "Log in at /dashboard/login, open /community-president, click 'Añadir bucle', fill Título + Tipo + Próxima acción, press 'Crear bucle', then hard-reload the page."
     expected: "The slide-over animates in from the right over the still-visible board; on submit the panel closes and the new loop appears; after a full reload the loop is still present. Then edit a loop's title/owner/due, save, reload — all three changes persist. Discard a loop — it leaves the board but stays in data/community-open-loops.json with status dropped."
     why_human: "curl proved the POST/PATCH API and the Server-Component render path only. The create-then-hard-reload round-trip through the browser, the slide-over motion, focus trap/restore, reduced-motion, and Esc/backdrop dismiss are not scriptable here."
+
   - test: "Open /community-president at a 390px viewport (device toolbar), then re-check at 1440px."
     expected: "390px: top bar with a working hamburger drawer; the three columns stack in priority order Vencidos -> Vencen pronto -> A la espera de otros -> Sin fecha; quick-action buttons are always visible (no hover) with >=44px hit areas; the slide-over is near-full-width with a reachable footer when the keyboard is open. 1440px: three columns, fixed left sidebar, 420px slide-over, no regression."
     why_human: "Responsive rendering and touch-target geometry (D-15) require a real viewport; the breakpoint classes are present in code but their visual result is not verifiable by grep."
+
   - test: "Create an overdue loop whose owner is 'administrador' (or status waiting_on_other). Confirm with Nicola: 'your overdue loops that are waiting on the administrador show up in Vencidos with an Administrador chip, not also under A la espera - OK?'"
     expected: "Nicola confirms the single-column (disjoint priority cascade) reading of D-02 is acceptable. If he wants dual listing, groupLoopsByUrgency must push into multiple arrays and the count strip switches to unique-loop wording."
     why_human: "RESEARCH assumption A1 / D-02 is a product decision that only Nicola can confirm at first UAT (flagged unresolved in 01-02-PLAN.md)."
+
   - test: "Before shipping the surface: set DASHBOARD_TOKEN in local .env, Vercel Preview, and Vercel Production."
     expected: "With DASHBOARD_TOKEN set, the layout gate and requireAuth() both pass for a valid cookie. Without it both fail closed (redirect / 401) - the surface is unusable rather than exposed, but it must be set for the phase to actually ship."
     why_human: "Pre-existing STATE.md blocker; .env is not writable from the agent environment and Vercel env vars are out of band."
