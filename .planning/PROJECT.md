@@ -18,15 +18,17 @@ waiting on, and which LPH deadline is closing in — without digging through ema
 
 ### Validated
 
-(None yet — ship to validate)
+- ✓ Create/edit an `OpenLoop` (kind / status / owner / next action / soft due date; locked enum vocabularies) — Phase 1
+- ✓ Passive cockpit view: OpenLoops grouped overdue / due-soon / waiting-on-others + collapsed "Sin fecha", sorted by urgency, on open, no filtering — Phase 1
+- ✓ Standalone `app/community-president/` surface with its own auth-gated `layout.tsx` and sidebar — Phase 1
+- ✓ Shared `requireAuth()` strong-token helper on every `/api/community/*` route (hardened past the `app/cv` fail-open hole) — Phase 1
+- ✓ `OpenLoop` / `Submission` separation with `source` accepting `neighbour_form`; no president-internal field on `Submission` — Phase 1
 
 ### Active
 
 **Open-loop tracker (core)**
-- [ ] Create/edit an `OpenLoop` with kind (commitment / incidencia / obra / follow_up / permiso), status (open / waiting_on_other / blocked / done / dropped), owner (me / neighbour / administrador / provider / junta), next action, and soft due date
 - [ ] Attach one or more `Document`s (acta / contract / presupuesto / carta) to an OpenLoop
 - [ ] Presupuestos sub-workflow: for an obra-kind loop, record multiple `Presupuesto`s (provider, amount, scope, received/valid dates, doc) and compare them side by side
-- [ ] Passive cockpit view: OpenLoops grouped by due / overdue / waiting-on-others, sorted by urgency, shown when Nicola opens the surface
 
 **LPH deadline engine**
 - [ ] Record a `Junta` (date, type, convocatoria sent date, acta doc, acuerdos) and link acuerdos to OpenLoops
@@ -45,9 +47,7 @@ waiting on, and which LPH deadline is closing in — without digging through ema
 - [ ] Extend `scripts/email-organizer/` (iCloud IMAP → Drive) to also feed administrador emails to the cockpit as draft `Document`s / OpenLoops
 
 **Platform**
-- [ ] Standalone `app/community-president/` surface with its own `layout.tsx` (auth check mirroring `app/cv/layout.tsx`) and sidebar
-- [ ] Shared `requireAuth()` helper with a strong `DASHBOARD_TOKEN` comparison, used by every new `/api/community/*` route
-- [ ] `OpenLoop` / `Submission` separation preserved in the data model so a neighbour-facing intake form can bolt on later without a rewrite (`OpenLoop.source` already supports `neighbour_form`)
+- (all Phase 1 platform requirements now Validated — see above)
 
 ### Out of Scope
 
@@ -154,13 +154,14 @@ accuracy on real actas (deferred with AI extraction).
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Ship as a standalone `app/community-president/` surface, not under `/dashboard` | Cleanest separation; eases the later fork to its own repo; avoids inheriting the dashboard's half-done light-theme migration and zero mobile support | — Pending |
+| Ship as a standalone `app/community-president/` surface, not under `/dashboard` | Cleanest separation; eases the later fork to its own repo; avoids inheriting the dashboard's half-done light-theme migration and zero mobile support | ✓ Phase 1 — surface on the portfolio `neutral-*` palette, mobile top-bar + drawer, own sidebar |
 | v1 ingestion = manual upload + extend the Python email-organizer | Honest v1 with no OAuth/scraper dependency; the email-organizer already files Colmenarejo administrador emails | — Pending |
 | AI extraction of actas deferred to a post-v1 phase | Learn the real `OpenLoop` shape from one junta cycle before designing extraction; propose-then-confirm design (Research Q3) | — Pending |
 | Pricing check is lightweight (Claude + web search), not a scraper | Pillar 3 is market-validated but administrador-facing; a per-presupuesto advisory estimate delivers most of the value for near-zero infra | — Pending |
 | Deadline awareness is passive (shown on open), not scheduled reminders | Smallest v1 that delivers the core value; cron digest and per-loop reminders are a clear v2 | — Pending |
-| New routes get a shared `requireAuth()` strong-token helper; existing `/api/cv` holes left alone | Protects the new sensitive surface without expanding scope into an app-wide auth refactor | — Pending |
-| Preserve `OpenLoop` / `Submission` separation now | The one piece of forward-compatibility that makes the neighbour portal cheap later instead of a rewrite | — Pending |
+| New routes get a shared `requireAuth()` strong-token helper; existing `/api/cv` holes left alone | Protects the new sensitive surface without expanding scope into an app-wide auth refactor | ✓ Phase 1 — `requireAuth()` first statement of GET/POST/PATCH; three-part fail-closed guard added to BOTH the helper and the layout (the `app/cv/layout.tsx` analog fails open when `DASHBOARD_TOKEN` is unset) |
+| Preserve `OpenLoop` / `Submission` separation now | The one piece of forward-compatibility that makes the neighbour portal cheap later instead of a rewrite | ✓ Phase 1 — add-alongside (not a promoted supertype); `Submission` ships empty of president internals, no v1 consumer |
+| Overdue-and-waiting loops show in Vencidos column only, with an owner chip (disjoint priority cascade, not dual-column) | Keeps the D-17 count strip readable as `X · Y · Z` and the board at exactly three columns; the owner chip already conveys who each loop waits on | ✓ Phase 1 — RESEARCH assumption A1 confirmed by Nicola at first UAT |
 
 ## Evolution
 
@@ -180,4 +181,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-09-08 after initialization*
+*Last updated: 2026-09-10 after Phase 1 (Cockpit Foundation & Open-Loop Tracker)*

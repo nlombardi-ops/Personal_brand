@@ -24,7 +24,7 @@ pattern and PDF proxy pattern all already exist.
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Cockpit Foundation & Open-Loop Tracker** - Standalone authenticated Community President surface where every open commitment/incidencia is captured and ranked by urgency on open
+- [x] **Phase 1: Cockpit Foundation & Open-Loop Tracker** - Standalone authenticated Community President surface where every open commitment/incidencia is captured and ranked by urgency on open (completed 2026-09-10)
 - [ ] **Phase 2: Documents & Presupuestos Workflow** - Upload PDFs to private Blob, attach documents to loops, and compare competing presupuestos side by side
 - [ ] **Phase 3: LPH Deadline Engine** - Juntas and acuerdos carry auto-computed impugnación / acta-closure / majority / mandatory-accessibility clocks that surface in the cockpit
 - [ ] **Phase 4: Claude-Assisted Advice (LPH Q&A + Presupuesto Pricing)** - LPH-grounded chatbot and a per-presupuesto web-search pricing check behind one centralised Anthropic client
@@ -46,7 +46,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   4. Any request to a `/api/community/*` route with a missing or wrong token is rejected with 401 via a shared `requireAuth()` helper doing a strong `=== DASHBOARD_TOKEN` comparison.
   5. Every stored OpenLoop carries a `source` field that already accepts a `neighbour_form` value, and no president-internal field (LPH data, owner routing, presupuestos) is defined on a shared/neighbour-visible shape.
 
-**Plans:** 3/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 **Wave 1**
@@ -144,7 +144,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Cockpit Foundation & Open-Loop Tracker | 3/3 | In Progress|  |
+| 1. Cockpit Foundation & Open-Loop Tracker | 3/3 | Complete    | 2026-09-10 |
 | 2. Documents & Presupuestos Workflow | 0/TBD | Not started | - |
 | 3. LPH Deadline Engine | 0/TBD | Not started | - |
 | 4. Claude-Assisted Advice (LPH Q&A + Presupuesto Pricing) | 0/TBD | Not started | - |
