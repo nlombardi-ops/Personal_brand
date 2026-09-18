@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import DocumentRow from "./DocumentRow";
+import DocumentRow, { type LoopSummary } from "./DocumentRow";
 import type { Document } from "@/lib/types";
 
 interface Props {
   documents: Document[];
+  // D-05 (document side): the lightweight loop list DocumentRow's assignment
+  // control needs — never the full OpenLoop (T-02-19).
+  loops: LoopSummary[];
 }
 
 interface RowState {
@@ -19,7 +22,7 @@ const SAVE_ERROR =
 // Per-document pending/error map keyed by document id (Cockpit.tsx lines
 // 34-36 / 115-127 shape) — one row's spinner and error notice never block
 // another row from staying interactive.
-export default function DocumentList({ documents }: Props) {
+export default function DocumentList({ documents, loops }: Props) {
   const [state, setState] = useState<Record<string, RowState>>({});
 
   function onStart(docId: string) {
@@ -44,6 +47,7 @@ export default function DocumentList({ documents }: Props) {
         <div key={doc.id}>
           <DocumentRow
             document={doc}
+            loops={loops}
             pending={state[doc.id]?.pending ?? false}
             onStart={() => onStart(doc.id)}
             onSettle={(ok) => onSettle(doc.id, ok)}

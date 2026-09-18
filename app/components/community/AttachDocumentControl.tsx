@@ -9,6 +9,7 @@ import {
   formatBytes,
 } from "@/lib/community/document-defaults";
 import type { Document } from "@/lib/types";
+import DocumentUpload from "./DocumentUpload";
 
 const SAVE_ERROR =
   "No se ha podido adjuntar el documento. Revisa tu conexión e inténtalo de nuevo.";
@@ -20,11 +21,16 @@ interface Props {
   onSettle?: (ok: boolean) => void;
 }
 
-// D-05 (loop side): attach from the library or detach — the ONE mutation
-// path is PATCH /api/community/documents/{id} with the COMPLETE new
-// linked_loop_ids array (attachLoopId / detachLoopId build it). There is no
-// attach endpoint and no detach endpoint. Disables while a request is in
-// flight so a double click cannot fire two racing whole-array writes.
+type Mode = "closed" | "pick" | "upload";
+
+// D-05 (loop side): two entry points — pick from the library, or upload a
+// new file that auto-attaches in one action (D-01, via DocumentUpload's
+// existing loopId prop) — plus detach. The ONE mutation path for the
+// existing-document case is PATCH /api/community/documents/{id} with the
+// COMPLETE new linked_loop_ids array (attachLoopId / detachLoopId build
+// it). There is no attach endpoint and no detach endpoint. Disables while a
+// request is in flight so a double click cannot fire two racing whole-array
+// writes.
 export default function AttachDocumentControl({
   loopId,
   attached,
@@ -34,7 +40,7 @@ export default function AttachDocumentControl({
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [mode, setMode] = useState<Mode>("closed");
   const [selected, setSelected] = useState("");
 
   const attachedIds = new Set(attached.map((d) => d.id));
@@ -73,13 +79,20 @@ export default function AttachDocumentControl({
   function handleAttach() {
     const doc = library.find((d) => d.id === selected);
     if (!doc) return;
-    setPickerOpen(false);
+    setMode("closed");
     setSelected("");
     void patchLinks(doc, attachLoopId(doc.linked_loop_ids, loopId));
   }
 
   function handleDetach(doc: Document) {
     void patchLinks(doc, detachLoopId(doc.linked_loop_ids, loopId));
+  }
+
+  function handleUploadDone() {
+    // DocumentUpload already calls router.refresh() once its batch settles —
+    // this just folds the picker back so a fresh "Adjuntar documento" /
+    // "Subir y adjuntar" choice starts clean next time.
+    setMode("closed");
   }
 
   return (
@@ -121,54 +134,89 @@ export default function AttachDocumentControl({
         </ul>
       )}
 
-      {pickerOpen ? (
-        <div className="flex flex-wrap items-center gap-2">
-          {pickable.length === 0 ? (
-            <p className="text-xs text-neutral-500">
-              No hay documentos disponibles. Súbelos desde la sección
-              Documentos.
-            </p>
-          ) : (
-            <>
-              <select
-                value={selected}
-                disabled={pending}
-                onChange={(e) => setSelected(e.target.value)}
-                className="border border-neutral-200 bg-white px-2 py-1.5 text-sm text-neutral-900 outline-none focus:border-neutral-400"
-              >
-                <option value="">Selecciona un documento…</option>
-                {pickable.map((doc) => (
-                  <option key={doc.id} value={doc.id}>
-                    {doc.title} — {DOCUMENT_TYPE_LABELS[doc.type]}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                disabled={pending || !selected}
-                onClick={handleAttach}
-                className="rounded-lg bg-[#0f172a] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#1e293b] disabled:opacity-50"
-              >
-                Adjuntar
-              </button>
-            </>
-          )}
+      {mode === "upload" && (
+        <div className="rounded-lg border border-neutral-200 bg-white p-3">
+          <DocumentUpload loopId={loopId} onDone={handleUploadDone} />
           <button
             type="button"
-            onClick={() => setPickerOpen(false)}
-            className="text-xs font-medium text-neutral-600 transition-colors hover:text-neutral-900"
+            onClick={() => setMode("closed")}
+            className="mt-2 text-xs font-medium text-neutral-600 transition-colors hover:text-neutral-900"
           >
-            Cancelar
+            Cerrar
           </button>
         </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setPickerOpen(true)}
-          className="self-start rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
-        >
-          Adjuntar documento
-        </button>
+      )}
+
+      {mode === "pick" &&
+        // Task 1's dead end replaced (D-01): an empty library still has a
+        // way forward — upload straight from here instead of a "go to
+        // Documentos" message.
+        (pickable.length === 0 ? (
+          <div className="rounded-lg border border-neutral-200 bg-white p-3">
+            <p className="text-xs text-neutral-500">
+              No hay documentos disponibles todavía.
+            </p>
+            <div className="mt-2">
+              <DocumentUpload loopId={loopId} onDone={handleUploadDone} />
+            </div>
+            <button
+              type="button"
+              onClick={() => setMode("closed")}
+              className="mt-2 text-xs font-medium text-neutral-600 transition-colors hover:text-neutral-900"
+            >
+              Cerrar
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={selected}
+              disabled={pending}
+              onChange={(e) => setSelected(e.target.value)}
+              className="border border-neutral-200 bg-white px-2 py-1.5 text-sm text-neutral-900 outline-none focus:border-neutral-400"
+            >
+              <option value="">Selecciona un documento…</option>
+              {pickable.map((doc) => (
+                <option key={doc.id} value={doc.id}>
+                  {doc.title} — {DOCUMENT_TYPE_LABELS[doc.type]}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              disabled={pending || !selected}
+              onClick={handleAttach}
+              className="rounded-lg bg-[#0f172a] px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-[#1e293b] disabled:opacity-50"
+            >
+              Adjuntar
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("closed")}
+              className="text-xs font-medium text-neutral-600 transition-colors hover:text-neutral-900"
+            >
+              Cancelar
+            </button>
+          </div>
+        ))}
+
+      {mode === "closed" && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setMode("pick")}
+            className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+          >
+            Adjuntar documento
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("upload")}
+            className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+          >
+            Subir y adjuntar
+          </button>
+        </div>
       )}
 
       {error && (

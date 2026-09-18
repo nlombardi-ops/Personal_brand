@@ -3,8 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-import { DOCUMENT_TYPE_LABELS, formatBytes } from "@/lib/community/document-defaults";
-import type { Document, DocumentType } from "@/lib/types";
+import {
+  DOCUMENT_TYPE_LABELS,
+  attachLoopId,
+  detachLoopId,
+  formatBytes,
+} from "@/lib/community/document-defaults";
+import { KIND_LABELS } from "@/lib/community/loop-defaults";
+import type { Document, DocumentType, OpenLoopKind, OpenLoopStatus } from "@/lib/types";
 
 const TYPE_ENTRIES = Object.entries(DOCUMENT_TYPE_LABELS) as [DocumentType, string][];
 
@@ -12,23 +18,41 @@ const fieldClass =
   "w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 outline-none transition focus:border-neutral-400 focus:ring-1 focus:ring-neutral-400";
 const labelClass = "text-xs font-semibold text-neutral-700";
 
+// T-02-19: the lightweight loop shape this row's assignment control needs —
+// never the full OpenLoop (its Phase 3 LPH fields never reach this surface).
+export interface LoopSummary {
+  id: string;
+  title: string;
+  kind: OpenLoopKind;
+  status: OpenLoopStatus;
+}
+
 interface Props {
   document: Document;
+  loops: LoopSummary[];
   pending: boolean;
   onStart: () => void;
   onSettle: (ok: boolean) => void;
 }
 
-// Card shell copied from LoopCard.tsx. All free text (title) renders as
-// ordinary React text children — the raw-HTML injection prop is prohibited
-// on this surface, since a title may quote a neighbour's name. Every edit
-// PATCHes the single mutation endpoint, reporting start/settle to the list's
-// keyed map so only this row shows a spinner (D-04).
-export default function DocumentRow({ document, pending, onStart, onSettle }: Props) {
+// Card shell copied from LoopCard.tsx. All free text (title, loop title)
+// renders as ordinary React text children — the raw-HTML injection prop is
+// prohibited on this surface, since a title may quote a neighbour's name.
+// Every edit PATCHes the single mutation endpoint, reporting start/settle to
+// the list's keyed map so only this row shows a spinner (D-04).
+export default function DocumentRow({
+  document,
+  loops,
+  pending,
+  onStart,
+  onSettle,
+}: Props) {
   const router = useRouter();
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(document.title);
   const [archiving, setArchiving] = useState(false);
+  const [assigning, setAssigning] = useState(false);
+  const [selectedLoopId, setSelectedLoopId] = useState("");
 
   const dateLabel = format(
     new Date(document.doc_date ?? document.uploaded_at),
@@ -70,6 +94,29 @@ export default function DocumentRow({ document, pending, onStart, onSettle }: Pr
   function revertTitle() {
     setTitleDraft(document.title);
     setEditingTitle(false);
+  }
+
+  // D-05 (document side): the same wholesale-replace-array contract as the
+  // loop side's AttachDocumentControl — attachLoopId / detachLoopId build
+  // the complete new linked_loop_ids array, patchDoc PATCHes it through the
+  // single mutation endpoint and reports into the list's keyed pending map.
+  const linkedLoops = loops.filter((loop) =>
+    document.linked_loop_ids.includes(loop.id),
+  );
+  const assignableLoops = loops.filter(
+    (loop) => !document.linked_loop_ids.includes(loop.id),
+  );
+
+  function assignLoop(loopId: string) {
+    void patchDoc({
+      linked_loop_ids: attachLoopId(document.linked_loop_ids, loopId),
+    });
+  }
+
+  function unassignLoop(loopId: string) {
+    void patchDoc({
+      linked_loop_ids: detachLoopId(document.linked_loop_ids, loopId),
+    });
   }
 
   return (
@@ -144,6 +191,86 @@ export default function DocumentRow({ document, pending, onStart, onSettle }: Pr
           className={`${fieldClass} max-w-[180px]`}
         />
       </label>
+
+      <div className="mt-3">
+        <span className={labelClass}>Bucles</span>
+        {linkedLoops.length === 0 ? (
+          <p className="mt-1 text-xs text-neutral-500">Sin bucle asignado</p>
+        ) : (
+          <ul className="mt-1 flex flex-col gap-1">
+            {linkedLoops.map((loop) => (
+              <li key={loop.id} className="flex items-center gap-2">
+                <span className="max-w-[220px] truncate text-xs text-neutral-700">
+                  {loop.title}
+                </span>
+                <button
+                  type="button"
+                  disabled={pending}
+                  onClick={() => unassignLoop(loop.id)}
+                  className="text-xs font-medium text-[#b91c1c] transition-colors hover:text-[#991b1b] disabled:opacity-50"
+                >
+                  Quitar
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {assigning ? (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            {assignableLoops.length === 0 ? (
+              <p className="text-xs text-neutral-500">
+                No hay más bucles disponibles.
+              </p>
+            ) : (
+              <>
+                <select
+                  value={selectedLoopId}
+                  disabled={pending}
+                  onChange={(e) => setSelectedLoopId(e.target.value)}
+                  className="border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-900 outline-none focus:border-neutral-400"
+                >
+                  <option value="">Selecciona un bucle…</option>
+                  {assignableLoops.map((loop) => (
+                    <option key={loop.id} value={loop.id}>
+                      {loop.title} — {KIND_LABELS[loop.kind]}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  disabled={pending || !selectedLoopId}
+                  onClick={() => {
+                    const loopId = selectedLoopId;
+                    setAssigning(false);
+                    setSelectedLoopId("");
+                    assignLoop(loopId);
+                  }}
+                  className="rounded-lg bg-[#0f172a] px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-[#1e293b] disabled:opacity-50"
+                >
+                  Asignar
+                </button>
+              </>
+            )}
+            <button
+              type="button"
+              onClick={() => setAssigning(false)}
+              className="text-xs font-medium text-neutral-600 transition-colors hover:text-neutral-900"
+            >
+              Cancelar
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setAssigning(true)}
+            disabled={pending}
+            className="mt-2 text-xs font-medium text-[#0f172a] transition-colors hover:text-[#1e293b] disabled:opacity-50"
+          >
+            Asignar a un bucle
+          </button>
+        )}
+      </div>
 
       <div className="mt-3">
         {archiving ? (
