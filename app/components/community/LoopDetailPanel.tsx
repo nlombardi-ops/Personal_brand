@@ -9,6 +9,7 @@ import { formatEuros } from "@/lib/community/presupuesto-defaults";
 import type { Document, OpenLoop, Presupuesto } from "@/lib/types";
 import AttachDocumentControl from "./AttachDocumentControl";
 import PresupuestoForm from "./PresupuestoForm";
+import PresupuestoComparison from "./PresupuestoComparison";
 
 interface Props {
   open: boolean;
@@ -186,6 +187,12 @@ export default function LoopDetailPanel({
               {loop.kind === "obra" && (
                 <section>
                   <h3 className={sectionLabelClass}>Presupuestos</h3>
+                  {presupuestos.length > 0 && (
+                    <PresupuestoComparison
+                      presupuestos={presupuestos}
+                      documents={libraryDocuments}
+                    />
+                  )}
                   {presupuestos.length === 0 ? (
                     <p className="mt-2 text-sm text-neutral-600">
                       Aún no has registrado ningún presupuesto.
