@@ -24,10 +24,21 @@ export interface InternetBill {
   plan?: string;
 }
 
+export interface InsuranceBill {
+  month: string;
+  total: number;
+  provider: string;
+  policy?: string;
+}
+
 export interface BillsData {
   energy: EnergyBill[];
   internet: InternetBill[];
   community: CommunityBill[];
+  // Optional: production Blob bills.json and the committed seed both predate
+  // this field, so a required declaration would type-lie about documents
+  // already in the store and blow up on `.length` at runtime.
+  insurance?: InsuranceBill[];
 }
 
 export interface MortgageYearEntry {

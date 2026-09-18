@@ -37,6 +37,7 @@ FOLDERS = {
     "phone_internet": "1UKLsmvyQ_1er64dyPHLZJe17xG_Uqeby",
     "community": "1b_TuM2oeIwUI1klonWONT1XTTX0ErSUY",
     # "energy": None,  # see issue A4 — folder ID not yet identified
+    # "insurance": None,  # lives on the TypeScript side only (lib/drive/sync.ts) — this script already lags energy
 }
 
 

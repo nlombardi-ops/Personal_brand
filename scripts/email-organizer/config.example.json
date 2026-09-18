@@ -11,6 +11,9 @@
     "Energy": {
       "senders": ["soycliente@masmovilluzygas.es"]
     },
+    "Insurance": {
+      "senders": []
+    },
     "Community-Building": {
       "senders": ["attcliente@administracionescolmenarejo.es"]
     },
