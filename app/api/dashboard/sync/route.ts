@@ -25,10 +25,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let category: "all" | "internet" | "community" | "energy" = "all";
+  let category: "all" | "internet" | "community" | "energy" | "insurance" = "all";
   try {
     const body = await request.json();
-    if (["internet", "community", "energy"].includes(body.category)) {
+    if (["internet", "community", "energy", "insurance"].includes(body.category)) {
       category = body.category;
     }
   } catch {

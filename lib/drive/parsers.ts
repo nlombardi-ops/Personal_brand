@@ -1,4 +1,4 @@
-import type { EnergyBill, InternetBill, CommunityBill } from "@/lib/types";
+import type { EnergyBill, InternetBill, CommunityBill, InsuranceBill } from "@/lib/types";
 
 // ─── Text extraction ───────────────────────────────────────────────────────
 
@@ -205,4 +205,63 @@ export function parseMasmovilEnergyBill(text: string): Omit<EnergyBill, never> |
     iva: iva ?? 0,
     provider: "MasMovil Luz y Gas",
   };
+}
+
+// ─── SegurCaixa Adeslas ─────────────────────────────────────────────────────
+
+// These patterns are unverified guesses — unlike the three parsers above,
+// whose regexes were reverse-engineered from real invoices, no sample
+// Adeslas document exists in this repo. Refinement path: drop a real
+// captured file into the Drive folder, dump its extracted text with
+// scripts/email-organizer/sync_bills.py's --peek debug mode (see that
+// script's usage header), then tighten these patterns against what
+// actually comes out.
+export function parseAdeslasBill(text: string): Omit<InsuranceBill, never> | null {
+  text = normalizeText(text);
+
+  let total: number | null = null;
+  let month: string | null = null;
+  let policy: string | undefined;
+
+  // Amount — try a short list of label-anchored patterns, each requiring an
+  // explicit label near a two-decimal amount and a euro sign. No catch-all
+  // "first euro amount anywhere" fallback: on a template nobody has ever
+  // seen, that would silently capture a coverage limit or tax base and
+  // write wrong money into bills.json.
+  for (const pat of [
+    /Importe\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
+    /Total\s+a\s+pagar\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
+    /(?:Recibo|Prima)\s*[:\s]*(\d+[.,]\d{2})\s*€/i,
+  ]) {
+    const m = text.match(pat);
+    if (m) { total = parseFloat(m[1].replace(",", ".")); break; }
+  }
+
+  // Month — try an emission-date pattern first, then a billing-period
+  // end-date pattern, both yielding YYYY-MM.
+  let m = text.match(/Fecha de emisi.n[:\s]*(\d{2})\/(\d{2})\/(\d{4})/i);
+  if (m) {
+    month = `${m[3]}-${m[2]}`;
+  } else {
+    m = text.match(/[Dd]el\s+\d{2}\/\d{2}\/\d{4}\s+al\s+(\d{2})\/(\d{2})\/(\d{4})/);
+    if (m) {
+      month = `${m[3]}-${m[2]}`;
+    } else {
+      m = text.match(/Fecha de emisi.n[:\s]+\d{1,2}\s+de\s+(\w+)\s+de\s+(\d{4})/i);
+      if (m) {
+        const monthNum = MONTH_MAP_ES[m[1].toLowerCase()];
+        if (monthNum) month = `${m[2]}-${monthNum}`;
+      }
+    }
+  }
+
+  // Policy label — only when a label pattern trivially yields one.
+  m = text.match(/P.liza\s*(?:de)?\s*(Hogar|Salud|Vida)/i);
+  if (m) policy = m[1];
+
+  // Bail honestly. Returning null for every real file until these patterns
+  // are tightened against a real sample is the intended behaviour of this
+  // stub — better than a wrong number that looks correct on the dashboard.
+  if (!total || !month) return null;
+  return { month, total, provider: "SegurCaixa Adeslas", policy };
 }

@@ -8,13 +8,20 @@ import {
   parsePepephoneBill,
   parseCommunityBill,
   parseMasmovilEnergyBill,
+  parseAdeslasBill,
 } from "./parsers";
-import type { BillsData, EnergyBill, InternetBill, CommunityBill } from "@/lib/types";
+import type { BillsData, EnergyBill, InternetBill, CommunityBill, InsuranceBill } from "@/lib/types";
 
+// insurance's Drive folder does not exist yet — organizer.py creates it on
+// its first run once an Insurance provider entry is present in the user's
+// (gitignored) config.json. Paste the resulting folder ID here afterwards.
+// Never write a real-looking Drive ID here; a fabricated 33-character ID
+// would send the sync at a random or non-existent folder.
 const FOLDERS = {
   phone_internet: "1UKLsmvyQ_1er64dyPHLZJe17xG_Uqeby",
   community: "1b_TuM2oeIwUI1klonWONT1XTTX0ErSUY",
   energy: "1EBzivC0dyH0cRiTlI2tAhwL1AOFDXcY6",
+  insurance: null as string | null,
 };
 
 const BLOB_PATHNAME = "bills.json";
@@ -112,13 +119,31 @@ async function syncEnergy(drive: DriveClient): Promise<EnergyBill[]> {
   return bills.sort((a, b) => a.month.localeCompare(b.month));
 }
 
+async function syncInsurance(drive: DriveClient, folderId: string): Promise<InsuranceBill[]> {
+  const files = await drive.listFiles(folderId, [".pdf"]);
+  const bills: InsuranceBill[] = [];
+
+  for (const f of files) {
+    try {
+      const buf = await drive.downloadFile(f.id);
+      const text = await extractTextFromPdf(buf);
+      const parsed = parseAdeslasBill(text);
+      if (parsed) bills.push(parsed);
+    } catch {
+      // skip unparseable file
+    }
+  }
+
+  return bills.sort((a, b) => a.month.localeCompare(b.month));
+}
+
 // ─── Main entry point ──────────────────────────────────────────────────────
 
 export interface SyncResult {
-  synced: { internet: number; community: number; energy: number };
+  synced: { internet: number; community: number; energy: number; insurance: number };
 }
 
-export async function syncBills(category: "all" | "internet" | "community" | "energy" = "all"): Promise<SyncResult> {
+export async function syncBills(category: "all" | "internet" | "community" | "energy" | "insurance" = "all"): Promise<SyncResult> {
   if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.GOOGLE_REFRESH_TOKEN) {
     throw new Error("Missing Google OAuth env vars: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN");
   }
@@ -129,6 +154,9 @@ export async function syncBills(category: "all" | "internet" | "community" | "en
   let internet = current.internet;
   let community = current.community;
   let energy = current.energy;
+  // BillsData.insurance predates the field, so a stored document may not
+  // have it — default defensively.
+  let insurance = current.insurance ?? [];
 
   if (category === "all" || category === "internet") {
     internet = await syncInternet(drive);
@@ -139,14 +167,18 @@ export async function syncBills(category: "all" | "internet" | "community" | "en
   if (category === "all" || category === "energy") {
     energy = await syncEnergy(drive);
   }
+  if ((category === "all" || category === "insurance") && FOLDERS.insurance) {
+    insurance = await syncInsurance(drive, FOLDERS.insurance);
+  }
 
-  await storeBillsData({ internet, community, energy });
+  await storeBillsData({ internet, community, energy, insurance });
 
   return {
     synced: {
       internet: internet.length,
       community: community.length,
       energy: energy.length,
+      insurance: insurance.length,
     },
   };
 }
