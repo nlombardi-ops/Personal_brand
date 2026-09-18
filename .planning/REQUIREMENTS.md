@@ -32,7 +32,7 @@ Requirements for the initial private president's cockpit. Each maps to a roadmap
 
 ### Ingestion
 
-- [ ] **INGEST-01**: User can upload a PDF into the cockpit; it is stored in the private Vercel Blob store and served back via a proxy route
+- [x] **INGEST-01**: User can upload a PDF into the cockpit; it is stored in the private Vercel Blob store and served back via a proxy route
 - [ ] **INGEST-02**: The `scripts/email-organizer/` pipeline feeds administrador emails (Administraciones Colmenarejo) into the cockpit as draft `Document`s / OpenLoops
 
 ### Platform
@@ -94,7 +94,7 @@ Which phases cover which requirements. Populated during roadmap creation.
 | LPH-05 | Phase 3 | Pending |
 | QA-01 | Phase 4 | Pending |
 | PRICE-01 | Phase 4 | Pending |
-| INGEST-01 | Phase 2 | Pending |
+| INGEST-01 | Phase 2 | Complete |
 | INGEST-02 | Phase 5 | Pending |
 | PLAT-01 | Phase 1 | Complete |
 | PLAT-02 | Phase 1 | Complete |

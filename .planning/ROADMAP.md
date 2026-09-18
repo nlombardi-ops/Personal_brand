@@ -76,12 +76,12 @@ Plans:
   3. On an obra-kind loop Nicola can record multiple Presupuestos — provider, amount, scope, received/valid dates, linked document.
   4. Nicola can view those Presupuestos in a side-by-side comparison showing provider, amount, scope and dates together.
 
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 **Wave 1**
 
-- [ ] 02-01-PLAN.md — Slice 1 (INGEST-01): client-upload to the private Blob store via a `handleUpload` token broker, the `Document` type + dual-mode store + file-type allow-list, the authenticated inline file proxy, and the `Documentos` surface with classify / retitle / date / archive
+- [x] 02-01-PLAN.md — Slice 1 (INGEST-01): client-upload to the private Blob store via a `handleUpload` token broker, the `Document` type + dual-mode store + file-type allow-list, the authenticated inline file proxy, and the `Documentos` surface with classify / retitle / date / archive
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -159,7 +159,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Cockpit Foundation & Open-Loop Tracker | 3/3 | Complete    | 2026-09-10 |
-| 2. Documents & Presupuestos Workflow | 0/3 | Planned | - |
+| 2. Documents & Presupuestos Workflow | 1/3 | In Progress|  |
 | 3. LPH Deadline Engine | 0/TBD | Not started | - |
 | 4. Claude-Assisted Advice (LPH Q&A + Presupuesto Pricing) | 0/TBD | Not started | - |
 | 5. Administrador Email Ingestion | 0/TBD | Not started | - |
