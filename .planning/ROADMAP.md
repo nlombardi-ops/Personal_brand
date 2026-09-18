@@ -76,7 +76,7 @@ Plans:
   3. On an obra-kind loop Nicola can record multiple Presupuestos — provider, amount, scope, received/valid dates, linked document.
   4. Nicola can view those Presupuestos in a side-by-side comparison showing provider, amount, scope and dates together.
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans executed
 
 Plans:
 **Wave 1**
@@ -89,7 +89,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 02-03-PLAN.md — Slice 3 (LOOP-03): the `Presupuesto` entity with integer-cents money and a server-computed total on obra loops, the tested pure `comparePresupuestos`, and the attributes × quotes comparison table with cheapest highlighting, deltas and a sort control
+- [x] 02-03-PLAN.md — Slice 3 (LOOP-03): the `Presupuesto` entity with integer-cents money and a server-computed total on obra loops, the tested pure `comparePresupuestos`, and the attributes × quotes comparison table with cheapest highlighting, deltas and a sort control
 
 **UI hint**: yes
 
@@ -159,7 +159,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Cockpit Foundation & Open-Loop Tracker | 3/3 | Complete    | 2026-09-10 |
-| 2. Documents & Presupuestos Workflow | 2/3 | In Progress|  |
+| 2. Documents & Presupuestos Workflow | 3/3 | In Progress|  |
 | 3. LPH Deadline Engine | 0/TBD | Not started | - |
 | 4. Claude-Assisted Advice (LPH Q&A + Presupuesto Pricing) | 0/TBD | Not started | - |
 | 5. Administrador Email Ingestion | 0/TBD | Not started | - |

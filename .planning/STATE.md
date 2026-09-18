@@ -4,16 +4,16 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 2
 current_phase_name: Documents & Presupuestos Workflow
-status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-09-18T12:08:11.880Z"
+status: verifying
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-09-18T12:27:02.993Z"
 last_activity: 2026-09-17
 last_activity_desc: Phase 2 execution started
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # Project State
@@ -29,10 +29,10 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 
 Phase: 2 (Documents & Presupuestos Workflow) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-09-17 — Phase 2 execution started
 
-Progress: [████████░░] 83%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -64,6 +64,7 @@ Progress: [████████░░] 83%
 | Phase quick-260917-pjc P01 | 35min | 3 tasks | 9 files |
 | Phase 02 P01 | 45min | 3 tasks | 14 files |
 | Phase 02 P02 | 62min | 3 tasks | 12 files |
+| Phase 02-documents-presupuestos-workflow P03 | 55min | 3 tasks | 14 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,9 @@ Recent decisions affecting current work:
 - [Phase ?]: 02-01: three plan-authored grep-count acceptance gates (requireAuth/serveContentType import+call counts) are known artifacts, not implementation defects — same pattern exists in the Phase 1 analog files
 - [Phase ?]: [Phase 02]: 02-02: documentsForLoop is the single loop->document resolution function, reused by the detail panel and the board attachment-count chip — never a second independent filter
 - [Phase ?]: [Phase 02]: 02-02: AttachDocumentControl centralizes both attach and detach PATCH calls and renders the attached-document row list itself, so the single mutation path lives in one file
+- [Phase ?]: 02-03: PresupuestoComparison mounts only when non-archived presupuestos exist, avoiding two stacked empty-state messages
+- [Phase ?]: 02-03: total_cents is always server-recomputed (unconditional) in applyPresupuestoPatch/applyPresupuestoCreateDefaults and absent from PATCHABLE_PRESUPUESTO_KEYS — a client-sent total can never survive
+- [Phase ?]: 02-03: comparePresupuestos computes cheapestId before sorting so the highlight is invariant across the total/received_at sort keys (D-19)
 
 ### Pending Todos
 
@@ -114,6 +118,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-09-18T12:08:11.875Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-09-18T12:27:02.988Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
