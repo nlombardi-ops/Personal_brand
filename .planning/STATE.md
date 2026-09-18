@@ -5,14 +5,14 @@ milestone_name: milestone
 current_phase: 2
 current_phase_name: Documents & Presupuestos Workflow
 status: executing
-stopped_at: Phase 2 context gathered
-last_updated: "2026-09-10T10:00:39.745Z"
-last_activity: 2026-09-10
-last_activity_desc: Phase 2 planning complete
+stopped_at: Completed 260917-pjc-PLAN.md (Insurance/Adeslas sync category scaffold)
+last_updated: "2026-09-18T10:55:18.838Z"
+last_activity: 2026-09-17
+last_activity_desc: Phase 2 execution started
 progress:
   total_phases: 2
   completed_phases: 1
-  total_plans: 3
+  total_plans: 6
   completed_plans: 3
 ---
 
@@ -23,14 +23,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-09-08)
 
 **Core value:** At any moment the president can see every open commitment and incidencia, who it is waiting on, and which LPH deadline is closing in — without digging through email.
-**Current focus:** Phase 01 — Cockpit Foundation & Open-Loop Tracker
+**Current focus:** Phase 2 — Documents & Presupuestos Workflow
 
 ## Current Position
 
-Phase: 2 — Documents & Presupuestos Workflow
-Plan: Not started
-Status: Ready to execute
-Last activity: 2026-09-10 — Phase 2 planning complete
+Phase: 2 (Documents & Presupuestos Workflow) — EXECUTING
+Plan: 1 of 3
+Status: Executing Phase 2
+Last activity: 2026-09-17 — Phase 2 execution started
 
 Progress: [██████████] 100%
 
@@ -61,6 +61,7 @@ Progress: [██████████] 100%
 | Phase 01 P01 | 50min | 2 tasks | 12 files |
 | Phase 01 P02 | 35min | 3 tasks | 10 files |
 | Phase 01 P03 | 45min | 3 tasks | 10 files |
+| Phase quick-260917-pjc P01 | 35min | 3 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,9 @@ Recent decisions affecting current work:
 - [Phase ?]: 01-03: existing-loop mutations go through applyPatch's frozen PATCHABLE_KEYS allow-list — never spread the request body; blocks mass assignment + prototype pollution at one choke point
 - [Phase ?]: 01-03: no hard-delete anywhere in the community namespace — Descartar = PATCH status:dropped, hidden by plan-02 grouping
 - [Phase ?]: 01-03: PLAT-03/SC-5 audited clean — neighbour_form retained on OpenLoopSource, Submission free of president-internal fields, zero v1 consumers
+- [Phase ?]: 260917-pjc: InsuranceBill kept narrow (month/total/provider/policy?) — distinct from InsurancePolicy static-metadata interface
+- [Phase ?]: 260917-pjc: FOLDERS.insurance ships null (never a fabricated Drive ID); syncBills only calls syncInsurance when the ID is truthy
+- [Phase ?]: 260917-pjc: parseAdeslasBill returns null on any ambiguity — no catch-all amount/date fallback, to avoid writing wrong money into bills.json
 
 ### Pending Todos
 
@@ -104,6 +108,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-09-10T09:04:12.328Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-documents-presupuestos-workflow/02-CONTEXT.md
+Last session: 2026-09-18T10:55:12.557Z
+Stopped at: Completed 260917-pjc-PLAN.md (Insurance/Adeslas sync category scaffold)
+Resume file: None
