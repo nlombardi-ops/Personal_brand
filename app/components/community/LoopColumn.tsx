@@ -28,6 +28,9 @@ interface Props extends QuickActionHandlers {
   emptyCopy: string;
   onOpen: (loop: OpenLoop) => void;
   onOpenDetail: (loop: OpenLoop) => void;
+  // Same documentsForLoop-derived counts the detail panel resolves from —
+  // keyed by loop id, so the board chip and the panel can never disagree.
+  attachmentCounts: Record<string, number>;
   quickState: QuickState;
 }
 
@@ -41,6 +44,7 @@ export default function LoopColumn({
   emptyCopy,
   onOpen,
   onOpenDetail,
+  attachmentCounts,
   quickState,
   onQuickStart,
   onQuickSettle,
@@ -72,6 +76,7 @@ export default function LoopColumn({
               tone={tone}
               onOpen={onOpen}
               onOpenDetail={onOpenDetail}
+              attachmentCount={attachmentCounts[loop.id] ?? 0}
               pendingAction={quickState[loop.id]?.pendingAction ?? null}
               quickError={quickState[loop.id]?.error ?? false}
               onQuickStart={onQuickStart}

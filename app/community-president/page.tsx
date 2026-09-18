@@ -23,8 +23,14 @@ export default async function CommunityPresidentPage() {
   const grouped = groupLoopsByUrgency(loops);
 
   const documentsByLoop: Record<string, Document[]> = {};
+  const attachmentCounts: Record<string, number> = {};
   for (const loop of loops) {
-    documentsByLoop[loop.id] = documentsForLoop(documents, loop.id);
+    const attachments = documentsForLoop(documents, loop.id);
+    documentsByLoop[loop.id] = attachments;
+    // Derived from the SAME documentsForLoop result the panel resolves —
+    // never a second, independent filter over the raw documents array — so
+    // the board chip and the panel can never disagree.
+    attachmentCounts[loop.id] = attachments.length;
   }
 
   // Library picker (AttachDocumentControl): every non-archived document,
@@ -42,6 +48,7 @@ export default async function CommunityPresidentPage() {
         grouped={grouped}
         documentsByLoop={documentsByLoop}
         libraryDocuments={libraryDocuments}
+        attachmentCounts={attachmentCounts}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText } from "lucide-react";
+import { FileText, Paperclip } from "lucide-react";
 import { OWNER_LABELS, OWNER_DETAIL_OWNERS } from "@/lib/community/loop-defaults";
 import { formatRelativeDue } from "@/lib/community/relative-date";
 import type { OpenLoop } from "@/lib/types";
@@ -33,6 +33,10 @@ interface Props {
   tone: UrgencyTone;
   onOpen: (loop: OpenLoop) => void;
   onOpenDetail: (loop: OpenLoop) => void;
+  // Non-archived attachment count for this loop, from the SAME
+  // documentsForLoop result the detail panel resolves — so the chip and the
+  // panel can never disagree. Zero renders no chip at all.
+  attachmentCount: number;
   pendingAction: QuickActionKey | null;
   quickError: boolean;
   onQuickStart: (loopId: string, key: QuickActionKey) => void;
@@ -49,6 +53,7 @@ export default function LoopCard({
   tone,
   onOpen,
   onOpenDetail,
+  attachmentCount,
   pendingAction,
   quickError,
   onQuickStart,
@@ -101,6 +106,19 @@ export default function LoopCard({
               </span>
             ) : null}
           </span>
+          {attachmentCount > 0 ? (
+            <span
+              aria-label={
+                attachmentCount === 1
+                  ? "1 documento adjunto"
+                  : `${attachmentCount} documentos adjuntos`
+              }
+              className="inline-flex items-center gap-1 border border-neutral-200 px-2 py-0.5 text-xs text-neutral-600"
+            >
+              <Paperclip className="h-3 w-3" />
+              {attachmentCount}
+            </span>
+          ) : null}
         </div>
         {quickError ? (
           <p className="mt-2 text-xs font-semibold text-[#b91c1c]">

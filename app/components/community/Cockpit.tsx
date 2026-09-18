@@ -27,6 +27,10 @@ interface Props {
   // panel never opens with an empty attachment list and then pops.
   documentsByLoop: Record<string, Document[]>;
   libraryDocuments: Document[];
+  // Derived from documentsByLoop in page.tsx (array length per loop id) —
+  // the SAME resolution the detail panel uses, so the board chip and the
+  // panel can never disagree.
+  attachmentCounts: Record<string, number>;
 }
 
 export default function Cockpit({
@@ -34,6 +38,7 @@ export default function Cockpit({
   grouped,
   documentsByLoop,
   libraryDocuments,
+  attachmentCounts,
 }: Props) {
   const router = useRouter();
   const [slideOverOpen, setSlideOverOpen] = useState(false);
@@ -189,6 +194,7 @@ export default function Cockpit({
               emptyCopy="Nada vencido"
               onOpen={openEdit}
               onOpenDetail={openDetail}
+              attachmentCounts={attachmentCounts}
               quickState={quickState}
               onQuickStart={quickStart}
               onQuickSettle={quickSettle}
@@ -200,6 +206,7 @@ export default function Cockpit({
               emptyCopy="Nada vence en los próximos 14 días"
               onOpen={openEdit}
               onOpenDetail={openDetail}
+              attachmentCounts={attachmentCounts}
               quickState={quickState}
               onQuickStart={quickStart}
               onQuickSettle={quickSettle}
@@ -211,6 +218,7 @@ export default function Cockpit({
               emptyCopy="No estás esperando a nadie"
               onOpen={openEdit}
               onOpenDetail={openDetail}
+              attachmentCounts={attachmentCounts}
               quickState={quickState}
               onQuickStart={quickStart}
               onQuickSettle={quickSettle}
@@ -220,6 +228,7 @@ export default function Cockpit({
             loops={grouped.noDate}
             onOpen={openEdit}
             onOpenDetail={openDetail}
+            attachmentCounts={attachmentCounts}
             quickState={quickState}
             onQuickStart={quickStart}
             onQuickSettle={quickSettle}

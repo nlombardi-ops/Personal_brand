@@ -8,6 +8,7 @@ interface Props extends QuickActionHandlers {
   loops: OpenLoop[];
   onOpen: (loop: OpenLoop) => void;
   onOpenDetail: (loop: OpenLoop) => void;
+  attachmentCounts: Record<string, number>;
   quickState: QuickState;
 }
 
@@ -18,6 +19,7 @@ export default function NoDateSection({
   loops,
   onOpen,
   onOpenDetail,
+  attachmentCounts,
   quickState,
   onQuickStart,
   onQuickSettle,
@@ -37,6 +39,7 @@ export default function NoDateSection({
             tone="noDate"
             onOpen={onOpen}
             onOpenDetail={onOpenDetail}
+            attachmentCount={attachmentCounts[loop.id] ?? 0}
             pendingAction={quickState[loop.id]?.pendingAction ?? null}
             quickError={quickState[loop.id]?.error ?? false}
             onQuickStart={onQuickStart}
