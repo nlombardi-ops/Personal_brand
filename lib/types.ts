@@ -304,3 +304,35 @@ export interface Submission {
   status: "triage";
   created_at: string;
 }
+
+// Locked vocabulary (CONTEXT D-04, D-06, D-07). Single source of truth for the
+// document type / kind / status across the type, the validator, the upload
+// allow-list and the Spanish label record in lib/community/document-defaults.ts.
+// "sin_clasificar" is a distinct fifth member, not an overload of one of the
+// four named types, so Record<DocumentType, string> stays exhaustive and fails
+// to compile if the union drifts.
+export type DocumentType =
+  | "acta"
+  | "contrato"
+  | "presupuesto"
+  | "carta"
+  | "sin_clasificar";
+export type DocumentFileKind = "pdf" | "image";
+export type DocumentStatus = "active" | "archived"; // D-06: archiving is the only removal
+
+export interface Document {
+  id: string;
+  title: string; // defaults to original_name at upload (D-04), editable after
+  type: DocumentType; // defaults to "sin_clasificar" (D-04)
+  status: DocumentStatus;
+  blob_pathname: string; // server-constructed community-documents/{uuid}.{ext}, never patchable
+  file_kind: DocumentFileKind; // derived server-side from classifyFile, never trusted from the client
+  content_type: string; // derived server-side from classifyFile, never trusted from the client
+  size_bytes: number;
+  original_name: string; // data only — never used to build a path (path-traversal vector)
+  linked_loop_ids: string[]; // many-to-many link to OpenLoop, [] meaning orphan (D-02), consumed by Slice 2
+  doc_date?: string | null; // plain "YYYY-MM-DD", distinct from uploaded_at (D-04)
+  uploaded_at: string; // ISO 8601
+  updated_at: string; // ISO 8601
+  extracted_text?: string; // declared now, populated by nobody in Phase 2 (deferred to v2 EXTRACT-01)
+}

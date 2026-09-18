@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ChevronLeft,
+  FileText,
   LogOut,
   Menu,
   X,
@@ -15,6 +16,7 @@ import {
 // drawer. Future surfaces add entries here only.
 const NAV_ITEMS = [
   { label: "Panel", href: "/community-president", icon: LayoutDashboard },
+  { label: "Documentos", href: "/community-president/documentos", icon: FileText },
 ];
 
 function NavLinks({
