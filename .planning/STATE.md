@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 2
 current_phase_name: Documents & Presupuestos Workflow
 status: executing
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-09-18T10:57:44.047Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-09-18T12:08:11.880Z"
 last_activity: 2026-09-17
 last_activity_desc: Phase 2 execution started
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 ## Current Position
 
 Phase: 2 (Documents & Presupuestos Workflow) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-09-17 — Phase 2 execution started
 
-Progress: [███████░░░] 67%
+Progress: [████████░░] 83%
 
 ## Performance Metrics
 
@@ -63,6 +63,7 @@ Progress: [███████░░░] 67%
 | Phase 01 P03 | 45min | 3 tasks | 10 files |
 | Phase quick-260917-pjc P01 | 35min | 3 tasks | 9 files |
 | Phase 02 P01 | 45min | 3 tasks | 14 files |
+| Phase 02 P02 | 62min | 3 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -88,6 +89,8 @@ Recent decisions affecting current work:
 - [Phase ?]: 260917-pjc: parseAdeslasBill returns null on any ambiguity — no catch-all amount/date fallback, to avoid writing wrong money into bills.json
 - [Phase ?]: 02-01: Blob SDK error classes mapped to Spanish copy by message-substring match rather than importing server-only error classes into a client bundle
 - [Phase ?]: 02-01: three plan-authored grep-count acceptance gates (requireAuth/serveContentType import+call counts) are known artifacts, not implementation defects — same pattern exists in the Phase 1 analog files
+- [Phase ?]: [Phase 02]: 02-02: documentsForLoop is the single loop->document resolution function, reused by the detail panel and the board attachment-count chip — never a second independent filter
+- [Phase ?]: [Phase 02]: 02-02: AttachDocumentControl centralizes both attach and detach PATCH calls and renders the attached-document row list itself, so the single mutation path lives in one file
 
 ### Pending Todos
 
@@ -111,6 +114,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-09-18T10:57:44.042Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-09-18T12:08:11.875Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
