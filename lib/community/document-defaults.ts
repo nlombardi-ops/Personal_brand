@@ -359,3 +359,55 @@ export function applyDocumentCreateDefaults(
     linked_loop_ids: linkedLoopId ? [linkedLoopId] : [],
   };
 }
+
+// ── Slice 2: loop <-> document link helpers (LOOP-02, D-02, D-05) ────────
+// Pure, isomorphic array helpers — only the `Document` type may be imported
+// here, no framework, no filesystem, no React (urgency.ts import-discipline
+// header). `documentsForLoop` is the ONE place the loop→documents resolution
+// is expressed; the detail panel and the board's attachment-count chip both
+// call it so they can never disagree. `attachLoopId` / `detachLoopId` are
+// the single wholesale-replace-array builders every attach/detach call site
+// (loop side and document side) uses before PATCHing the complete new array.
+
+/**
+ * Non-archived documents linked to `loopId`, newest-first by `uploaded_at`.
+ * Two documents sharing an `uploaded_at` keep input order — the comparator
+ * is a plain string compare and V8's Array#sort is stable.
+ */
+export function documentsForLoop(
+  documents: Document[],
+  loopId: string,
+): Document[] {
+  return documents
+    .filter(
+      (doc) => doc.status !== "archived" && doc.linked_loop_ids.includes(loopId),
+    )
+    .sort((a, b) =>
+      a.uploaded_at < b.uploaded_at ? 1 : a.uploaded_at > b.uploaded_at ? -1 : 0,
+    );
+}
+
+/**
+ * Returns a new array with `loopId` appended only when absent — never
+ * duplicates, never mutates `ids`. The de-duplication that makes attaching
+ * an already-linked document a no-op.
+ */
+export function attachLoopId(
+  ids: readonly string[],
+  loopId: string,
+): string[] {
+  if (ids.includes(loopId)) return [...ids];
+  return [...ids, loopId];
+}
+
+/**
+ * Returns a new array with every occurrence of `loopId` removed — never
+ * mutates `ids`. Removing the only entry returns an empty array, a valid
+ * orphan state (D-02).
+ */
+export function detachLoopId(
+  ids: readonly string[],
+  loopId: string,
+): string[] {
+  return ids.filter((id) => id !== loopId);
+}

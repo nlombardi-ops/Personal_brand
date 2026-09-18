@@ -7,6 +7,7 @@ import type { OpenLoop } from "@/lib/types";
 interface Props extends QuickActionHandlers {
   loops: OpenLoop[];
   onOpen: (loop: OpenLoop) => void;
+  onOpenDetail: (loop: OpenLoop) => void;
   quickState: QuickState;
 }
 
@@ -16,6 +17,7 @@ interface Props extends QuickActionHandlers {
 export default function NoDateSection({
   loops,
   onOpen,
+  onOpenDetail,
   quickState,
   onQuickStart,
   onQuickSettle,
@@ -34,6 +36,7 @@ export default function NoDateSection({
             loop={loop}
             tone="noDate"
             onOpen={onOpen}
+            onOpenDetail={onOpenDetail}
             pendingAction={quickState[loop.id]?.pendingAction ?? null}
             quickError={quickState[loop.id]?.error ?? false}
             onQuickStart={onQuickStart}

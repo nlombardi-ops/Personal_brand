@@ -27,6 +27,7 @@ interface Props extends QuickActionHandlers {
   loops: OpenLoop[];
   emptyCopy: string;
   onOpen: (loop: OpenLoop) => void;
+  onOpenDetail: (loop: OpenLoop) => void;
   quickState: QuickState;
 }
 
@@ -39,6 +40,7 @@ export default function LoopColumn({
   loops,
   emptyCopy,
   onOpen,
+  onOpenDetail,
   quickState,
   onQuickStart,
   onQuickSettle,
@@ -69,6 +71,7 @@ export default function LoopColumn({
               loop={loop}
               tone={tone}
               onOpen={onOpen}
+              onOpenDetail={onOpenDetail}
               pendingAction={quickState[loop.id]?.pendingAction ?? null}
               quickError={quickState[loop.id]?.error ?? false}
               onQuickStart={onQuickStart}

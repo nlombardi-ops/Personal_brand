@@ -1,5 +1,6 @@
 "use client";
 
+import { FileText } from "lucide-react";
 import { OWNER_LABELS, OWNER_DETAIL_OWNERS } from "@/lib/community/loop-defaults";
 import { formatRelativeDue } from "@/lib/community/relative-date";
 import type { OpenLoop } from "@/lib/types";
@@ -31,6 +32,7 @@ interface Props {
   loop: OpenLoop;
   tone: UrgencyTone;
   onOpen: (loop: OpenLoop) => void;
+  onOpenDetail: (loop: OpenLoop) => void;
   pendingAction: QuickActionKey | null;
   quickError: boolean;
   onQuickStart: (loopId: string, key: QuickActionKey) => void;
@@ -46,6 +48,7 @@ export default function LoopCard({
   loop,
   tone,
   onOpen,
+  onOpenDetail,
   pendingAction,
   quickError,
   onQuickStart,
@@ -106,16 +109,32 @@ export default function LoopCard({
         ) : null}
       </div>
 
-      {/* Quick actions: always visible on mobile (static row below the meta);
-          on desktop an absolute top-right cluster revealed on hover / focus,
-          forced visible while pending or after an error (D-12 / D-15). */}
+      {/* Quick actions + Detalle: always visible on mobile (static row below
+          the meta); on desktop an absolute top-right cluster revealed on
+          hover / focus, forced visible while pending or after an error
+          (D-12 / D-15). This row re-enables its own pointer events and each
+          button stops propagation, so it never triggers the whole-card
+          overlay button. */}
       <div
-        className={`pointer-events-auto relative z-20 mt-3 flex justify-end md:absolute md:right-2 md:top-2 md:mt-0 md:transition-opacity ${
+        className={`pointer-events-auto relative z-20 mt-3 flex items-center justify-between gap-1 md:absolute md:right-2 md:top-2 md:mt-0 md:transition-opacity ${
           busy || quickError
             ? "md:opacity-100"
             : "md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100"
         }`}
       >
+        <button
+          type="button"
+          aria-label={`Ver detalle: ${loop.title}`}
+          disabled={busy}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenDetail(loop);
+          }}
+          className="inline-flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-neutral-500 transition-colors hover:text-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0f172a] disabled:opacity-50"
+        >
+          <FileText className="h-4 w-4" />
+          Detalle
+        </button>
         <QuickActions
           loopId={loop.id}
           pendingAction={pendingAction}

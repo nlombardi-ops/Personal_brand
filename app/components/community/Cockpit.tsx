@@ -12,9 +12,10 @@ import LoopSlideOver, {
   type CreateLoopPayload,
   type LoopPatch,
 } from "./LoopSlideOver";
+import LoopDetailPanel from "./LoopDetailPanel";
 import CountStrip from "./CountStrip";
 import type { GroupedLoops } from "@/lib/community/urgency";
-import type { OpenLoop } from "@/lib/types";
+import type { Document, OpenLoop } from "@/lib/types";
 
 const SAVE_ERROR =
   "No se ha podido guardar el bucle. Revisa tu conexión e inténtalo de nuevo.";
@@ -22,15 +23,27 @@ const SAVE_ERROR =
 interface Props {
   loops: OpenLoop[];
   grouped: GroupedLoops;
+  // Slice 2: server-resolved (documentsForLoop, page.tsx) so the detail
+  // panel never opens with an empty attachment list and then pops.
+  documentsByLoop: Record<string, Document[]>;
+  libraryDocuments: Document[];
 }
 
-export default function Cockpit({ loops, grouped }: Props) {
+export default function Cockpit({
+  loops,
+  grouped,
+  documentsByLoop,
+  libraryDocuments,
+}: Props) {
   const router = useRouter();
   const [slideOverOpen, setSlideOverOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   // null → the slide-over opens in create mode; a loop → edit mode.
   const [editingLoop, setEditingLoop] = useState<OpenLoop | null>(null);
+  // The D-17 wider detail-mode panel — a separate mount from LoopSlideOver,
+  // never stacked with it (opening one closes the other first).
+  const [detailLoop, setDetailLoop] = useState<OpenLoop | null>(null);
   // Per-card quick-action state keyed by loop id — two cards never share one
   // spinner, and the rest of the board stays interactive during a mutation.
   const [quickState, setQuickState] = useState<QuickState>({});
@@ -38,18 +51,29 @@ export default function Cockpit({ loops, grouped }: Props) {
   function openSlideOver() {
     setEditingLoop(null);
     setSaveError(null);
+    setDetailLoop(null);
     setSlideOverOpen(true);
   }
 
   function openEdit(loop: OpenLoop) {
     setEditingLoop(loop);
     setSaveError(null);
+    setDetailLoop(null);
     setSlideOverOpen(true);
   }
 
   function closeSlideOver() {
     if (pending) return;
     setSlideOverOpen(false);
+  }
+
+  function openDetail(loop: OpenLoop) {
+    setSlideOverOpen(false);
+    setDetailLoop(loop);
+  }
+
+  function closeDetail() {
+    setDetailLoop(null);
   }
 
   async function handleCreate(payload: CreateLoopPayload) {
@@ -164,6 +188,7 @@ export default function Cockpit({ loops, grouped }: Props) {
               loops={grouped.overdue}
               emptyCopy="Nada vencido"
               onOpen={openEdit}
+              onOpenDetail={openDetail}
               quickState={quickState}
               onQuickStart={quickStart}
               onQuickSettle={quickSettle}
@@ -174,6 +199,7 @@ export default function Cockpit({ loops, grouped }: Props) {
               loops={grouped.dueSoon}
               emptyCopy="Nada vence en los próximos 14 días"
               onOpen={openEdit}
+              onOpenDetail={openDetail}
               quickState={quickState}
               onQuickStart={quickStart}
               onQuickSettle={quickSettle}
@@ -184,6 +210,7 @@ export default function Cockpit({ loops, grouped }: Props) {
               loops={grouped.waiting}
               emptyCopy="No estás esperando a nadie"
               onOpen={openEdit}
+              onOpenDetail={openDetail}
               quickState={quickState}
               onQuickStart={quickStart}
               onQuickSettle={quickSettle}
@@ -192,6 +219,7 @@ export default function Cockpit({ loops, grouped }: Props) {
           <NoDateSection
             loops={grouped.noDate}
             onOpen={openEdit}
+            onOpenDetail={openDetail}
             quickState={quickState}
             onQuickStart={quickStart}
             onQuickSettle={quickSettle}
@@ -208,6 +236,15 @@ export default function Cockpit({ loops, grouped }: Props) {
         onCreate={handleCreate}
         onSave={handleSave}
         onDiscard={handleDiscard}
+      />
+
+      <LoopDetailPanel
+        open={detailLoop !== null}
+        loop={detailLoop}
+        documents={detailLoop ? (documentsByLoop[detailLoop.id] ?? []) : []}
+        libraryDocuments={libraryDocuments}
+        onClose={closeDetail}
+        onEdit={openEdit}
       />
     </>
   );
