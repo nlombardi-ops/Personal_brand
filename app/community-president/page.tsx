@@ -1,9 +1,10 @@
 import Cockpit from "@/app/components/community/Cockpit";
 import { getOpenLoops } from "@/lib/community/open-loops-store";
 import { getDocuments } from "@/lib/community/documents-store";
+import { getPresupuestos } from "@/lib/community/presupuestos-store";
 import { groupLoopsByUrgency } from "@/lib/community/urgency";
 import { documentsForLoop } from "@/lib/community/document-defaults";
-import type { Document } from "@/lib/types";
+import type { Document, Presupuesto } from "@/lib/types";
 
 // Server Component: reads the store directly at request time (the layout already
 // gates the segment, so no AuthGuard here). Never static-import the seed JSON —
@@ -16,9 +17,10 @@ import type { Document } from "@/lib/types";
 // here too, via documentsForLoop, so the detail panel never opens with an
 // empty attachment list and then pops.
 export default async function CommunityPresidentPage() {
-  const [loops, documents] = await Promise.all([
+  const [loops, documents, presupuestos] = await Promise.all([
     getOpenLoops(),
     getDocuments(),
+    getPresupuestos(),
   ]);
   const grouped = groupLoopsByUrgency(loops);
 
@@ -41,6 +43,17 @@ export default async function CommunityPresidentPage() {
       a.uploaded_at < b.uploaded_at ? 1 : a.uploaded_at > b.uploaded_at ? -1 : 0,
     );
 
+  // Slice 3: resolved server-side, obra loops only, non-archived — so the
+  // detail panel never opens with a stale or empty presupuesto list and then
+  // pops (same rule as documentsByLoop above).
+  const presupuestosByLoop: Record<string, Presupuesto[]> = {};
+  for (const loop of loops) {
+    if (loop.kind !== "obra") continue;
+    presupuestosByLoop[loop.id] = presupuestos.filter(
+      (p) => p.loop_id === loop.id && p.status !== "archived",
+    );
+  }
+
   return (
     <div className="px-6 py-8 lg:px-8">
       <Cockpit
@@ -49,6 +62,7 @@ export default async function CommunityPresidentPage() {
         documentsByLoop={documentsByLoop}
         libraryDocuments={libraryDocuments}
         attachmentCounts={attachmentCounts}
+        presupuestosByLoop={presupuestosByLoop}
       />
     </div>
   );

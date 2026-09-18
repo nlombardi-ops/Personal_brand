@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { KIND_LABELS, STATUS_LABELS } from "@/lib/community/loop-defaults";
 import { formatRelativeDue } from "@/lib/community/relative-date";
-import type { Document, OpenLoop } from "@/lib/types";
+import { formatEuros } from "@/lib/community/presupuesto-defaults";
+import type { Document, OpenLoop, Presupuesto } from "@/lib/types";
 import AttachDocumentControl from "./AttachDocumentControl";
+import PresupuestoForm from "./PresupuestoForm";
 
 interface Props {
   open: boolean;
@@ -15,6 +17,9 @@ interface Props {
   // documentsForLoop runs server-side, in page.tsx, for first paint.
   documents: Document[];
   libraryDocuments: Document[];
+  // Slice 3: this loop's non-archived presupuestos, resolved server-side in
+  // page.tsx. Only meaningful when loop.kind === "obra" (D-10).
+  presupuestos: Presupuesto[];
   onClose: () => void;
   onEdit: (loop: OpenLoop) => void;
 }
@@ -35,12 +40,14 @@ export default function LoopDetailPanel({
   loop,
   documents,
   libraryDocuments,
+  presupuestos,
   onClose,
   onEdit,
 }: Props) {
   const reduce = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const [addingPresupuesto, setAddingPresupuesto] = useState(false);
 
   // DOM focus management (external system — an effect is correct here).
   useEffect(() => {
@@ -171,9 +178,62 @@ export default function LoopDetailPanel({
                 </div>
               </section>
 
-              {/* Slice 3 inserts the obra-only presupuesto section HERE, as a
-                  sibling section — never nested inside this one or inside a
-                  form element. */}
+              {/* Slice 3, D-10: presupuestos are gated on the loop's kind, not
+                  hidden with CSS — a non-obra loop's DOM contains no
+                  presupuesto markup at all. Compare-only: the outcome of a
+                  quote round is recorded on the loop's next_action and
+                  status, never here (D-11). */}
+              {loop.kind === "obra" && (
+                <section>
+                  <h3 className={sectionLabelClass}>Presupuestos</h3>
+                  {presupuestos.length === 0 ? (
+                    <p className="mt-2 text-sm text-neutral-600">
+                      Aún no has registrado ningún presupuesto.
+                    </p>
+                  ) : (
+                    <ul className="mt-3 flex flex-col gap-2">
+                      {presupuestos.map((p) => (
+                        <li
+                          key={p.id}
+                          className="flex flex-wrap items-center gap-2 rounded-lg border border-neutral-200 bg-white p-3"
+                        >
+                          <span className="min-w-0 flex-1 truncate text-sm text-neutral-900">
+                            {p.provider}
+                          </span>
+                          <span className="font-mono text-sm tabular-nums text-neutral-700">
+                            {formatEuros(p.total_cents)} €
+                          </span>
+                          {p.received_at && (
+                            <span className="font-mono text-xs tabular-nums text-neutral-500">
+                              {p.received_at}
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <div className="mt-3">
+                    {addingPresupuesto ? (
+                      <PresupuestoForm
+                        loopId={loop.id}
+                        documents={libraryDocuments}
+                        onSettle={(ok) => {
+                          if (ok) setAddingPresupuesto(false);
+                        }}
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setAddingPresupuesto(true)}
+                        className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+                      >
+                        Añadir presupuesto
+                      </button>
+                    )}
+                  </div>
+                </section>
+              )}
             </div>
           </motion.div>
         </>

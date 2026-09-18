@@ -347,3 +347,25 @@ export interface Document {
   updated_at: string; // ISO 8601
   extracted_text?: string; // declared now, populated by nobody in Phase 2 (deferred to v2 EXTRACT-01)
 }
+
+// Locked vocabulary (CONTEXT D-06, D-16). Archiving is the only removal — a
+// Presupuesto is never hard-deleted.
+export type PresupuestoStatus = "active" | "archived";
+
+export interface Presupuesto {
+  id: string;
+  loop_id: string; // the obra loop this quote belongs to (D-10) — never nested on the loop
+  provider: string;
+  base_imponible_cents: number; // integer cents (D-12)
+  iva_pct: number;
+  total_cents: number; // integer cents, server-computed and stored (D-12) — never trusted from the client
+  scope: string; // free-text, multi-line (D-14)
+  received_at?: string | null; // plain "YYYY-MM-DD" (D-15)
+  valid_until?: string | null; // plain "YYYY-MM-DD" (D-15)
+  document_id?: string | null; // optional link to a Document (D-13)
+  status: PresupuestoStatus;
+  created_at: string; // ISO 8601
+  updated_at: string; // ISO 8601
+  // Deliberately compare-only: the outcome of a quote round is recorded on
+  // the loop's next_action and status, never here (D-11).
+}

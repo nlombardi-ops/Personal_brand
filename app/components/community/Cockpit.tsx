@@ -15,7 +15,7 @@ import LoopSlideOver, {
 import LoopDetailPanel from "./LoopDetailPanel";
 import CountStrip from "./CountStrip";
 import type { GroupedLoops } from "@/lib/community/urgency";
-import type { Document, OpenLoop } from "@/lib/types";
+import type { Document, OpenLoop, Presupuesto } from "@/lib/types";
 
 const SAVE_ERROR =
   "No se ha podido guardar el bucle. Revisa tu conexión e inténtalo de nuevo.";
@@ -31,6 +31,8 @@ interface Props {
   // the SAME resolution the detail panel uses, so the board chip and the
   // panel can never disagree.
   attachmentCounts: Record<string, number>;
+  // Slice 3: server-resolved (page.tsx), obra loops only, non-archived.
+  presupuestosByLoop: Record<string, Presupuesto[]>;
 }
 
 export default function Cockpit({
@@ -39,6 +41,7 @@ export default function Cockpit({
   documentsByLoop,
   libraryDocuments,
   attachmentCounts,
+  presupuestosByLoop,
 }: Props) {
   const router = useRouter();
   const [slideOverOpen, setSlideOverOpen] = useState(false);
@@ -252,6 +255,7 @@ export default function Cockpit({
         loop={detailLoop}
         documents={detailLoop ? (documentsByLoop[detailLoop.id] ?? []) : []}
         libraryDocuments={libraryDocuments}
+        presupuestos={detailLoop ? (presupuestosByLoop[detailLoop.id] ?? []) : []}
         onClose={closeDetail}
         onEdit={openEdit}
       />
