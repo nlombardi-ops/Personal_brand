@@ -11,7 +11,10 @@ import {
   ALLOWED_MIME,
   MAX_FILE_BYTES,
   applyDocumentPatch,
+  attachLoopId,
   classifyFile,
+  detachLoopId,
+  documentsForLoop,
   formatBytes,
   sanitizeFilename,
   validateDocumentInput,
@@ -215,4 +218,88 @@ test("validateDocumentInput rejects a linked_loop_ids array over 50 entries", ()
     { create: false },
   );
   assert.notEqual(result, null);
+});
+
+// ── documentsForLoop / attachLoopId / detachLoopId (Slice 2, LOOP-02) ─────
+// The ONE place the loop→documents resolution is expressed — the detail
+// panel and the board's attachment-count chip both call it so they can
+// never disagree.
+
+test("documentsForLoop returns only documents whose linked_loop_ids contains the loop id", () => {
+  const linked = makeDocument({ linked_loop_ids: ["loop-a"] });
+  const other = makeDocument({ linked_loop_ids: ["loop-b"] });
+  const result = documentsForLoop([linked, other], "loop-a");
+  assert.deepEqual(result.map((d) => d.id), [linked.id]);
+});
+
+test("documentsForLoop excludes archived documents even when linked", () => {
+  const archived = makeDocument({
+    linked_loop_ids: ["loop-a"],
+    status: "archived",
+  });
+  assert.deepEqual(documentsForLoop([archived], "loop-a"), []);
+});
+
+test("documentsForLoop returns an empty array for a loop with no links, and for empty input", () => {
+  const unrelated = makeDocument({ linked_loop_ids: ["loop-b"] });
+  assert.deepEqual(documentsForLoop([unrelated], "loop-a"), []);
+  assert.deepEqual(documentsForLoop([], "loop-a"), []);
+});
+
+test("documentsForLoop orders by uploaded_at descending, keeping input order for ties (stable sort)", () => {
+  const older = makeDocument({
+    linked_loop_ids: ["loop-a"],
+    uploaded_at: "2026-01-01T00:00:00.000Z",
+  });
+  const newer = makeDocument({
+    linked_loop_ids: ["loop-a"],
+    uploaded_at: "2026-02-01T00:00:00.000Z",
+  });
+  const tie1 = makeDocument({
+    linked_loop_ids: ["loop-a"],
+    uploaded_at: "2026-03-01T00:00:00.000Z",
+  });
+  const tie2 = makeDocument({
+    linked_loop_ids: ["loop-a"],
+    uploaded_at: "2026-03-01T00:00:00.000Z",
+  });
+  const result = documentsForLoop([older, tie1, tie2, newer], "loop-a");
+  assert.deepEqual(result.map((d) => d.id), [
+    tie1.id,
+    tie2.id,
+    newer.id,
+    older.id,
+  ]);
+});
+
+test("attachLoopId appends when absent", () => {
+  assert.deepEqual(attachLoopId(["x"], "y"), ["x", "y"]);
+});
+
+test("attachLoopId returns an array equal to the input when the id is already present — no duplicate, order preserved", () => {
+  assert.deepEqual(attachLoopId(["x", "y"], "x"), ["x", "y"]);
+});
+
+test("attachLoopId never mutates the input array", () => {
+  const input = Object.freeze(["x"]);
+  attachLoopId(input, "y");
+  assert.deepEqual(input, ["x"]);
+});
+
+test("detachLoopId removes the id when present", () => {
+  assert.deepEqual(detachLoopId(["x", "y"], "x"), ["y"]);
+});
+
+test("detachLoopId returns an array equal to the input when the id is absent", () => {
+  assert.deepEqual(detachLoopId(["x", "y"], "z"), ["x", "y"]);
+});
+
+test("detachLoopId removing the only entry returns an empty array — a valid orphan state", () => {
+  assert.deepEqual(detachLoopId(["x"], "x"), []);
+});
+
+test("detachLoopId never mutates the input array", () => {
+  const input = Object.freeze(["x", "y"]);
+  detachLoopId(input, "x");
+  assert.deepEqual(input, ["x", "y"]);
 });
