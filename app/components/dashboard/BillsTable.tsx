@@ -6,6 +6,9 @@ interface BillRow {
   community: number;
   water: number;
   internet: number;
+  // insurance: Adeslas category, wired quick-260917-pjc; renders "—" via fmt()
+  // until FOLDERS.insurance and parseAdeslasBill are tightened against real bills.
+  insurance: number;
   total: number;
 }
 
@@ -27,6 +30,7 @@ export default function BillsTable({ rows }: { rows: BillRow[] }) {
             <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-emerald-600">Community</th>
             <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-cyan-600">Water</th>
             <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-indigo-600">Internet</th>
+            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-rose-600">Insurance</th>
             <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-stone-900">Total</th>
           </tr>
         </thead>
@@ -38,6 +42,7 @@ export default function BillsTable({ rows }: { rows: BillRow[] }) {
               <td className="px-4 py-3 text-right text-emerald-600">{fmt(row.community)}</td>
               <td className="px-4 py-3 text-right text-cyan-600">{fmt(row.water)}</td>
               <td className="px-4 py-3 text-right text-indigo-600">{fmt(row.internet)}</td>
+              <td className="px-4 py-3 text-right text-rose-600">{fmt(row.insurance)}</td>
               <td className="px-4 py-3 text-right font-bold text-stone-900">{fmt(row.total)}</td>
             </tr>
           ))}
@@ -56,6 +61,9 @@ export default function BillsTable({ rows }: { rows: BillRow[] }) {
             </td>
             <td className="px-4 py-3 text-right font-bold text-indigo-600">
               {fmt(rows.reduce((s, r) => s + r.internet, 0))}
+            </td>
+            <td className="px-4 py-3 text-right font-bold text-rose-600">
+              {fmt(rows.reduce((s, r) => s + r.insurance, 0))}
             </td>
             <td className="px-4 py-3 text-right font-bold text-stone-900">{fmt(grandTotal)}</td>
           </tr>

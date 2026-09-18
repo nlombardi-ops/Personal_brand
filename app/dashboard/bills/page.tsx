@@ -17,6 +17,7 @@ function buildRows() {
   billsData.energy.forEach((b) => months.add(b.month));
   billsData.community.forEach((b) => months.add(b.month));
   billsData.internet.forEach((b) => months.add(b.month));
+  billsData.insurance?.forEach((b) => months.add(b.month));
 
   return Array.from(months)
     .sort()
@@ -26,7 +27,16 @@ function buildRows() {
       const community = comm?.cuota || 0;
       const water = comm?.water || 0;
       const internet = billsData.internet.find((b) => b.month === month)?.total || 0;
-      return { month, energy, community, water, internet, total: energy + community + water + internet };
+      const insurance = billsData.insurance?.find((b) => b.month === month)?.total || 0;
+      return {
+        month,
+        energy,
+        community,
+        water,
+        internet,
+        insurance,
+        total: energy + community + water + internet + insurance,
+      };
     });
 }
 
