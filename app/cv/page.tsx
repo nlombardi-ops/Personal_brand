@@ -314,9 +314,9 @@ export default function GeneratorPage() {
     (inputMode === "url" && url.trim().length > 0) || pastedText.trim().length > 50;
 
   return (
-    <div className="flex h-screen min-w-[1024px]">
+    <div className="flex flex-col md:h-screen md:flex-row">
       {/* ── Left panel ── */}
-      <div className="w-[360px] flex-shrink-0 border-r border-stone-200 bg-white overflow-y-auto flex flex-col">
+      <div className="flex w-full flex-col border-b border-stone-200 bg-white md:w-[360px] md:flex-shrink-0 md:border-b-0 md:border-r md:overflow-y-auto">
         <div className="p-6 flex-1">
           <h1 className="text-base font-semibold text-stone-900 mb-4">Generate CV</h1>
 
@@ -458,11 +458,11 @@ export default function GeneratorPage() {
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex-1 overflow-y-auto bg-stone-50">
+      <div className="flex-1 min-w-0 bg-stone-50 md:overflow-y-auto">
 
         {/* Idle */}
         {analyzeState === "idle" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <p className="text-stone-400 text-sm max-w-xs text-center">
               Paste a job URL or text on the left to get started →
             </p>
@@ -471,7 +471,7 @@ export default function GeneratorPage() {
 
         {/* Analyzing */}
         {analyzeState === "loading" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <div className="flex items-center gap-2 text-stone-500 text-sm">
               <Loader2 className="h-4 w-4 animate-spin" />
               Reading the job posting…
@@ -481,7 +481,7 @@ export default function GeneratorPage() {
 
         {/* Analyze error */}
         {analyzeState === "error" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <div className="rounded-xl border border-red-100 bg-red-50 px-6 py-5 text-center max-w-sm">
               <p className="text-sm text-red-700">{analyzeError}</p>
             </div>
@@ -548,7 +548,7 @@ export default function GeneratorPage() {
 
         {/* Generating */}
         {generateState === "generating" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <div className="w-72">
               <p className="text-sm font-medium text-stone-700 mb-4 text-center">{GEN_PHASES[phase]}</p>
               <div className="h-1.5 w-full rounded-full bg-stone-200 overflow-hidden">
@@ -568,7 +568,7 @@ export default function GeneratorPage() {
 
         {/* Generate error */}
         {generateState === "error" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <div className="rounded-xl border border-red-100 bg-red-50 px-6 py-5 text-center max-w-sm">
               <p className="text-sm text-red-700 mb-3">{generateError}</p>
               <button onClick={() => handleGenerate()} className="text-sm font-medium text-red-700 underline">Try again</button>
@@ -581,7 +581,7 @@ export default function GeneratorPage() {
           <div className="flex flex-col">
             {/* Sticky HR read */}
             {angleAnalysis && (
-              <div className="sticky top-0 z-10 bg-stone-50 px-6 pt-4 pb-3 border-b border-stone-100">
+              <div className="sticky top-14 z-10 bg-stone-50 px-4 pt-4 pb-3 border-b border-stone-100 md:top-0 md:px-6">
                 <div className="max-w-[595px] mx-auto border-l-4 border-stone-400 bg-white rounded-r-lg px-4 py-3">
                   <p className="text-[10px] font-medium text-stone-500 uppercase tracking-wider mb-1">HR read</p>
                   <p className="text-xs text-stone-600 leading-relaxed">{angleAnalysis.summary}</p>
@@ -590,7 +590,7 @@ export default function GeneratorPage() {
             )}
 
             {/* Action buttons + CV */}
-            <div className="flex flex-col items-center py-6 px-6">
+            <div className="flex flex-col items-center py-6 px-4 md:px-6">
               <div className="flex items-center gap-3 mb-6 w-full max-w-[595px]">
                 <button
                   onClick={handleDownload}
@@ -692,7 +692,7 @@ export default function GeneratorPage() {
                 </div>
               )}
 
-              <div className="overflow-x-auto">
+              <div className="w-full overflow-x-auto">
                 <CvPreview content={cvContent} />
               </div>
             </div>

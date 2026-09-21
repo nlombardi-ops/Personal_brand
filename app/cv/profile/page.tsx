@@ -265,7 +265,7 @@ export default function ProfilePage() {
         <h2 className="text-sm font-semibold text-stone-900 mb-3 pb-2 border-b border-stone-200">
           Languages & Education
         </h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="rounded-lg border border-stone-200 bg-white p-4">
             <p className="text-xs font-semibold text-stone-700 mb-2">Languages</p>
             {profile.languages.map((l, i) => (

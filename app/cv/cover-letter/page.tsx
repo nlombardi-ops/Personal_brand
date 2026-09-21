@@ -132,9 +132,9 @@ export default function CoverLetterPage() {
     wordCount < 220 ? "text-amber-600" : wordCount > 310 ? "text-red-600" : "text-emerald-600";
 
   return (
-    <div className="flex h-screen min-w-[1024px]">
+    <div className="flex flex-col md:h-screen md:flex-row">
       {/* ── Left panel ── */}
-      <div className="w-[360px] flex-shrink-0 border-r border-stone-200 bg-white overflow-y-auto flex flex-col">
+      <div className="flex w-full flex-col border-b border-stone-200 bg-white md:w-[360px] md:flex-shrink-0 md:border-b-0 md:border-r md:overflow-y-auto">
         <div className="p-6 flex-1">
           <h1 className="text-base font-semibold text-stone-900 mb-1">Cover Letter</h1>
           <p className="text-xs text-stone-500 mb-4">Industry format · 250–300 words</p>
@@ -260,9 +260,9 @@ export default function CoverLetterPage() {
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex-1 overflow-y-auto bg-stone-50">
+      <div className="flex-1 min-w-0 bg-stone-50 md:overflow-y-auto">
         {generateState === "idle" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <p className="text-stone-400 text-sm max-w-xs text-center">
               Analyze a job URL on the left to generate your cover letter →
             </p>
@@ -270,7 +270,7 @@ export default function CoverLetterPage() {
         )}
 
         {generateState === "generating" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <div className="text-center">
               <Loader2 className="h-6 w-6 animate-spin text-stone-400 mx-auto mb-3" />
               <p className="text-sm text-stone-600">Writing your cover letter…</p>
@@ -280,7 +280,7 @@ export default function CoverLetterPage() {
         )}
 
         {generateState === "error" && (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex min-h-[50vh] items-center justify-center md:h-full md:min-h-0">
             <div className="rounded-xl border border-red-100 bg-red-50 px-6 py-5 text-center max-w-sm">
               <p className="text-sm text-red-700 mb-3">{generateError}</p>
               <button onClick={handleGenerate} className="text-sm font-medium text-red-700 underline">
@@ -291,9 +291,9 @@ export default function CoverLetterPage() {
         )}
 
         {generateState === "done" && clText && (
-          <div className="p-8 max-w-2xl mx-auto">
+          <div className="p-4 md:p-8 max-w-2xl mx-auto">
             {/* Header row */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-sm font-semibold text-stone-900">
                   {jobAnalysis?.company} — {jobAnalysis?.role_title}

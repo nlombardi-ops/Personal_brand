@@ -47,7 +47,7 @@ export default async function StatsPage() {
       <h1 className="text-lg font-semibold text-stone-900 mb-1">Stats</h1>
       <p className="text-sm text-stone-500 mb-6">Your application pipeline at a glance</p>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <StatCard label="CVs Generated" value={String(versions.length)} icon={FileText} />
         <StatCard label="Applications Submitted" value={String(total)} icon={Send} />
         <StatCard
