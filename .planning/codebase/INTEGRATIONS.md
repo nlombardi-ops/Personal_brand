@@ -16,13 +16,15 @@
 - Cost tracking: every AI route returns `_cost_usd` computed by `lib/cv/cost.ts` (`calcCostUsd(model, inputTokens, outputTokens)`), rates table keyed by `claude-opus-4-8` / `claude-sonnet-4-6` / `claude-haiku-4-5`. Not persisted — response-only.
 
 **Google Drive API (v3):**
-- Used for: reading bill PDFs/HTML invoices from three known folders, and uploading generated CV PDFs into a `CVs` folder.
+- Used for: reading bill PDFs/HTML invoices from known folders, and uploading generated CV PDFs into a `CVs` folder.
 - Client: hand-rolled in `lib/drive/client.ts` (no googleapis npm package). `DriveClient.create()` does an OAuth refresh-token exchange against `https://oauth2.googleapis.com/token`, then calls `https://www.googleapis.com/drive/v3/*` and `https://www.googleapis.com/upload/drive/v3/files` (multipart upload, manual boundary).
 - Auth: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN` (installed-app flow). Routes check all three are present and 500 with "Google Drive is not configured" otherwise.
-- Hard-coded Drive folder IDs in `lib/drive/sync.ts` (and duplicated in `scripts/email-organizer/sync_bills.py`):
-  - `phone_internet`: `1UKLsmvyQ_1er64dyPHLZJe17xG_Uqeby`
-  - `community`: `1b_TuM2oeIwUI1klonWONT1XTTX0ErSUY`
-  - `energy`: `1EBzivC0dyH0cRiTlI2tAhwL1AOFDXcY6`
+- Hard-coded Drive folder IDs in `lib/drive/sync.ts` (`sync_bills.py`'s own copy is stale — it's missing `energy`/`insurance` entirely and is left as-is, see that file's comments):
+  - `phone_internet`: `1UKLsmvyQ_1er64dyPHLZJe17xG_Uqeby` (standalone folder, predates the dedicated root below)
+  - `community`: `1GlJ5FM421QML9Ew31mcx8ISd2e8LUz6l`
+  - `energy`: `1rNDnt0ts34dzzFcMt2h1r_JE549WLKAk`
+  - `insurance`: `1eyReti2zUdze7PIGp13YqpcPlFRdC-PQ`
+  - `community`/`energy`/`insurance` are sibling subfolders auto-created by `scripts/email-organizer/organizer.py` under one dedicated root folder (`10bYSFOjF282p5Pp68E4hOPZX1w4L9s_p`), named after each `providers` entry in the pipeline's (gitignored) `config.json`.
 - Consumers: `app/api/dashboard/sync/route.ts` (bill sync), `app/api/cv/drive-upload/route.ts` (CV PDF upload).
 
 **iCloud Mail (IMAP) — local pipeline only, NOT in the deployed app:**

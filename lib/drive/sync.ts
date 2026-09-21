@@ -12,16 +12,16 @@ import {
 } from "./parsers";
 import type { BillsData, EnergyBill, InternetBill, CommunityBill, InsuranceBill } from "@/lib/types";
 
-// insurance's Drive folder does not exist yet — organizer.py creates it on
-// its first run once an Insurance provider entry is present in the user's
-// (gitignored) config.json. Paste the resulting folder ID here afterwards.
-// Never write a real-looking Drive ID here; a fabricated 33-character ID
-// would send the sync at a random or non-existent folder.
+// All four category folders live under one dedicated root
+// (10bYSFOjF282p5Pp68E4hOPZX1w4L9s_p), auto-created by scripts/email-organizer/organizer.py
+// per config.json's provider names. phone_internet predates that root and has
+// no "Mobile-Internet" senders configured yet, so it still points at its
+// original standalone folder.
 const FOLDERS = {
   phone_internet: "1UKLsmvyQ_1er64dyPHLZJe17xG_Uqeby",
-  community: "1b_TuM2oeIwUI1klonWONT1XTTX0ErSUY",
-  energy: "1EBzivC0dyH0cRiTlI2tAhwL1AOFDXcY6",
-  insurance: null as string | null,
+  community: "1GlJ5FM421QML9Ew31mcx8ISd2e8LUz6l",
+  energy: "1rNDnt0ts34dzzFcMt2h1r_JE549WLKAk",
+  insurance: "1eyReti2zUdze7PIGp13YqpcPlFRdC-PQ" as string | null,
 };
 
 const BLOB_PATHNAME = "bills.json";
