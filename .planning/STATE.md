@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 Phase: 2 (Documents & Presupuestos Workflow) — EXECUTING
 Plan: 3 of 3
 Status: Phase complete — ready for verification
-Last activity: 2026-09-17 — Phase 2 execution started
+Last activity: 2026-09-21 - Completed quick task 260921-k2p: Make CV builder and Finance dashboard usable at iPhone widths
 
 Progress: [██████████] 100%
 
@@ -99,6 +99,12 @@ Recent decisions affecting current work:
 ### Pending Todos
 
 From .planning/todos/pending/ — none reviewed into the roadmap yet.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260921-k2p | Make CV builder and Finance dashboard usable at iPhone widths | 2026-09-21 | 244855c | [260921-k2p-make-cv-builder-and-finance-dashboard-us](./quick/260921-k2p-make-cv-builder-and-finance-dashboard-us/) |
 
 ### Blockers/Concerns
 
