@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { readFileSync } from "fs";
+import { join } from "path";
 import Anthropic from "@anthropic-ai/sdk";
 import { calcCostUsd } from "@/lib/cv/cost";
 import rawContracts from "../../../../data/contracts.json";
@@ -9,6 +11,27 @@ import type { Contract, MortgageData, InsurancePolicy } from "@/lib/types";
 const contracts = rawContracts.contracts as Contract[];
 const mortgage = rawMortgage as MortgageData;
 const policies = rawInsurance.policies as InsurancePolicy[];
+
+// Detailed coverage-lookup references, written for this assistant to answer
+// "is X covered?" questions the summary-level insurance.json can't. Missing
+// files are skipped, never thrown — same as the rest of this repo's read helpers.
+const COVERAGE_DOC_PATHS = [
+  "docs/adeslas-plena-vital-salud.md",
+  "docs/mybox-hogar-coberturas.md",
+  "docs/mybox-decesos-coberturas.md",
+];
+
+function loadCoverageDocs(): string {
+  return COVERAGE_DOC_PATHS.map((path) => {
+    try {
+      return readFileSync(join(process.cwd(), path), "utf-8");
+    } catch {
+      return null;
+    }
+  })
+    .filter((doc): doc is string => doc !== null)
+    .join("\n\n---\n\n");
+}
 
 const MAX_HISTORY = 12;
 
@@ -53,7 +76,10 @@ Obligations: linked account (${mortgage.obligaciones.cuenta_pago}), mandatory ho
     )
     .join("\n");
 
-  return `CONTRACTS ON FILE:\n${contractsBlock}\n\n${mortgageBlock}\n\nINSURANCE POLICIES:\n${insuranceBlock}`;
+  const coverageDocs = loadCoverageDocs();
+  const coverageBlock = coverageDocs ? `\n\nCOVERAGE REFERENCE DOCS:\n${coverageDocs}` : "";
+
+  return `CONTRACTS ON FILE:\n${contractsBlock}\n\n${mortgageBlock}\n\nINSURANCE POLICIES:\n${insuranceBlock}${coverageBlock}`;
 }
 
 export async function POST(request: NextRequest) {
