@@ -20,18 +20,25 @@ const STARTERS = [
   "Draft a short note to the recruiter",
 ];
 
+const LENGTHS = [
+  { words: 120, label: "Short" },
+  { words: 150, label: "Standard" },
+  { words: 250, label: "Long" },
+];
+
 export default function ApplicationChat({
   jobAnalysis,
   angleSummary,
   coverLetter,
   onCost,
 }: {
-  jobAnalysis: JobAnalysis;
+  jobAnalysis?: JobAnalysis;
   angleSummary?: string;
   coverLetter?: string;
   onCost?: (usd: number) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [targetWords, setTargetWords] = useState(150);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -63,6 +70,7 @@ export default function ApplicationChat({
           job_analysis: jobAnalysis,
           angle_summary: angleSummary ?? "",
           cover_letter: coverLetter ?? "",
+          target_words: targetWords,
           messages: next,
         }),
       });
@@ -112,7 +120,9 @@ export default function ApplicationChat({
         <div className="min-w-0">
           <p className="text-sm font-semibold text-stone-900">Application questions</p>
           <p className="truncate text-[11px] text-stone-500">
-            {jobAnalysis.role_title} · {jobAnalysis.company}
+            {jobAnalysis
+              ? `${jobAnalysis.role_title} · ${jobAnalysis.company}`
+              : "No role loaded — answers stay general"}
           </p>
         </div>
         <div className="flex items-center gap-1">
@@ -223,6 +233,24 @@ export default function ApplicationChat({
         }}
         className="border-t border-stone-200 p-3"
       >
+        <div className="mb-2 flex items-center gap-1.5">
+          <span className="text-[10px] text-stone-400">Length</span>
+          {LENGTHS.map((l) => (
+            <button
+              key={l.words}
+              type="button"
+              onClick={() => setTargetWords(l.words)}
+              className={`rounded px-2 py-0.5 text-[10px] transition ${
+                targetWords === l.words
+                  ? "bg-[#0f172a] text-white"
+                  : "text-stone-500 hover:bg-stone-100"
+              }`}
+            >
+              {l.label}
+            </button>
+          ))}
+          <span className="ml-auto text-[10px] text-stone-300">~{targetWords}w</span>
+        </div>
         <div className="flex items-end gap-2">
           <textarea
             value={input}

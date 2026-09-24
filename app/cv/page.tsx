@@ -920,15 +920,13 @@ export default function GeneratorPage() {
         )}
       </div>
 
-      {/* ── Application-question chat — available as soon as the role is read ── */}
-      {jobAnalysis && (
-        <ApplicationChat
-          jobAnalysis={jobAnalysis}
-          angleSummary={angleAnalysis?.summary}
-          coverLetter={clText}
-          onCost={(usd) => setTotalCost((c) => c + usd)}
-        />
-      )}
+      {/* ── Application-question chat — usable with or without a role loaded ── */}
+      <ApplicationChat
+        jobAnalysis={jobAnalysis ?? undefined}
+        angleSummary={angleAnalysis?.summary}
+        coverLetter={clText}
+        onCost={(usd) => setTotalCost((c) => c + usd)}
+      />
     </div>
   );
 }
