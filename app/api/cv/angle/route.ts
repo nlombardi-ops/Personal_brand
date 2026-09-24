@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { readFileSync } from "fs";
-import { join } from "path";
 import Anthropic from "@anthropic-ai/sdk";
-import type { JobAnalysis } from "@/lib/types";
+import type { JobAnalysis, Profile, ContextEntry } from "@/lib/types";
+import { getProfile } from "@/lib/cv/profile-store";
 import { calcCostUsd } from "@/lib/cv/cost";
 
 const ANGLE_SCHEMA = {
@@ -16,11 +15,6 @@ const ANGLE_SCHEMA = {
   required: ["summary"],
   additionalProperties: false,
 };
-
-function loadProfile() {
-  const raw = readFileSync(join(process.cwd(), "data/profile.json"), "utf-8");
-  return JSON.parse(raw);
-}
 
 export async function POST(request: NextRequest) {
   const authCookie = request.cookies.get("dashboard_auth");
@@ -40,21 +34,43 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing job_analysis" }, { status: 400 });
   }
 
-  const profile = loadProfile();
+  const profile = (await getProfile()) as Profile;
+
+  const experience = profile.experience as Array<{
+    company: string;
+    role: string;
+    period: string;
+    bullets?: string[];
+  }>;
+
+  // The angle is only as good as the evidence behind it. Send the full track record
+  // with its bullets plus the experience bank, not a list of job titles — the
+  // achievements are what make one angle land and another sink.
+  const enrichment = (profile.context_enrichment ?? []) as ContextEntry[];
+  const enrichmentBlock =
+    enrichment.length > 0
+      ? `\nEvidence bank (the candidate's own answers from past applications):\n${enrichment
+          .slice(-12)
+          .flatMap((e) => e.statements.map((st) => `  - ${st}`))
+          .join("\n")}`
+      : "";
 
   const profileSnippet = [
-    `About: ${profile.about?.short ?? profile.about?.long?.slice(0, 300)}`,
-    `Recent roles: ${(profile.experience as Array<{ company: string; role: string; period: string }>)
-      .slice(0, 3)
-      .map((e) => `${e.role} at ${e.company} (${e.period})`)
-      .join(" | ")}`,
-    `Key skills: ${Object.values(profile.skills as Record<string, { skills: Array<{ name: string }> }>)
+    `About: ${profile.about.long}`,
+    `\nFull track record:`,
+    ...experience.map(
+      (e) =>
+        `${e.role} at ${e.company} (${e.period})\n` +
+        (e.bullets ?? []).map((b) => `  - ${b}`).join("\n")
+    ),
+    `\nKey skills: ${Object.values(profile.skills as Record<string, { skills: Array<{ name: string }> }>)
       .flatMap((cat) => cat.skills.map((s) => s.name))
-      .slice(0, 20)
+      .slice(0, 30)
       .join(", ")}`,
     `Education: ${(profile.education as Array<{ degree: string; institution: string }>)
       .map((e) => `${e.degree} — ${e.institution}`)
       .join("; ")}`,
+    enrichmentBlock,
   ].join("\n");
 
   const jobSnippet = [
