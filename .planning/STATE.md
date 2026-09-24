@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-09-08)
 Phase: 2 (Documents & Presupuestos Workflow) — EXECUTING
 Plan: 3 of 3
 Status: Phase complete — ready for verification
-Last activity: 2026-09-21 - Completed quick task 260921-k2p: Make CV builder and Finance dashboard usable at iPhone widths
+Last activity: 2026-09-24 - Completed quick task 260924-nkt: Add Application Q&A chat to CV surface
 
 Progress: [██████████] 100%
 
@@ -105,6 +105,7 @@ From .planning/todos/pending/ — none reviewed into the roadmap yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260921-k2p | Make CV builder and Finance dashboard usable at iPhone widths | 2026-09-21 | 244855c | [260921-k2p-make-cv-builder-and-finance-dashboard-us](./quick/260921-k2p-make-cv-builder-and-finance-dashboard-us/) |
+| 260924-nkt | Add Application Q&A chat to CV surface | 2026-09-24 | 113e7ce | [260924-nkt-add-application-q-a-chat-to-cv-surface](./quick/260924-nkt-add-application-q-a-chat-to-cv-surface/) |
 
 ### Blockers/Concerns
 
