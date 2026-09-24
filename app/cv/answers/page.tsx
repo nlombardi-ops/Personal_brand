@@ -59,6 +59,9 @@ export default function AnswersPage() {
     if (!canAnalyze || analyzeState === "loading") return;
     setAnalyzeState("loading");
     setAnalyzeError("");
+    // Drop the previous role up front. Otherwise a failed re-analysis hides
+    // the card while still sending the old job as context on every answer.
+    setJobAnalysis(null);
     try {
       const res = await fetch("/api/cv/analyze-job", {
         method: "POST",
