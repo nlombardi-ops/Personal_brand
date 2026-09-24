@@ -3,6 +3,7 @@ import AuthGuard from "../components/dashboard/AuthGuard";
 import StatCard from "../components/dashboard/StatCard";
 import CostChart from "../components/dashboard/CostChart";
 import SyncButton from "../components/dashboard/SyncButton";
+import ContractsChat from "../components/dashboard/ContractsChat";
 import { getBillsData } from "@/lib/drive/sync";
 import rawInsurance from "../../data/insurance.json";
 import rawContracts from "../../data/contracts.json";
@@ -276,6 +277,10 @@ export default async function DashboardOverview() {
             ))}
           </div>
         </div>
+
+        {/* Same assistant as the contracts page — it already reads bills,
+            mortgage, insurance and rates, so it belongs on the overview too. */}
+        <ContractsChat />
       </div>
     </AuthGuard>
   );

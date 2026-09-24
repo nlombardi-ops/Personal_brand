@@ -1,25 +1,36 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { FileText, Send, Loader2 } from "lucide-react";
+import { FileText, Send, Loader2, TrendingDown } from "lucide-react";
 
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
 
-const SUGGESTIONS = [
-  "¿Cuándo termina el periodo de permanencia de cada contrato?",
-  "¿Puedo cancelar el seguro de vida sin afectar la hipoteca?",
-  "¿Qué cubre el seguro de hogar?",
-  "¿Qué pasa con la cuota cuando termine el tipo fijo?",
-];
+type Mode = "facts" | "advisor";
+
+const SUGGESTIONS: Record<Mode, string[]> = {
+  facts: [
+    "¿Cuándo termina el periodo de permanencia de cada contrato?",
+    "¿Puedo cancelar el seguro de vida sin afectar la hipoteca?",
+    "¿Qué cubre el seguro de hogar?",
+    "¿Qué pasa con la cuota cuando termine el tipo fijo?",
+  ],
+  advisor: [
+    "¿Dónde estoy pagando de más? Ordénalo por euros al año",
+    "¿Me compensa cambiar de compañía de luz con lo que pago ahora?",
+    "Con el Euríbor donde está, ¿qué hago cuando acabe mi tipo fijo?",
+    "¿Qué puedo cancelar ya sin penalización y sin perder bonificaciones?",
+  ],
+};
 
 export default function ContractsChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<Mode>("facts");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,7 +51,7 @@ export default function ContractsChat() {
       const res = await fetch("/api/dashboard/contracts-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: nextMessages }),
+        body: JSON.stringify({ messages: nextMessages, mode }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Request failed");
@@ -54,17 +65,50 @@ export default function ContractsChat() {
 
   return (
     <div className="rounded-xl border border-stone-200 bg-white p-5">
-      <div className="flex items-center gap-2 mb-3">
-        <FileText className="h-3.5 w-3.5 text-stone-500" />
-        <h3 className="text-sm font-semibold text-stone-900">Contract Q&amp;A Assistant</h3>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          {mode === "advisor" ? (
+            <TrendingDown className="h-3.5 w-3.5 text-emerald-600" />
+          ) : (
+            <FileText className="h-3.5 w-3.5 text-stone-500" />
+          )}
+          <h3 className="text-sm font-semibold text-stone-900">
+            {mode === "advisor" ? "Deal review" : "Contract Q&A Assistant"}
+          </h3>
+        </div>
+        <div className="flex overflow-hidden rounded-lg border border-stone-200 text-[11px] font-medium">
+          {([
+            { id: "facts" as Mode, label: "Mis contratos" },
+            { id: "advisor" as Mode, label: "Buscar mejoras" },
+          ]).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setMode(t.id)}
+              className={`px-2.5 py-1 transition ${
+                mode === t.id ? "bg-stone-900 text-white" : "bg-white text-stone-500 hover:bg-stone-50"
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
       <p className="mb-4 text-xs text-stone-500">
-        Ask about the contracts loaded above — permanencia, cancellation, coverage, rates, obligations.
+        {mode === "advisor" ? (
+          <>
+            Compara lo que pagas contra el mercado y lo ordena por euros al año. Marca cada cifra
+            como <span className="font-medium text-stone-700">[ON FILE]</span> (tuya) o{" "}
+            <span className="font-medium text-stone-700">[MERCADO - verificar]</span> (estimación
+            suya, no un precio real). Verifica antes de cambiar nada.
+          </>
+        ) : (
+          <>Ask about the contracts loaded above — permanencia, cancellation, coverage, rates, obligations.</>
+        )}
       </p>
 
       {messages.length === 0 && (
         <div className="mb-4 flex flex-wrap gap-2">
-          {SUGGESTIONS.map((s) => (
+          {SUGGESTIONS[mode].map((s) => (
             <button
               key={s}
               onClick={() => send(s)}
@@ -112,7 +156,9 @@ export default function ContractsChat() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask a question about your contracts…"
+          placeholder={
+            mode === "advisor" ? "¿Dónde puedo ahorrar?" : "Ask a question about your contracts…"
+          }
           className="flex-1 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-400 focus:outline-none"
         />
         <button
