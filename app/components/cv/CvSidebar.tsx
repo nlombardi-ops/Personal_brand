@@ -12,12 +12,14 @@ import {
   LogOut,
   Mail,
   Menu,
+  MessageSquare,
   X,
 } from "lucide-react";
 
 const NAV = [
   { label: "Generate", href: "/cv", icon: FileText },
   { label: "Cover Letter", href: "/cv/cover-letter", icon: Mail },
+  { label: "Application Q&A", href: "/cv/answers", icon: MessageSquare },
   { label: "My Profile", href: "/cv/profile", icon: User },
   { label: "History", href: "/cv/versions", icon: Clock },
   { label: "Stats", href: "/cv/stats", icon: BarChart2 },
